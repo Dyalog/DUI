@@ -1,0 +1,46 @@
+﻿:Class jqSortableSimple : MiPageSample
+⍝ Control:: _JQ.jqSortable
+⍝ Description:: List of items that can to be dragged to rearrange in a new order
+
+    ∇ Compose;sort
+      :Access Public
+      Add _.style ScriptFollows
+      ⍝ #sort li {
+      ⍝     list-style: none;
+      ⍝     font-size: x-large;
+      ⍝     padding: 20px;
+      ⍝     height: 30px; 
+      ⍝     width: 80px;
+      ⍝     box-shadow: 0 0 6px 1px black inset;
+      ⍝ }
+      ⍝ #sort_1 {background: rgba(255,0,0,0.5);}
+      ⍝ #sort_2 {background: rgba(0,0,0,0.5);}
+      ⍝ #sort_3 {background: rgba(255,255,0,0.5);}
+      ⍝ #sort_4 {background: rgba(255,255,255,0.5);}
+      ⍝ #sort_5 {background: rgba(0,0,255,0.5);}
+
+      Add _.p'Drag and drop the below items to reorder them:'
+     
+      sort←'sort'Add _.jqSortable('Item1' 'Item2' 'Item3' 'Item4' 'Item5')
+      sort.On'stop' 'myCallBack'('order' 'method' '"toArray"')
+      sort.Options.tolerance←'pointer'
+     
+      '#output'Add _.div
+    ∇
+
+    ∇ r←myCallBack;order
+      :Access Public
+      order←⍎(⍕Get'order')∩11↑⎕D
+      :Select order
+      :Case ⍳5
+          order←'restored'
+      :Case ⌽⍳5
+          order←'reversed'
+      :Else
+          order←⍕order
+      :EndSelect
+      r←'#output'Replace'The order is now ',order,'.'
+    ∇
+
+
+:EndClass

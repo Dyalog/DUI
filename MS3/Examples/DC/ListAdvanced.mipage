@@ -1,0 +1,24 @@
+﻿:Class ListAdvanced : MiPageSample
+⍝ Control:: _DC.List
+⍝ Description:: Nested (multi-level) lists
+
+    ∇ Compose;levels;hrefs;items
+      :Access Public
+     
+     
+      Add _.p'The below language tree  has the following features:'
+
+      Add _.List'Each entry is a link' 'It has multiple nested levels' 'It is numbered'
+     
+      Add _.h3'Language tree'
+     
+     ⍝ Below, the second link includes a target attribute for the auto-generated a element
+      items←'Germanic' 'Scandinavian' 'Danish' 'Norwegian' 'German' 'Romance' 'Italian' 'French'
+      levels←1 2 3 3 2 1 2 2
+      hrefs←'https://en.wikipedia.org/wiki/'∘,¨items∘.,⊂'_language'
+      
+      ('links'Add _.List(items levels hrefs)).Ordered←1 ⍝ Construct ordered List with texts, levels, and urls
+      
+     ∇
+
+:EndClass

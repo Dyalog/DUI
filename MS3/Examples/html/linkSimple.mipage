@@ -1,0 +1,12 @@
+﻿:class linkSimple: MiPageSample
+⍝ Control:: _html.link
+⍝ Description:: Include an external resource; here an icon
+
+    ∇ Compose
+      :Access public
+      'href="../Data/duck.ico" rel="icon" type="image/x-icon"'Add _.link
+      Add _.title'← LOOK HERE'
+      Add _.p'Your browser''s tab or window should now have a rubber duck icon.'
+    ∇
+
+:endclass

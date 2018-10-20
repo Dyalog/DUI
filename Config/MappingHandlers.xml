@@ -1,0 +1,10 @@
+<MappingHandlers>
+  <MappingHandler>
+    <ext>md</ext>
+    <handler>Markdown</handler>
+  </MappingHandler>
+  <MappingHandler>
+    <ext>php</ext>
+    <shell>c:/php/php %file%</shell>
+  </MappingHandler>
+</MappingHandlers>

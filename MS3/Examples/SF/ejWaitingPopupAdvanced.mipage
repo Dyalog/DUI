@@ -1,0 +1,44 @@
+﻿:Class ejWaitingPopupAdvanced : MiPageSample
+⍝ Control:: _SF.ejWaitingPopup
+⍝ Description:: Insert styled toggleable pop-up with arbitrary web content
+
+    ∇ Compose;wp;mydiv;p
+      :Access public
+     
+      Add _.style ScriptFollows
+      ⍝ #mydiv {
+      ⍝     width: 220px;
+      ⍝     margin-top: 10em;
+      ⍝     color: white;
+      ⍝     background-color: black;
+      ⍝     padding: 5px;
+      ⍝     border-radius: 10px;
+      ⍝     cursor: progress;
+      ⍝     box-shadow: 0 10px 30px 0 black;
+      ⍝ }
+      ⍝
+      ⍝ #title {
+      ⍝     margin-top: 0;
+      ⍝     padding: 5px;
+      ⍝     background-color: darkorange;
+      ⍝     border-radius: 5px;
+      ⍝     font-size; larger;
+      ⍝     font-weight: bold;
+      ⍝ }
+     
+      mydiv←'mydiv'Add _.div
+      'align'mydiv.Set'center'
+      'title'mydiv.Add _.p'PLEASE WAIT'
+      'src="../Data/spin.gif"'mydiv.Add _.img
+      
+      p←mydiv.Add _.p
+      p.Add'Create cutting-edge '
+      p.Add _.b'HTML5'
+      p.Add' web applications with ease'
+     
+      wp←Add _.ejWaitingPopup
+      'template'wp.Set'#mydiv' ⍝ we want the div we just created to be the contents
+      'showOnInit'wp.Set _true ⍝ by default, the pop-up is hidden
+    ∇
+
+:EndClass

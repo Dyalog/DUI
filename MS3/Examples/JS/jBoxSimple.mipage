@@ -1,0 +1,24 @@
+﻿:Class jBoxSimple : MiPageSample
+⍝ Control::     _JS.jBox
+⍝ Description:: jBox provides several style of popups
+
+    ∇ Compose;p
+      :Access public
+      p←Add _.p'jBox has various functions which might be of interest to the APL-developer. Here, we demonstrate tooltips: '
+      '.tooltip' 'title="Hi, I''m a tooltip!"'p.Add _.span'Move mouse over this text!'
+     
+      p←Add _.p ScriptFollows
+      ⍝ The tooltip opens automatically when your moves over the element. To help you recognize these
+      ⍝ sensitive areas, the "tooltipped" elements have dots around them. However, that is only a specific
+      ⍝ feature of this demo, as you will see when&nbsp;
+      '.tooltip' 'title="Click on the &quot;VIEW - APL Code&quot; tab!"'p.Add _.span'examining the source-code'
+      p.Add'.'
+     
+    ⍝ As promised, add some styling to make the tooltipped spans stand out more
+      Add _.style'.tooltip {border:2px dotted darkorange}'
+     
+    ⍝ Now create tooltips for all elements with class "tooltip". jBox by default uses the title attribute for the tooltip's text):
+      (Add _.jBox).Selector←'.tooltip'
+     
+    ∇
+:EndClass

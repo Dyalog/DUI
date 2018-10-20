@@ -1,0 +1,17 @@
+﻿:class detailsSimple: MiPageSample
+⍝ Control:: _html.details _html.summary
+⍝ Description:: Add a summary with revealable details
+ 
+    ∇ Compose;det
+      :Access public
+      Add _.p 'Note that the support for summary/details varies.'
+      Add _.p 'Click the line below to reveal the details.'
+       
+      det←Add _.details
+    ⍝ Add a summary line that will display next to the little arrow
+      det.Add _.summary'Click here for details'
+    ⍝ Add the text to be hidden by default
+      det.Add'A request has been made to uncover this text!'
+    ∇
+
+:endclass

@@ -1,0 +1,49 @@
+﻿:Class IconSimple : MiPageSample
+⍝ Control:: _DC.Icon
+⍝ Description:: Icons from FontAwesome, Syncfusion, and Google
+
+    ∇ Compose;p;i
+      :Access Public
+     
+      Add _.style'.red {color: red;}'
+     
+      p←Add _.p
+      p.Add _.Icon'fa-cloud-upload-alt'
+      p.Add' FontAwesome'
+     
+      p←Add _.p
+      p.Add _.Icon'md-fingerprint'
+      p.Add' Google Material Design'
+     
+      p←Add _.p
+      p.Add _.Icon'e-delete-column_01'
+      p.Add' Syncfusion'
+     
+      p←Add _.p
+      '.fa-spin'p.Add _.Icon'md-track_changes'
+      p.Add' FontAwesome effects'
+     
+      p←Add _.p
+      '.red' 'style="font-size:36px;padding-right:15px"'p.Add _.Icon'fab-pied-piper-alt'
+      p.Add' custom styling'
+     
+      p←Add _.p
+      p.Add _.Icon'far-square fa-2x' 'fas-terminal'
+      p.Add' &nbsp; small terminal on large square'
+     
+      p←Add _.p
+      p.Add _.Icon'far-square fa-2x'('data-fa-transform="shrink-4 right-4"'New _.Icon'fas-terminal')
+      p.Add' &nbsp; small terminal on large square (looks better with resized and slightly shifted terminal-icon using advanced options)'
+     
+      p←Add _.p
+      i←p.Add _.Icon
+      i.Add _.Icon'fas-battery-full'
+      'style="font-size: 1.5em; opacity: 0.7;"'i.Add _.Icon'fas-times red'
+      p.Add' large red X on small battery'
+     
+      p←Add _.p
+      'style=color:orange'p.Add _.Icon'fab-dyalog fa-2x'
+      p.Add' Dyalog sponsored the development of FontAwesome 5 and was rewarded with this icon.'
+    ∇
+
+:EndClass

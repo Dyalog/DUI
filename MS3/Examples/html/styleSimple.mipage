@@ -1,0 +1,12 @@
+﻿:class styleSimple: MiPageSample
+⍝ Control:: _html.style
+⍝ Description:: Embed a style sheet
+
+    ∇ Compose
+      :Access public
+      Add _.style'#title {color:orange;} #text {color:orchid;background-color:purple;}'
+      '#title'Add _.h1'Dyalog''s Color Preferences'
+      '#text'Add _.p'We love all shades of purple colors.'
+    ∇
+
+:endclass

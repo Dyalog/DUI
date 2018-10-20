@@ -1,0 +1,60 @@
+<Virtual>
+<!-- valid replacements are 
+     %ServerRoot% - MiServer root directory
+     %SiteRoot%   - web site root -->
+
+  <directory>
+    <alias>Dyalog</alias>
+    <path>%ServerRoot%/PlugIns/Dyalog/</path>
+  </directory>
+
+  <directory>
+    <alias>JQuery</alias>
+    <path>%ServerRoot%/PlugIns/JQuery/</path>
+  </directory>
+
+  <directory>
+    <alias>Syncfusion</alias>
+    <path>%ServerRoot%/PlugIns/Syncfusion-16.3.0.21/</path>
+  </directory>
+
+  <directory>
+    <alias>PlugIns</alias>
+    <path>%ServerRoot%/PlugIns/</path>
+  </directory>
+
+  <directory>
+    <alias>FontAwesome5</alias>
+    <path>%ServerRoot%/PlugIns/Other/fontawesome-free-5.1.0-web/</path>
+  </directory>
+
+  <directory>
+    <alias>material-icons</alias>
+    <path>%ServerRoot%/PlugIns/Other/material-icons/</path>
+  </directory>
+
+  <directory>
+    <alias>jBox</alias>
+    <path>%ServerRoot%/PlugIns/Other/jBox-0.4.9/</path>
+  </directory>
+
+  <directory>
+    <alias>DataTables</alias>  
+    <path>%ServerRoot%/PlugIns/Other/DataTables-1.10.16/</path>
+  </directory>
+
+  <directory>
+    <alias>chosen</alias>
+    <path>%ServerRoot%/PlugIns/Other/chosen-1.8.3/</path>
+  </directory>
+
+  <directory>
+    <alias>Bootstrap3</alias>
+    <path>%ServerRoot%/PlugIns/Bootstrap-3.3.7/</path>
+  </directory>
+
+  <directory>
+    <alias>Bootstrap4</alias>
+    <path>%ServerRoot%/PlugIns/Bootstrap-4.1.0/</path>
+  </directory>
+</Virtual>

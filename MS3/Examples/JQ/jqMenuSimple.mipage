@@ -1,0 +1,17 @@
+﻿:Class jqMenuSimple : MiPageSample
+⍝ Control:: _JQ.jqMenu
+⍝ Description:: Insert a vertical (drop-down or context) menu
+
+    ∇ r←Compose;items;levels;hrefs
+      :Access Public
+     
+    ⍝ Define the items.
+      items←'Germanic' 'Scandinavian' 'Danish' 'Norwegian' 'German' 'Romance' 'Italian' 'French'
+      levels←1 2 3 3 2 1 2 2
+      hrefs←'https://en.wikipedia.org/wiki/'∘,¨items∘.,⊂'_language'
+      '#mymenu'Add _.jqMenu(items levels hrefs)
+      
+      Add _.style'#mymenu {width:150px;}'
+    ∇
+
+:EndClass

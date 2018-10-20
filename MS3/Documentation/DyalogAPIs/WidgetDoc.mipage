@@ -1,0 +1,87 @@
+﻿:Class WidgetDoc : MiPageSample
+
+    :include #.MS3SiteUtils
+
+    ∇ Compose;ns;widget;ref;wref;src;chunk;files;r;split;find
+      :Access public
+      Add _.style'#view {display: none}'
+      r←'<div class="WidgetDoc">'
+      (ns widget)←Get'namespace widget'
+      :If 9.1=#.⎕NC⊂ns
+          ref←#.⍎ns
+          :If 9=ref.⎕NC widget
+              wref←ref⍎widget
+              r,←'<h3 id="WidgetDocTitle">'
+              :If 0=wref.⎕NC⊂'DocBase'
+              :OrIf 0∊⍴wref.DocBase      ⍝ without link
+                  r,←ns,'.',widget
+              :Else                      ⍝ with link
+                  r,←(ns,'.',widget)External wref.DocBase
+              :EndIf
+     
+              src←1↓⎕SRC wref
+              src↓⍨←+/∧\''∘≡¨src
+              src←#.Strings.dlb¨src
+              src←src/⍨∧\'⍝'=⊃¨src
+              src←'¶  +'⎕R' '⊢'¶',¨1↓¨src
+              src←{1↓¨⍵⊂⍨'¶'=⍵}∊src
+              src←HtmlSafeText¨#.Strings.dlb¨src
+     
+              :If 0∊⍴src
+                  r,←'<h3 class="red">No documentation found.</h3>'
+              :Else
+                  :For chunk :In src
+                      ⍝ Section::
+                      ⍝ Section:: text
+                      ⍝ text - text
+                      ⍝  - text
+                      ⍝ code ⍝ text
+                      ⍝ code
+                      :If ∨/'::'⍷chunk ⍝ Section::
+                          :If ∨/find←' - '⍷chunk
+                              split←find⍳1
+                              r,←'<h3>',(chunk↑⍨split-1),'</h3>'
+                              chunk←chunk↓⍨split+2
+                              find←'- '⍷chunk
+                              split←find⍳1
+                              r,←'<p'
+                              :If '-'≠⊃chunk~' '
+                                  r,←' class="hang"'
+                              :EndIf
+                              r,←'>',(chunk↑⍨split-1),'&ndash;',(split↓chunk),'</p>'
+                          :Else
+                              r,←'<h3>',chunk,'</h3>'
+                          :EndIf
+                      :ElseIf ∨/find←'- '⍷chunk
+                          split←find⍳1
+                          r,←'<p'
+                          :If '-'≠⊃chunk~' '
+                              r,←' class="hang"'
+                          :EndIf
+                          r,←'>',(chunk↑⍨split-1),'&ndash;',(split↓chunk),'</p>'
+                      :Else ⍝ [APL code] [⍝ comment]
+                          find←'&#9053;'⍷chunk
+                          split←6+find⍳1
+                          r,←'<p class="hang"><code>',(split↑chunk),'</code>',(split↓chunk),'</p>'
+                      :EndIf
+                  :EndFor
+              :EndIf
+     
+              files←'relevant'ForControl widget
+              :If 0∊⍴files
+                  r,←'<h3 class="red">No relevant sample pages found.</h3>'
+              :Else
+                  r,←'<h3>Relevant Sample Pages:</h3>'
+                  (files←'#samples'New _.Tabs(↓⍉↑{DescrEmbed ⍵}¨files)).Theme←'FF8C00'
+                  r,←files.Render
+              :EndIf
+          :Else
+              r,←'<h3 class="red">Widget "',widget,'" not found in namespace ',ns,'.</h3>'
+          :EndIf
+      :Else
+          r,←'<h3 class="red">Namespace "',ns,'" not found.</h3>'
+      :EndIf
+      r,←'</div>'
+      Add'<h3>Description::' '::'⎕R'' ':'⊢r
+    ∇
+:EndClass

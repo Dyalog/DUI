@@ -1,0 +1,28 @@
+﻿:Class fieldsetSimple: MiPageSample
+⍝ Control:: _html.fieldset _html.legend
+⍝ Description:: Group form controls
+
+    ∇ Compose
+      :Access public
+     
+    ⍝ The main form
+      frm←Add _.Form
+     
+    ⍝ Makes a box
+      fs←frm.Add _.fieldset
+     
+    ⍝ Puts a label on the top edge of the box
+      fs.Add _.legend'Customer information entry'
+     
+    ⍝ Automated adding of lists of elements with labels
+      Types←'text' 'number' ⋄ Labels←'Reference: ' 'Amount: '
+      :For i :In ⍳⍴Types
+          ((fs.Add _.label,i⊃Labels).Add _.input).type←i⊃Types
+          fs.Add _.br
+      :EndFor
+     
+    ⍝ Submit button
+      fs.Add _.SubmitButton'Next customer'
+    ∇
+
+:EndClass

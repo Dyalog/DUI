@@ -1,0 +1,29 @@
+﻿:Class jqSpinnerSimple : MiPageSample
+⍝ Control:: _JQ.jqSpinner
+⍝ Description:: Select and preselect values with spinners
+
+    ∇ Compose
+      :Access Public
+      
+      Add _.style '#Update {display: block; margin:20px;}'
+
+      Add _.h2'Simple Spinner'
+      '#Simple' '.spin'Add _.jqSpinner
+     
+      Add _.h2'Preset Spinner'
+      '#Preset' '.spin'Add _.jqSpinner 0 10 7
+     
+      Add _.Handler'.spin' 'spinchange' 'myCallBack'('newval' 'val')
+     
+      '#Update'Add _.Button'Report' ⍝ makes user leave control
+     
+      '#output'Add _.div
+    ∇
+
+    ∇ r←myCallBack
+      :Access Public
+      r←'#output'Replace _what,' Spinner changed to ',⍕Get'newval'
+    ∇
+
+
+:EndClass

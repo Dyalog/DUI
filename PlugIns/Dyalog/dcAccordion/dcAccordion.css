@@ -1,0 +1,39 @@
+/* CSS for the _DC.Accordion widget */
+/* Configure the radio buttons to be outside the screen */
+.dc-accordion > input[type="radio"] {
+    position: absolute;
+    left: -100%;
+}
+
+/* Configure labels to look like sections */
+.dc-accordion > input[type=radio] + label {
+    display: block;
+    padding: 1ex 0;
+    font-weight: bold;
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+/* Checked sections must be unfaded */
+.dc-accordion > input[type="radio"]:checked + label {
+    opacity: 1;
+}
+
+/* The section content */
+.dc-accordion > div {
+    display: none;
+    margin-right: 3ex;
+}
+
+.dc-accordion > input[type="radio"] + label:before {
+    position: relative;
+    content: "\2C5";
+    float: right;
+    width: 3ex;
+    text-align: center;
+    transition: 0.5s;
+}
+
+.dc-accordion > input[type="radio"]:checked + label:before {
+    transform: rotate(180deg);
+}

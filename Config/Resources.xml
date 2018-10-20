@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Resources>
+<!-- 
+*******************************
+*    Dyalog Widget resources  *
+*******************************
+-->
+	<resource>
+		<name>dcTabs</name>
+		<style>/Dyalog/dcTabs/dcTabs.css</style>
+	</resource>
+	<resource>
+		<name>dcAccordion</name>
+		<style>/Dyalog/dcAccordion/dcAccordion.css</style>
+	</resource>
+	<resource>
+		<name>dcPanel</name>
+		<uses>faIcons5svg</uses>
+		<style>/Dyalog/dcPanel/dcPanel.css</style>
+	</resource>
+
+<!-- 
+*******************************
+*      Bootstrap resources    *
+*******************************
+-->
+	<resource>
+		<name>Bootstrap3</name>
+		<uses>JQuery</uses>
+		<style>/Bootstrap3/css/bootstrap.min.css</style>
+		<script>/Bootstrap3/js/bootstrap.min.js</script>
+	</resource>
+
+	<resource>
+	  	<name>Bootstrap4</name>
+	  	<uses>JQuery</uses>
+	    <script>/Bootstrap4/popper.min.js</script>
+	    <script>/Bootstrap4/bootstrap.min.js</script>
+	    <style>/Bootstrap4/bootstrap.min.css</style>
+	</resource>
+<!--
+*******************************
+*      FontAwesome5 Resources *
+*******************************
+-->
+	<resource>
+		<name>faIcons5svg</name>
+		<script>/FontAwesome5/js/all.js</script>
+	</resource>
+	
+	<resource>
+		<name>faIcons5css</name>
+		<style>/FontAwesome5/css/all.css</style>
+	</resource>
+
+<!-- 
+******************************************
+*      Google Material Design Icons      *
+******************************************
+-->
+	<resource>
+		<name>mdIcons</name>
+		<style>/material-icons/material-icons.css</style>
+	</resource>
+
+<!-- 
+*********************************
+*      Syncfusion ej-Icons      *
+*********************************
+-->
+	<resource>
+		<name>ejIcons</name>
+		<uses>sfTheme</uses>   <!-- Syncfusion ejIcons are built into theme -->
+	</resource>
+
+<!-- 
+********************************************
+*      Datatable - just the bare core,     *
+* more stuff loaded via DataTable.dyalog   *
+********************************************
+-->
+<resource>
+	<name>DataTables</name>
+	<uses>JQuery</uses>
+	<script>/DataTables/js/jquery.dataTables.min.js</script>
+</resource>
+
+<!-- 
+*********************************************
+*      jBox resources (including plugins)   *
+*********************************************
+-->
+	<resource>
+		<name>jBox</name>
+		<uses>JQuery</uses>
+		<script>/jBox/jBox.min.js</script>
+		<style>/jBox/jBox.css</style>
+		<style>/jBox/plugins/Confirm/jBox.Confirm.css</style>
+		<script>/jBox/plugins/Confirm/jBox.Confirm.min.js</script>
+		<style>/jBox/plugins/Notice/jBox.Notice.css</style>
+		<script>/jBox/plugins/Notice/jBox.Notice.min.js</script>
+		<style>/jBox/plugins/Image/jBox.Image.css</style>
+		<script>/jBox/plugins/Image/jBox.Image.min.js</script>
+	</resource>
+<!-- 
+*********************************
+*      d3/dimple resources      *
+*********************************
+-->
+	<resource>
+		<name>d3</name>
+		<script>/PlugIns/Other/d3/d3.min.js</script>
+	</resource>
+	<resource>
+		<name>dimple</name>
+		<uses>d3</uses>
+		<script>/PlugIns/Other/dimple/dimple.v2.3.0.min.js</script>
+	</resource>
+<!-- 
+**************************
+*    jQuery resources    *
+**************************
+-->
+	<resource>
+		<name>jqTheme</name>
+		<style>/JQuery/JQueryUI/Themes/redmond/jquery-ui.min.css</style>
+	</resource>
+	<resource>
+		<name>JQuery</name>
+		<script>/JQuery/jquery-3.3.1.min.js</script>
+		<script>/JQuery/APL_JavaScript_Utils.js</script>
+	</resource>
+	<resource>
+		<name>jQuery</name> <!-- define an alias for jQuery using its proper name -->
+		<uses>JQuery</uses>
+	</resource>
+	<resource>
+		<name>JQueryUI</name>
+		<uses>JQuery</uses>
+		<uses>jqTheme</uses>
+		<script>/JQuery/JQueryUI/jquery-ui.min.js</script>
+	</resource>
+	<resource>
+		<name>jquery.cookie</name>
+		<uses>JQuery</uses>
+		<script>/JQuery/PlugIns/jqueryCookie/jquery.cookie.js</script>
+	</resource>
+
+	<!-- 
+**************************
+*  Syncfusion resources  *
+**************************
+-->
+	<!-- 
+*********************************
+*  Common Syncfusion resources  *
+*********************************
+-->
+	<resource>
+		<name>sfTheme</name>
+		<style>/Syncfusion/assets/css/web/gradient-saffron/ej.web.all.min.css</style>
+	</resource>
+	<resource>
+		<name>jquery.validate</name>
+		<uses>JQuery</uses>
+		<script>/Syncfusion/assets/external/jquery.validate.min.js</script>
+	</resource>
+        <resource>
+		<name>jsrender</name>
+		<script>/Syncfusion/assets/external/jsrender.min.js</script>
+	</resource>
+	<resource>
+		<name>ej.unobtrusive</name>
+		<uses>Syncfusion</uses>
+		<script>/Syncfusion/assets/scripts/common/ej.unobtrusive.min.js</script>
+	</resource>
+	<resource>
+		<name>excanvas</name>
+		<script>/Syncfusion/assets/external/excanvas.min.js</script>
+	</resource>
+	<resource>
+		<name>SyncfusionJS</name>
+		<script>/Syncfusion/assets/scripts/web/ej.web.all.min.js</script>
+	</resource>
+	<resource>
+		<name>Syncfusion</name>
+		<uses>JQuery</uses>
+		<uses>sfTheme</uses>
+		<uses>SyncfusionJS</uses>
+	</resource>
+<!-- 
+*********************************
+*  Widget Syncfusion resources  *
+*********************************
+-->
+	<resource>
+		<name>ejAccordion</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejAutocomplete</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejBarcode</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejBulletGraph</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejButton</name>
+		<uses>Syncfusion</uses	>
+	</resource>
+	<resource>
+		<name>ejChart</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejCheckBox</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejColorPicker</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejCircularGauge</name>
+		<uses>Syncfusion</uses>
+		<uses>excanvas</uses>
+	</resource>
+	<resource>
+		<name>ejCurrencyTextbox</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejDatePicker</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejDateTimePicker</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejDiagram</name>
+		<uses>Syncfusion</uses>
+		<uses>jsrender</uses>
+	</resource>
+	<resource>
+		<name>ejDialog</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejDigitalGauge</name>
+		<uses>Syncfusion</uses>
+		<uses>excanvas</uses>
+	</resource>
+	<resource>
+		<name>ejDraggable</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejDropDownList</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejDroppable</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejGantt</name>
+		<uses>Syncfusion</uses>
+		<uses>jsrender</uses>
+	</resource>
+	<resource>
+		<name>ejGrid</name>
+		<uses>Syncfusion</uses>
+		<uses>jquery.validate</uses>
+		<uses>ej.unobtrusive</uses>
+		<uses>jsrender</uses>
+	</resource>
+	<resource>
+		<name>ejLinearGauge</name>
+		<uses>Syncfusion</uses>
+		<uses>excanvas</uses>
+	</resource>
+	<resource>
+		<name>ejListBox</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejListView</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejMap</name>
+		<uses>Syncfusion</uses>
+		<uses>jsrender</uses>
+	</resource>
+	<resource>
+		<name>ejMaskEdit</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejMenu</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejNumericTextbox</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejOlapChart</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejOlapClient</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejOlapGauge</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejOlapGrid</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejOlapPager</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejPercentageTextbox</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejProgressBar</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejRadioButton</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejRangeNavigator</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejRating</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejResizable</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejRotator</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejRTE</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejSchedule</name>
+		<uses>Syncfusion</uses>
+		<uses>jsrender</uses>
+	</resource>
+	<resource>
+		<name>ejScroller</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejSlider</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejSplitButton</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejSplitter</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejSpreadsheet</name>
+		<uses>Syncfusion</uses>
+		<uses>jquery.validate</uses>
+		<uses>ej.unobtrusive</uses>
+	</resource>
+	<resource>
+		<name>ejSymbolPalette</name>
+		<uses>Syncfusion</uses>
+		<uses>jsrender</uses>
+		<uses>jquery.validate</uses>
+		<uses>ej.unobtrusive</uses>
+	</resource>
+	<resource>
+		<name>ejTab</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejTagCloud</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejTextBoxes</name>
+		<uses>Syncfusion</uses>
+		<uses>jquery.validate</uses>
+	</resource>
+	<resource>
+		<name>ejTimePicker</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejToggleButton</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejToolbar</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejTreeGrid</name>
+		<uses>Syncfusion</uses>
+		<uses>jsrender</uses>
+	</resource>
+	<resource>
+		<name>ejTreeMap</name>
+		<uses>Syncfusion</uses>
+		<uses>jsrender</uses>
+	</resource>
+	<resource>
+		<name>ejTreeView</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejUploadbox</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
+		<name>ejWaitingPopup</name>
+		<uses>Syncfusion</uses>
+	</resource>
+
+<!--
+*********************************
+*      chosen resources         *
+*********************************
+-->
+<resource>
+	<name>chosen</name>
+	<uses>JQuery</uses>
+	<script>/chosen/chosen.jquery.min.js</script>
+	<script>/chosen/chosen-tools.js</script>
+	<style>/chosen/chosen.min.css</style>
+</resource>
+
+<!-- 
+****************************
+*     jsSHA resources      *
+****************************
+-->
+	<resource>
+		<name>jsSHA</name>
+		<script>/PlugIns/Other/jsSHA/sha.js</script>
+	</resource>
+</Resources>

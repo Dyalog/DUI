@@ -1,0 +1,58 @@
+﻿:Class jBoxAdvancedConfOnLoad : MiPageSample
+⍝ Control::     _JS.jBox
+⍝ Description:: Confirmation Dialog on PageLoad
+
+    ∇ Compose;dd
+      :Access public
+     
+     
+      Add _.h2'jBox Widget - Advanced sample: Confirmation on PageLoad'
+      Add ScriptFollows
+    ⍝ This page illustrates how to setup a jBox as an MiServer-Widget and then
+    ⍝ inject the code so that it gets executed when the page is loaded.
+     
+      jb←New _.jBox'Confirm'  ⍝ set it up as an independent object
+     
+      jb.Var←'jb'
+      jb.JavaScript←';jb.open();'
+      jb.ScriptOptions←0 0 0
+     
+    ⍝ Text of the dialog
+      'title'jb.Set'Your choice, please!'
+      'content'jb.Set'Do you like this sample?'
+     
+    ⍝ Set the button texts
+      'confirmButton'jb.Set'Yes'
+      'cancelButton'jb.Set'No'
+     
+    ⍝ assign event-handlers to the two buttons
+      'confirm'jb.Set⊂'function(){$(document).trigger("event_yes");}'
+      'cancel'jb.Set⊂'function(){$(document).trigger("event_no");}'
+     
+     
+    ⍝ create APL-Listeners for the JS-Events and have them call APL-Code
+      On'event_yes' 'OnYes'
+      On'event_no' 'OnNo'
+     
+      OnLoad←jb.Render  ⍝ inject code into PageLoad-event
+     
+      '#output'Add _.span
+    ∇
+
+
+    ∇ R←OnYes
+      :Access public
+      R←'#output'Replace'Thank you. It''s nice to see this software being used by competent users!'
+      R,←Execute'$("#output").css("background-color","#7d0");'
+    ∇
+
+
+    ∇ R←OnNo
+      :Access public
+      R←'#output'Replace'Please email miserver@dyalog.com and tell us what we could have done better!'
+      R,←Execute'$("#output").css("background-color","#ddd");'
+    ∇
+
+
+
+:EndClass

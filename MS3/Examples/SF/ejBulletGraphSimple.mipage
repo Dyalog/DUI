@@ -1,0 +1,12 @@
+﻿:Class ejBulletGraphSimple : MiPageSample
+⍝ Control:: _SF.ejBulletGraph
+⍝ Description:: Ruler-style indicator of two related values
+
+    ∇ Compose;bg
+      :Access Public
+      bg←'output'Add _.ejBulletGraph 8.9 7.6
+      'captionSettings.text'bg.Set'Actual vs Avg'
+      bg.Options.captionSettings.textPosition←'right'
+    ∇
+
+:EndClass

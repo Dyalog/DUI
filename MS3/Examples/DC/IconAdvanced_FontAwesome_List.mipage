@@ -1,0 +1,83 @@
+﻿:Class IconAdvanced_FontAwesome_List : MiPageSample
+⍝ Control:: _DC.Icon _.JS.DataTable⌈
+⍝ Description:: Icon-Finder for FontAwesome-Icons
+
+
+    ∇ Compose;p;matches;tab;Columns;css;fa;dt;yml
+      :Access Public
+      Use'faIcons5svg'
+      Add _.p ScriptFollows
+   ⍝ This page offers a tool to easily browse FontAwesome-Icons even when you're offline and have no access to the
+   ⍝ excellent Search-Tool on FontAwesome's <a href="http://fontawesome.com/icons/">site</a>.
+   ⍝ Please note that the search also operates on the aliases that are (by default) not shown in the table.
+   ⍝ The visibility of columns can be toggled with the appropriate button in the table (which makes this 
+   ⍝ page also a useful example for DataTable-features. 
+     
+     
+      fa←#.Boot.ms.Config.Virtual{(⍺.alias⍳⊂⍵)⊃⍺.path,⊂''}'FontAwesome5' ⍝ get path
+      json←⎕JSON 1⊃⎕NGET fa,'metadata/icons.json'                                
+     
+   ⍝ A bit of CSS to emphasize the search-input more:
+      Add _.style ScriptFollows
+            ⍝label {
+            ⍝   margin-bottom:5px;
+            ⍝}
+      ⍝ .dataTables_filter input {
+            ⍝   border:none;
+            ⍝   -webkit-border-radius:5px;
+            ⍝   -moz-border-radius:5px;
+            ⍝   border-radius:5px;
+            ⍝   -webkit-box-shadow:0 0 5px #666 inset;
+            ⍝   -moz-box-shadow:0 0 5px #666 inset;
+            ⍝   box-shadow:0 0 5px #666 inset;
+      ⍝ font-size: 1.5em;
+            ⍝}
+            ⍝input { outline:none; }      
+      ⍝ .dataTables_filterX , inputX {
+      ⍝ font-size: 1.5em;
+      ⍝ border-radius: .2em;
+      ⍝ }
+      ⍝ .dataTables_filter {
+      ⍝ float: left !important;
+      ⍝ margin-top: 2em;
+      ⍝ margin-bottom: 2em;
+      ⍝ margin-left: 20%;
+      ⍝ clear: both;
+      ⍝ }
+      ⍝ .nofloat {
+      ⍝ clear: both;
+      ⍝ width: 80%;
+      ⍝ margin: auto;
+      ⍝ }
+     
+      matches←ProcJSON json
+      dt←Add _.DataTable matches
+      Columns←⎕NS¨6⍴⊂''
+      Columns.title←'Title' 'Sample' 'Code' 'Unicode' 'Styles'  'Alias' 
+      Columns[6].visible←_false  ⍝ alias-column not shown, but included in search!
+      dt.Options.columns←Columns
+      dt.Options.dom←'f<"nofloat"Bltipr>'
+      dt.Options.mark←_true
+      dt.Options.buttons←'colvis'
+      dt.Plugins←'responsive'
+    ∇
+
+
+    ∇ mat←ProcJSON json
+    ⍝ convert JSON-Data into a matrix
+    ⍝ [;1] = Code of icon
+    ⍝ [;2] = <i>-tags to show icon in all styles
+    ⍝ [;3] = Label
+    ⍝ [;4] = Unicode-code 
+    ⍝ [;5] = ,-separated list of available styles
+      mat←↑json.({Code←1(7162⌶)⍵ ⋄ (⊂Code),(⍎⍵).(label unicode styles(search.{0::⍵ ⋄ terms}''))}¨⎕NL-9)
+      mat←mat[;2 1 1 3 ],{{1<≢⍵:⍵⋄''}¯1↓∊⍵,¨','}¨mat[;4 5]
+      mat[;2]←mat[;5]{
+      s←∊1↑¨','#.Strings.split ⍺
+      ∊s{'<i class="fa',⍺,' fa-',⍵,'"></i>&nbsp;'}¨⊂⍵
+      }¨mat[;2]
+    ∇
+
+    JSONTranslateName←7162⌶  ⍝ translate aplified Json-name (of object) back into its original form
+
+:EndClass

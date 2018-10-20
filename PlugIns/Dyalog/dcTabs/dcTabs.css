@@ -1,0 +1,34 @@
+﻿/* CSS for the _DC.dcTabs widget */
+
+/* Configure the radio buttons to be outside the screen */
+.dc-tabs > input[type="radio"] {
+    position: absolute;
+    left: -100%;
+}
+ 
+/* Configure labels to look like tabs */
+.dc-tabs > input[type=radio] + label {
+    /* inline-block such that the label can be given dimensions */
+    display: inline-block;
+ 
+    /* Padding around centered tab text */
+    padding: 0.5em 0.75em;
+    text-align: center;
+
+    /* Set the default colors (non-selected tab) */
+    border-bottom: 0.25em solid transparent;
+		font-weight: bold;
+		opacity: 0.7;
+}
+
+/* Checked tabs must be clear */
+.dc-tabs > input[type="radio"]:checked + label {
+    opacity: 1;
+}
+ 
+/* The tab content must fill the widgets size */
+.dc-tabs > div {
+    display: none;
+    height: 100%;
+    overflow: auto;
+}

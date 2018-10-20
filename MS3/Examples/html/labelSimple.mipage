@@ -1,0 +1,21 @@
+﻿:class labelSimple: MiPageSample
+⍝ Control:: _html.label _html.form
+⍝ Description:: Include text in controls' clickable area
+
+    ∇ Compose;f;sex
+      :Access public
+     
+      f←Add _.form
+      P'Click on one of the text labels to toggle the related control:'
+     
+      P('for="male"'New _.label'Male')('#male type="radio" name="sex" value="masculine"'New _.input)
+      P('for="female"'New _.label'Female')('#female type="radio" name="sex" value="feminine"'New _.input)
+      P'type="submit"' 'value="Submit"'New _.input
+     
+      :If ''≢sex←Get'sex'
+          P'You selected: ',sex
+      :EndIf
+    ∇
+
+    P←{f.Add _.p ⍵}
+:endclass

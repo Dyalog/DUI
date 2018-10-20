@@ -1,0 +1,18 @@
+﻿:class iframeSimple: MiPageSample
+⍝ Control:: _html.iframe
+⍝ Description:: Embed another webpage
+
+    ∇ Compose;ifr
+      :Access public
+     
+      Add _.p'This is an embedded preview of Dialog''s homepage'
+     
+    ⍝ Then we add the iframe
+      ifr←Add _.iframe
+      'src'ifr.Set'http://www.dyalog.com' ⍝ add the source
+    ⍝ We can add an alternate phrase in case the browser does not support it:
+      ifr.Add _.p'Well, it appears your browser won''t do this'
+     
+    ∇
+
+:endclass

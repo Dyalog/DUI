@@ -1,0 +1,21 @@
+﻿:Class ejTabAdvanced : MiPageSample
+⍝ Control:: _SF.ejTab
+⍝ Description:: Tabbed interface with tabs on the left
+
+    ∇ Compose;captions;contents;intro;tab
+      :Access public
+     
+      intro←'Frequently used features include the ability to switch between four orientations '
+      intro,←'and load content asynchronously from another page.'
+     
+      Add _.p intro
+     
+      Add _.h2'Tabs on the left'
+      captions←'Tab One' 'Another' 'Third Tab' 'Fourth Tab'
+      contents←{'/Examples/Data/SampleText',(⍕⍵),'.txt'}¨⍳4
+      tab←'tab1' Add _.ejTab(captions contents)
+      'headerPosition'tab.Set'left'
+      tab.IsURL←4/1 ⍝ The texts are URLs and not actual content
+    ∇
+
+:EndClass
