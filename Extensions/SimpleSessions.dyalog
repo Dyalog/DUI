@@ -32,7 +32,7 @@
     ⍝ Initialize Session handler
      
       Sessions←0⍴⎕NEW Session
-      root←server.Config.Root
+      root←server.Config.AppRoot
       Timeout←server.Config.SessionTimeout
       timeout←Timeout÷24×60 ⍝ Convert minutes to fractions of a day
      
@@ -50,7 +50,7 @@
 
     ∇ GetSession req;c;tn;now;session;ns;new;t_out;i;r
       :Access Public
-    ⍝ Return session. Right argument is a HTTPRequest.
+    ⍝ Return session. Right argument is a HttpRequest.
      
       :Hold 'Sessions'
           session←req.GetCookie'Session'
@@ -61,7 +61,7 @@
               Sessions←Sessions,r←⎕NEW Session
               r.(ID User LastActive Cookie State Server)←NextSession''now c(⎕NS'')Server
               NextSession←(2*30)|NextSession+1
-              tn←(req.Server.Config.Root,'sessions.dcf')⎕FSTIE 0
+              tn←(req.Server.Config.AppRoot,'sessions.dcf')⎕FSTIE 0
               NextSession ⎕FREPLACE tn,1
               ⎕FUNTIE tn
               req.SetCookie'Session'c '/' 30 'HttpOnly'

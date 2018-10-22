@@ -1,15 +1,20 @@
-﻿:Class HTMLServer 
-⍝ HTMLRenderer-based DUI "server" component
+﻿:Class HRServer
+⍝ This is the core HTMLRenderer-based server class - do not modify it!
 
     :Field Public Config
 
     :Field Public TID←¯1                ⍝ Thread ID Server is running under
+    :Field Public SessionHandler
+    :Field Public Authentication
+    :Field Public Logger
     :Field Public Application
     :Field Public PageTemplates←⍬
     :Field Public Datasources←⍬
     :Field Public StartTime←⍬
+    :field Public Overrides
     :Field ServerName
-    :field Renderer
+
+    :Field Public _Renderer←''
 
     ⎕TRAP←0/⎕TRAP ⋄ (⎕ML ⎕IO)←1 1
 
@@ -27,47 +32,64 @@
     :section Override
 ⍝ ↓↓↓--- Methods which are usually overridden ---
 
+    ∇ {r}←Override
+      r←{
+          0::{Log ⎕JSON ⎕DMX ⋄ 1} ⍝ log any error
+          0≠⎕NC'Overrides.',2⊃⎕SI:1⊣Overrides⍎2⊃⎕SI ⍝ execute override function if found
+          0 ⍝ otherwise nothing done
+      }⍬
+    ∇
+
     ∇ onServerLoad
       :Access Public Overridable
     ⍝ Handle any server initialization prior to starting
+      Override
     ∇
 
     ∇ onServerStart
       :Access Public Overridable
     ⍝ Handle any server startup processing
+      Override
     ∇
 
     ∇ onSessionStart req
       :Access Public Overridable
     ⍝ Process a new session
+      Override
     ∇
 
     ∇ onSessionEnd session
       :Access Public Overridable
     ⍝ Handle the end of a session
+      Override
     ∇
 
     ∇ onHandleRequest req
       :Access Public Overridable
     ⍝ Called whenever a new request comes in
+      Override
     ∇
 
     ∇ onHandleMSP req
       :Access Public Overridable
     ⍝ Called when MiPage invoked
+      Override
     ∇
 
     ∇ onIdle
       :Access Public Overridable
     ⍝ Idle time handler - called when the server has gone idle for a period of time
+      Override
     ∇
 
     ∇ Error req
       :Access Public Overridable
     ⍝ Handle trapped errors
-      req.Response.HTML←'<font face="APL385 Unicode" color="red">',(⊃,/⎕DM,¨⊂'<br/>'),'</font>'
-      req.Fail 500 ⍝ Internal Server Error
-      1 Log ⎕DM
+      :If ~Override
+          req.Response.HTML←'<font face="APL385 Unicode" color="red">',(⊃,/⎕DM,¨⊂'<br/>'),'</font>'
+          req.Fail 500 ⍝ Internal Server Error
+          1 Log ⎕DM
+      :EndIf
     ∇
 
     ∇ level Log msg
@@ -75,45 +97,51 @@
     ⍝ Logs server messages
     ⍝ levels implemented in MildServer are:
     ⍝ 1-error/important, 2-warning, 4-informational, 8-transaction (GET/POST)
-      :If Config.LogMessageLevel bit level ⍝ if set to display this level of message
-          ⎕←msg ⍝ display it
+      :If ~Override
+          :If Config.LogMessageLevel bit level ⍝ if set to display this level of message
+              ⎕←msg ⍝ display it
+          :EndIf
       :EndIf
     ∇
 
     ∇ Cleanup
       :Access Public overridable
     ⍝ Perform any site specific cleanup
+      Override
     ∇
 
 ⍝ ↑↑↑--- End of Overridable methods ---
     :endsection
 
-
-⍝ ↓↓↓--- Begin MildServer Core Code
     :section Start/Stop
 
-    ∇ Run
+    ∇ (r msg)←Run;dyalog;ws;allocated;port;ports
       :Access Public
-      ('Already Running on Thread',⍕TID)⎕SIGNAL(TID∊⎕TNUMS)/11
+     
+      :If ~0∊⍴TID∩⎕TNUMS
+          →EXIT⊣(r msg)←1('Server is already running on thread',⍕TID)
+      :EndIf
+     
       onServerLoad
+     
       TID←RunServer&⍬
+      msg←'HRServer started, serving ',Config.AppRoot
+      r←0
+     EXIT:
     ∇
 
     ∇ End
     ⍝ Called by destructor
       :Access Public
       {0:: ⋄ Logger.Stop ⍬}⍬
-      #.HTTPRequest.Server←''
+      #.HttpRequest.Server←''
       Cleanup ⍝ overridable
       TID←¯1
     ∇
     :endsection
 
-    ∇ r←RunServer arg;Stop;StartTime;⎕TRAP;idletime;wres;rc;obj;evt;data;conx;ts
-      ⍝ Simple HTTP (Web) Server framework
-      ⍝ Assumes Conga available in #.DRC and uses #.HTTPRequest
+    ∇ r←RunServer arg;props
       ⍝ arg: dummy
-      ⍝ certs: RootCertDir, ServerCert, ServerKey (optional: runs Secure server)
      
       Stop←0
       StartTime←⎕TS
@@ -126,67 +154,15 @@
       onServerStart ⍝ meant to be overridden
      
       idletime←#.Dates.DateToIDN ⎕TS
-     
+      props←{0∊⍴n←⍵.⎕NL ¯2:'' ⋄ ⍵{⍵({∧/⊃(m n)←⎕VFI ⍵:n ⋄ ⍵}⍺⍎⍵)}¨n}Config.HRServer
+      props,←('Event'('onHTTPRequest' 'HandleRequest'))('InterceptedURLs'(1 2⍴'dyalog_root*'1))
+      _Renderer←⎕NEW'HTMLRenderer'props
+      _Renderer.Wait
       :While ~Stop
-          wres←#.DRC.Wait ServerName Config.WaitTimeout ⍝ Wait for WaitTimeout before timing out
-          ⍝ wres: (return code) (object name) (command) (data)
-          (rc obj evt data)←4↑wres
-          :Select rc
-          :Case 0 ⍝ Good data from RPC.Wait
-              :Select evt
-     
-              :Case 'Error'
-                  :If ServerName≡obj
-                      Stop←1
-                  :Else
-                      ConnectionDelete obj
-                  :EndIf
-                  :If 0≠4⊃wres
-                      (1+(4⊃wres)∊1008 1105 1119)Log'RunServer: DRC.Wait reported error ',(⍕#.Conga.Error 4⊃wres),' on ',2⊃wres
-                  :EndIf
-     
-              :Case 'Connect'
-                  ConnectionNew obj
-     
-              :CaseList 'HTTPHeader' 'HTTPTrailer' 'HTTPChunk' 'HTTPBody'
-                  :If 0≢conx←1 ConnectionUpdate obj
-                      {}conx{{}⍺ HandleRequest ⍵}&wres
-                  :Else
-                      ∘∘∘ ⍝!!! debug !!!
-                  :EndIf
-     
-              :Case 'Timeout'
-                  SessionHandler.HouseKeeping ⎕THIS
-                  :If 0<Config.IdleTimeout ⍝ if an idle timeout (in seconds) has been specified
-                  :AndIf Config.IdleTimeout<86400×-/(ts←#.Dates.DateToIDN ⎕TS)idletime ⍝ has it passed?
-                      onIdle
-                      idletime←ts
-                  :EndIf
-     
-              :Case 'Closed'
-                  ConnectionDelete obj
-     
-              :Else ⍝ unhandled event
-                  2 Log'Unhandled Conga event:'
-                  2 Log wres
-              :EndSelect
-     
-          :Case 1010 ⍝ Object Not found
-              1 Log'Object ''',ServerName,''' has been closed - Web Server shutting down'
-              →0
-     
-          :Else
-              1 Log'Conga wait failed:'
-              1 Log wres
-          :EndSelect
-     
-          ConnectionCleanup
-     
       :EndWhile
      
      RESUME: ⍝ Error Trapped and logged
-      {}#.DRC.Close ServerName
-      1 Log r←'Web server ''',ServerName,''' stopped '
+      1 Log r←'HRServer stopped '
       :If Config.CloseOnCrash
           ⎕OFF
       :EndIf
@@ -196,13 +172,14 @@
 
     :section Constructor/Destructor
 
-    ∇ Make config;CongaVersion;rc;allocated;port;ports
+    ∇ Make config;rc
       :Access Public
       :Implements Constructor
       SessionHandler←⎕NS''
       Authentication←⎕NS''
       Logger←⎕NS''
       Application←⎕NS''
+      Overrides←⎕NS''
      
       SessionHandler.GetSession←{}   ⍝ So we can always
       SessionHandler.HouseKeeping←{} ⍝    call these fns
@@ -214,26 +191,13 @@
      
       PageTemplates←#.Pages.⎕NL ¯9.4
      
-      allocated←0
-      :For port :In ports←∪Config.(Port,Ports)
-          :If allocated←0=1⊃,AllocatePort port
-              Config.Port←port
-              :Leave
-          :EndIf
-      :EndFor
-      ('Unable to allocate any TCP/IP port in ',1↓∊⍕¨',',¨ports)⎕SIGNAL(~allocated)/11
-      {}#.DRC.SetProp'.' 'EventMode' 1 ⍝ report Close/Timeout as events
-      {}#.DRC.SetProp ServerName'FIFOMode'Config.FIFOMode
-      {}#.DRC.SetProp ServerName'DecodeBuffers'(15×Config.DecodeBuffers)
-      #.HTTPRequest.DecodeBuffers←Config.DecodeBuffers
-      #.HTTPRequest.Server←⎕THIS
+      #.HttpRequest.Server←⎕THIS
     ∇
 
     ∇ UnMake
       :Implements Destructor
       :Trap 0 ⋄ End ⋄ :EndTrap
     ∇
-
 
     :endsection
 
@@ -279,24 +243,11 @@
       :EndIf
     ∇
 
-    ∇ r←conns HandleRequest arg;rc;obj;evt;data;REQ;res;startsize;length;ext;filename;enc;encodeMe;cacheMe;which;encoderc;html;enctype;status;response;hdr;done;offset;z;tn;file
-    ⍝ conns - connection namespace
-    ⍝ arg [1] conga rc [2] object name [3] event [4] data
-      r←0
-      arg←,⊆arg
-      (rc obj evt data)←4↑arg,(⍴arg)↓0 '' '' ''
-      :Select evt
-      :Case 'HTTPHeader'
-          conns.Req←⎕NEW #.HTTPRequest data
-      :Case 'HTTPBody'
-          conns.Req.ProcessBody data
-      :Case 'HTTPChunk'
-          conns.Req.ProcessChunk data
-      :Case 'HTTPTrailer'
-          conns.Req.ProcessTrailer data
-      :EndSelect
+    ∇ r←HandleRequest arg
+    ⍝ arg - HTMLRenderer callback data
+      r←arg
+      ∘∘∘
      
-      →0↓⍨conns.Req.Complete ⍝ exit if request is not complete
      
       REQ←conns.Req
       REQ.Server←⎕THIS ⍝ Request will also contain reference to the Server
@@ -339,7 +290,7 @@
               :AndIf ~0∊⍴enc←','#.Utils.penclose' '~⍨REQ.GetHeader'accept-encoding' ⍝ check if client supports encoding
               :AndIf encodeMe←~(⊂ext)∊'png' 'gif' 'jpg' 'mp4' ⍝ don't try to compress compressed graphics, should probably add zip files, etc
      
-                  :If 1=res.File ⍝ Sending a file?  (See HTTPRequest.ReturnFile)
+                  :If 1=res.File ⍝ Sending a file?  (See HttpRequest.ReturnFile)
                       cacheMe←0≠Config.HTTPCacheTime
                       (startsize length)←0,2 ⎕NINFO file←res.HTML
                       :If encodeMe←∧/2≤/1⌽length,⍨⌽Config.DirectFileSize ⍝ see if it falls within the size parameters
@@ -353,26 +304,6 @@
                               →SEND
                           :EndTrap
                       :EndIf
-                  :EndIf
-     
-                  :If encodeMe
-                  :AndIf 0≠which←⊃Encoders.Encoding{(⍴⍺){(⍺≥⍵)/⍵}⍺⍳⍵}enc ⍝ try to match what encodings they accept to those we provide
-                      (encoderc html)←Encoders[which].Compress res.HTML
-                      :If 0=encoderc
-                          length←startsize←⍴res.HTML
-                          :If startsize>⍴html ⍝ did we save anything by compressing
-                              length←⍴res.HTML←html ⍝ use it
-                              res.Headers⍪←'Content-Encoding'(enctype←Encoders[which].Encoding)
-                              4 Log'Used ',enctype,' compression on "',REQ.Page,'", transmitted% = ',2⍕length{⎕DIV←1 ⋄ ⍺÷⍵}startsize
-                          :Else
-                              4 Log'Compression not used on "',REQ.Page,'", startsize = ',(⍕startsize),', compressed length = ',⍕length
-                          :EndIf
-                      :ElseIf 0=res.File
-                          2 Log'Compression failed'
-                          length←⍴res.HTML ⍝ otherwise, send uncompressed
-                      :EndIf
-                  :ElseIf 0=res.File
-                      startsize←length←⍴res.HTML←∊res.HTML
                   :EndIf
               :EndIf
      
@@ -556,7 +487,7 @@
           :EndIf
      
           :If (1=Config.TrapErrors)∧9=⎕NC'#.DrA' ⋄ ⎕TRAP←#.DrA.TrapServer
-          :ElseIf (0=Config.Production) ⋄ ⎕TRAP←(800 'C' '→FAIL')(811 'E' '⎕SIGNAL 801')(813 'E' '⎕SIGNAL 803')(812 'S')((85,99+⍳500)'N')(0 'E' '⍎#.Boot.Oops') ⍝ enable development debug framework
+          :ElseIf (0=Config.Production) ⋄ ⎕TRAP←(800 'C' '→FAIL')(811 'E' '⎕SIGNAL 801')(813 'E' '⎕SIGNAL 803')(812 'S')((85,99+⍳500)'N')(0 'E' '⍎#.DUI.Oops') ⍝ enable development debug framework
           :EndIf
      
           :If flag←APLJax
@@ -621,11 +552,6 @@
       :Else ⋄ html,←'<code><font face="APL385 Unicode">',(⊃,/#.DrA.LastError,¨⊂'<br>'),'</font></code>'
       :EndIf
       REQ.Return html
-    ∇
-
-    ∇ CacheMSP file
-      :Access public
-     
     ∇
 
     ∇ inst←root LoadMSP file;path;name;ext;ns;class
@@ -702,7 +628,7 @@
     ∇ file←Config Virtual page;mask;f;ind;t;path;root
       :Access public shared
     ⍝ checks for virtual directory
-      root←(-'/\'∊⍨¯1↑root)↓root←Config.Root
+      root←(-'/\'∊⍨¯1↑root)↓root←Config.AppRoot
       page←('/\'∊⍨1↑page)↓page
       file←root,'/',page
       :If 0<⍴Config.Virtual
@@ -747,7 +673,7 @@
       :Trap 0/0 ⍝!!! remove 0/ after testing
           :While r⍱0∊⍴folder
               :If #.Files.Exists file←Config.AppRoot,folder,'Folder.xml'
-                  F←⎕NEW #.Boot.ConfigSpace file
+                  F←⎕NEW #.DUI.ConfigSpace file
                   :If F.Get'browsable' 1 0
                       filter←F.Get'filter'
                       template←{0∊⍴⍵:'MiPage' ⋄ ⍵}F.Get'template'
@@ -774,5 +700,4 @@
     ∇
     :endsection
 
- 
 :EndClass

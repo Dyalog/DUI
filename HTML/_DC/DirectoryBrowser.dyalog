@@ -22,7 +22,7 @@
 
     ∇ makeCommon
       :Trap 6
-          Root←#.DUI.Root
+          Root←#.DUI.AppRoot
       :Else
           Root←#.Utils.WSRoot
       :EndTrap
@@ -30,9 +30,9 @@
 
     ∇ r←Render;files;filenames;links;sizes
       :Access public
-      files←{⍵⌿⍨Down≥⍵[;4]}Filter #.Files.List Root,Folder  ⍝ remove folder entrie if no drilldown
+      files←{⍵⌿⍨Down≥⍵[;4]}Filter #.Files.List AppRoot,Folder  ⍝ remove folder entrie if no drilldown
       :If Down>0∊⍴Filter                       ⍝ if filtered and drilldown...
-          files⍪←{⍵⌿⍨⍵[;4]}#.Files.List Root,Folder ⍝ ...add in folders
+          files⍪←{⍵⌿⍨⍵[;4]}#.Files.List AppRoot,Folder ⍝ ...add in folders
       :EndIf
       Data←0 3⍴⊂''
       files⌿⍨←'.'≠⊃¨files[;1] ⍝ remove current and parent entries

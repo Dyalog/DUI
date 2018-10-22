@@ -1,4 +1,4 @@
-﻿:Class HTTPRequest
+﻿:Class HttpRequest
 
     (⎕IO ⎕ML)←1 1
     (CR LF)←NL←⎕UCS 13 10
@@ -19,7 +19,7 @@
 
     :Field Public Instance Complete←0        ⍝ do we have a complete request?
     :Field Public Instance URI←''            ⍝ the complete URI (page + query string)
-    :Field Public Instance Headers←0 2⍴⊂''   ⍝ HTTPRequest header fields (plus any supplied from HTTPTrailer event)
+    :Field Public Instance Headers←0 2⍴⊂''   ⍝ HTTP Request header fields (plus any supplied from HTTPTrailer event)
     :Field Public Instance Method←''         ⍝ HTTP method (GET, POST, PUT, etc)
     :Field Public Instance Page←''           ⍝ Requested URI
     :Field Public Instance Body←''           ⍝ body of the request
@@ -408,7 +408,7 @@
                 Response.(Status StatusText)←x
             :EndIf
             :If flag<0≡RESTfulReq
-                :For root :In Server.Config.(Root MSRoot) ⍝ try site root, then server root
+                :For root :In Server.Config.(AppRoot WC2Root) ⍝ try site root, then server root
                     :If gotFile←#.Files.Exists f←root,'CommonPages/',(⍕x),'.htm'
                         :If ~0∊⍴(⎕UCS 13 10)~⍨t←#.Files.ReadText f
                             Response.HTML,⍨←t,'<br/>'

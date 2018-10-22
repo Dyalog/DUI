@@ -5,6 +5,7 @@
   </MappingHandler>
   <MappingHandler>
     <ext>php</ext>
+    <handler>PHP</handler>
     <shell>c:/php/php %file%</shell>
   </MappingHandler>
 </MappingHandlers>

@@ -1,6 +1,5 @@
 ﻿:Class MiServer
 ⍝ This is the core web server class - do not modify it!
-⍝ Customized web servers should be based on this class - e.g.  :Class MyServer : MiServer
 
     :Field Public Config
 
@@ -16,6 +15,7 @@
     :Field Public Datasources←⍬
     :Field Public StartTime←⍬
     :field Public Connections←⍬ ⍝ list of connections
+    :field Public Overrides
     :Field ServerName
 
     ⎕TRAP←0/⎕TRAP ⋄ (⎕ML ⎕IO)←1 1
@@ -34,47 +34,64 @@
     :section Override
 ⍝ ↓↓↓--- Methods which are usually overridden ---
 
+    ∇ {r}←Override
+      r←{
+          0::{Log ⎕JSON ⎕DMX ⋄ 1} ⍝ log any error
+          0≠⎕NC'Overrides.',2⊃⎕SI:1⊣Overrides⍎2⊃⎕SI ⍝ execute override function if found
+          0 ⍝ otherwise nothing done
+      }⍬
+    ∇
+
     ∇ onServerLoad
       :Access Public Overridable
     ⍝ Handle any server initialization prior to starting
+      Override
     ∇
 
     ∇ onServerStart
       :Access Public Overridable
     ⍝ Handle any server startup processing
+      Override
     ∇
 
     ∇ onSessionStart req
       :Access Public Overridable
     ⍝ Process a new session
+      Override
     ∇
 
     ∇ onSessionEnd session
       :Access Public Overridable
     ⍝ Handle the end of a session
+      Override
     ∇
 
     ∇ onHandleRequest req
       :Access Public Overridable
     ⍝ Called whenever a new request comes in
+      Override
     ∇
 
     ∇ onHandleMSP req
       :Access Public Overridable
     ⍝ Called when MiPage invoked
+      Override
     ∇
 
     ∇ onIdle
       :Access Public Overridable
     ⍝ Idle time handler - called when the server has gone idle for a period of time
+      Override
     ∇
 
     ∇ Error req
       :Access Public Overridable
     ⍝ Handle trapped errors
-      req.Response.HTML←'<font face="APL385 Unicode" color="red">',(⊃,/⎕DM,¨⊂'<br/>'),'</font>'
-      req.Fail 500 ⍝ Internal Server Error
-      1 Log ⎕DM
+      :If ~Override
+          req.Response.HTML←'<font face="APL385 Unicode" color="red">',(⊃,/⎕DM,¨⊂'<br/>'),'</font>'
+          req.Fail 500 ⍝ Internal Server Error
+          1 Log ⎕DM
+      :EndIf
     ∇
 
     ∇ level Log msg
@@ -82,35 +99,82 @@
     ⍝ Logs server messages
     ⍝ levels implemented in MildServer are:
     ⍝ 1-error/important, 2-warning, 4-informational, 8-transaction (GET/POST)
-      :If Config.LogMessageLevel bit level ⍝ if set to display this level of message
-          ⎕←msg ⍝ display it
+      :If ~Override
+          :If Config.LogMessageLevel bit level ⍝ if set to display this level of message
+              ⎕←msg ⍝ display it
+          :EndIf
       :EndIf
     ∇
 
     ∇ Cleanup
       :Access Public overridable
     ⍝ Perform any site specific cleanup
+      Override
     ∇
 
 ⍝ ↑↑↑--- End of Overridable methods ---
     :endsection
 
 
-⍝ ↓↓↓--- Begin MildServer Core Code
+⍝ ↓↓↓--- Begin MiServer Core Code
     :section Start/Stop
 
-    ∇ Run
+    ∇ (r msg)←Run;dyalog;ws;allocated;port;ports
       :Access Public
-      ('Already Running on Thread',⍕TID)⎕SIGNAL(TID∊⎕TNUMS)/11
+     
+      :If ~0∊⍴TID∩⎕TNUMS
+          →EXIT⊣(r msg)←1('MiServer is already running on thread',⍕TID)
+      :EndIf
+     
       onServerLoad
+     
+      :If 0=#.⎕NC'Conga'
+          dyalog←⊃1 ⎕NPARTS'/',⍨2 ⎕NQ'.' 'GetEnvironment' 'DYALOG'
+     
+          :Trap 11
+              'Conga'#.⎕CY ws←dyalog,'ws/conga' ⍝ runtime needs full workspace path
+          :Else
+              r←2
+              msg←'This version of MiServer requires Conga v3.0 or later'
+              →EXIT⊣msg,←NL,'Conga v3.0 or later was not found at ',ws
+          :EndTrap
+     
+      :EndIf ⍝ Bring Conga in if not present
+     
+      :Trap 0
+          #.DRC←#.Conga.Init''
+      :Else
+          →EXIT⊣(r msg)←3 'Conga v3.0 or later shared library was not found.'
+      :EndTrap
+     
+      allocated←0
+      :For port :In ports←∪Config.(MSPort,MSPorts)
+          :If allocated←0=1⊃,AllocatePort port
+              Config.MSPort←port
+              :Leave
+          :EndIf
+      :EndFor
+     
+      →allocated↓EXIT⊣(r msg)←4('Unable to allocate any TCP/IP port in ',1↓∊⍕¨',',¨ports)
+      {}#.DRC.SetProp'.' 'EventMode' 1 ⍝ report Close/Timeout as events
+      {}#.DRC.SetProp ServerName'FIFOMode'Config.FIFOMode
+      {}#.DRC.SetProp ServerName'DecodeBuffers'(15×Config.DecodeBuffers)
+      #.HttpRequest.DecodeBuffers←Config.DecodeBuffers
+     
       TID←RunServer&⍬
+     
+      msg←'MiServer for "',Config.AppRoot,'" started on http://',(2 ⎕NQ'.' 'TCPGetHostID'),':',⍕Config.MSPort
+      msg,←NL,'Running in ',((1+Config.Production)⊃'Debug' 'Production'),' mode'
+      msg,←' (configured by setting <Production> in /Config/Server.xml)'
+      r←0
+     EXIT:
     ∇
 
     ∇ End
     ⍝ Called by destructor
       :Access Public
       {0:: ⋄ Logger.Stop ⍬}⍬
-      #.HTTPRequest.Server←''
+      #.HttpRequest.Server←''
       :If 0≠⎕NC'ServerName'
           'Not running'⎕SIGNAL(#.DRC.Exists ServerName)↓11
           {}#.DRC.Close ServerName
@@ -125,7 +189,7 @@
 
     ∇ r←RunServer arg;Stop;StartTime;⎕TRAP;idletime;wres;rc;obj;evt;data;conx;ts
       ⍝ Simple HTTP (Web) Server framework
-      ⍝ Assumes Conga available in #.DRC and uses #.HTTPRequest
+      ⍝ Assumes Conga available in #.DRC and uses #.HttpRequest
       ⍝ arg: dummy
       ⍝ certs: RootCertDir, ServerCert, ServerKey (optional: runs Secure server)
      
@@ -285,13 +349,14 @@
 
     :section Constructor/Destructor
 
-    ∇ Make config;CongaVersion;rc;allocated;port;ports
+    ∇ Make config;rc
       :Access Public
       :Implements Constructor
       SessionHandler←⎕NS''
       Authentication←⎕NS''
       Logger←⎕NS''
       Application←⎕NS''
+      Overrides←⎕NS''
      
       SessionHandler.GetSession←{}   ⍝ So we can always
       SessionHandler.HouseKeeping←{} ⍝    call these fns
@@ -303,19 +368,7 @@
      
       PageTemplates←#.Pages.⎕NL ¯9.4
      
-      allocated←0
-      :For port :In ports←∪Config.(Port,Ports)
-          :If allocated←0=1⊃,AllocatePort port
-              Config.Port←port
-              :Leave
-          :EndIf
-      :EndFor
-      ('Unable to allocate any TCP/IP port in ',1↓∊⍕¨',',¨ports)⎕SIGNAL(~allocated)/11
-      {}#.DRC.SetProp'.' 'EventMode' 1 ⍝ report Close/Timeout as events
-      {}#.DRC.SetProp ServerName'FIFOMode'Config.FIFOMode
-      {}#.DRC.SetProp ServerName'DecodeBuffers'(15×Config.DecodeBuffers)
-      #.HTTPRequest.DecodeBuffers←Config.DecodeBuffers
-      #.HTTPRequest.Server←⎕THIS
+      #.HttpRequest.Server←⎕THIS
     ∇
 
     ∇ UnMake
@@ -359,8 +412,8 @@
           4 Log msg,'succeeded.'
       :EndIf
      
-      4 Log'Web server ''',ServerName,''' started on port ',⍕Config.Port
-      4 Log'Root folder: ',Config.Root
+      4 Log'Web server ''',ServerName,''' started on port ',⍕Config.MSPort
+      4 Log'AppRoot folder: ',Config.AppRoot
     ∇
 
     :endsection
@@ -415,7 +468,7 @@
       (rc obj evt data)←4↑arg,(⍴arg)↓0 '' '' ''
       :Select evt
       :Case 'HTTPHeader'
-          conns.Req←⎕NEW #.HTTPRequest data
+          conns.Req←⎕NEW #.HttpRequest data
       :Case 'HTTPBody'
           conns.Req.ProcessBody data
       :Case 'HTTPChunk'
@@ -467,7 +520,7 @@
               :AndIf ~0∊⍴enc←','#.Utils.penclose' '~⍨REQ.GetHeader'accept-encoding' ⍝ check if client supports encoding
               :AndIf encodeMe←~(⊂ext)∊'png' 'gif' 'jpg' 'mp4' ⍝ don't try to compress compressed graphics, should probably add zip files, etc
      
-                  :If 1=res.File ⍝ Sending a file?  (See HTTPRequest.ReturnFile)
+                  :If 1=res.File ⍝ Sending a file?  (See HttpRequest.ReturnFile)
                       cacheMe←0≠Config.HTTPCacheTime
                       (startsize length)←0,2 ⎕NINFO file←res.HTML
                       :If encodeMe←∧/2≤/1⌽length,⍨⌽Config.DirectFileSize ⍝ see if it falls within the size parameters
@@ -830,7 +883,7 @@
     ∇ file←Config Virtual page;mask;f;ind;t;path;root
       :Access public shared
     ⍝ checks for virtual directory
-      root←(-'/\'∊⍨¯1↑root)↓root←Config.Root
+      root←(-'/\'∊⍨¯1↑root)↓root←Config.AppRoot
       page←('/\'∊⍨1↑page)↓page
       file←root,'/',page
       :If 0<⍴Config.Virtual

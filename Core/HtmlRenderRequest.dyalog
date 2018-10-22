@@ -127,7 +127,7 @@
 
     ∇ r←XlateArgs r;rgx;rgxu;i;j;z;t;m;⎕IO;lens;fill
       :Access public shared
-          ⍝ Translate HTTP command line arguments (lifted from MiServer HTTPRequest)
+          ⍝ Translate HTTP command line arguments (lifted from MiServer HttpRequest)
       ⎕IO←0
       ((r='+')/r)←' '
       rgx←'[0-9a-fA-F]'

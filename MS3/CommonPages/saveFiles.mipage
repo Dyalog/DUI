@@ -12,7 +12,7 @@
      
       :If (t←⊂'targetfolder')∊names
           target←_PageData.targetfolder
-          target←(0≠⍴target)/_Request.Server.Config.Root,'/',target
+          target←(0≠⍴target)/_Request.Server.Config.AppRoot,'/',target
           names←names~t
       :Else
           target←''

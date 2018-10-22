@@ -15,6 +15,8 @@
     :field private instance directory←''
     :field private instance interval←10
     :field private instance prefix←''
+    :field private instance badFolder←0
+    :field server
 
     :field private instance TieNo←⍬
     :field private instance Cache←''
@@ -23,22 +25,47 @@
     missing←{0∊⍴⍵:'-' ⋄ ⍵}
     Char←⎕DR ' '
 
-    ∇ Make ms;config
+    serverLog←{⍺←1 ⋄ ⍺ server.Log 'Logger: ',⍵}
+
+    ∇ Make ms;config;msg
       :Access public
       :Implements Constructor
      
       EOL←⎕UCS 13 10↓⍨~#.DUI.isWin
      
-      config←ConfigureLogger ms
+      server←ms
+      :If 0≢config←ConfigureLogger ms
+          Active←config.active
+          Anonymize←{3='.'+.=⍵:((-(⌽⍵)⍳'.')↓⍵),'.0' ⋄ ⍵}⍣config.anonymousIps
+          Prefix←config.prefix
+          Interval←config.interval
+          Directory←config.directory
+          :If ~#.Files.DirExists Directory
+              msg←'Log file directory "',Directory,'" '
+              :If config.createLogFolder
+                  :Trap 0
+                      :If 2 #.Files.MkDir Directory
+                          msg,←' created'
+                      :Else
+                          msg,←' was not able to be created.'
+                          badFolder←1
+                      :EndIf
+                  :Else
+                      msg,←' encountered a ',(⎕DMX.EM),' during creation.'
+                      badFolder←1
+                  :EndTrap
+              :Else
+                  msg,←' does not exist.'
+                  badFolder←1
+              :EndIf
+              serverLog msg
+          :EndIf
      
-      Active←config.active
-      Anonymize←{3='.'+.=⍵:((-(⌽⍵)⍳'.')↓⍵),'.0' ⋄ ⍵}⍣config.anonymousIps
-      Prefix←config.prefix
-      Interval←config.interval
-      Directory←#.DUI.{folderize SubstPath ⍵}config.directory
-      ('Log file directory "',Directory,'" not found!')⎕SIGNAL 11/⍨~#.Files.DirExists Directory
-      :If Active
-          tid←Run&0
+          :If badFolder<Active
+              Start
+          :ElseIf ~Active
+              4 serverLog'logging initialized, but is not active per configuration setting'
+          :EndIf
       :EndIf
     ∇
 
@@ -57,6 +84,7 @@
                   ClearCache
                   Close
               :EndIf
+              serverLog'logging stopped'
           :EndIf
       :EndTrap
     ∇
@@ -66,6 +94,7 @@
       :If ~tid∊⎕TNUMS
           Active←1
           tid←Run&0
+          serverLog'logging started to folder ',Directory
       :EndIf
     ∇
 
@@ -81,27 +110,26 @@
 
 
     ∇ r←Open;fn
-      r←0
-      :Trap 6
-          fn←#.Files.Normalize Directory,Prefix,(⍕100⊥3↑⎕TS),'.log'
-      :Else
-          →0
-      :EndTrap
+      ⎕NUNTIE TieNo
+      TieNo←0
+     
+      fn←#.Files.Normalize Directory,Prefix,(⍕100⊥3↑⎕TS),'.log'
      
       :Trap 22 ⍝ file name error
           TieNo←fn ⎕NTIE 0
       :Else
           :Trap 0
               TieNo←{0 ⎕NTIE⍨⍵⊣⎕NUNTIE ⍵ ⎕NCREATE 0}fn
+              4 serverLog'log file "',fn,'" created'
           :Else
-              1 ##.ms.Log'Unable to open log file "',fn,'"'
+              server.Log'Unable to open log file "',fn,'"'
               :Return
           :EndTrap
       :EndTrap
       r←0≠TieNo
     ∇
 
-    tryGetting←{0::('-'@(' '∘=))(⊃⎕DM),'-retrieving-"',(∊⍕⍵),'"' ⋄ ∊⍕⍎⍵}
+    tryGetting←{0::('-'@(' '∘=))⎕DMX.EM,'-retrieving-"',(∊⍕⍵),'"' ⋄ ∊⍕⍎⍵}
 
     ∇ Log req;addr;user;ts;method;page;status;msec;bytes
       :Access public
@@ -140,17 +168,19 @@
 
     ∇ config←ConfigureLogger ms;file;log;config;Setting
       ⍝ load logger information
-      Setting←#.DUI.Setting
-      :If 'Logger'≡ms.Config.Logger
+      config←0
+      :If 0∊⍴log←#.DUI.ReadConfiguration'Logger'
+          1 ms.Log'No Logger configuration file was found'
+      :Else
+          Setting←#.DUI.Setting
           config←ms.Config.LoggerConfig←⎕NS''
           ms.Config.LoggerConfig.active←0
-          :If ~0∊⍴log←#.DUI.ReadConfiguration'Logger'
-              config.active←log Setting'active' 1 0
-              config.anonymousIps←log Setting'anonymousIps' 1 1
-              config.directory←#.DUI.SubstPath log Setting'directory' 0 ''
-              config.interval←log Setting 'interval' 1 10   ⍝
-              config.prefix←log Setting 'prefix' 0 ''
-          :EndIf
+          config.active←log Setting'active' 1 0
+          config.anonymousIps←log Setting'anonymousIps' 1 1
+          config.createLogFolder←log Setting'createLogFolder' 1 0
+          config.directory←#.DUI.{folderize SubstPath ⍵}log Setting'directory' 0 'logs'
+          config.interval←log Setting'interval' 1 10   ⍝
+          config.prefix←log Setting'prefix' 0 ''
       :EndIf
     ∇
 

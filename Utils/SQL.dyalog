@@ -1,16 +1,15 @@
 ﻿:Namespace SQL
     (⎕IO ⎕ML)←1
 
-    ∇ r←ConnectTo database;ind;ds;dsn;opts;rc;conx;pwd;user;ms;find;args
-      ms←#.DUI.Server
+    ∇ r←ConnectTo database;find;datasources;ind;ds;dsn;opts;user;pwd;conx;args;rc
       find←{(⍴⍺){⍵×⍺≥⍵}⍺⍳⊂⍵}
       r←601 'No datasources defined'
-      :If 0<⍴{6::'' ⋄ ⍵.Datasources}ms ⍝ do we have Datasources defined?
-          :If 0=ind←ms.Datasources.Name find database ⍝ try to find it
+      :If 0<⍴datasources←{6::'' ⋄ #.DUI.Server.Config.Datasources}'' ⍝ do we have Datasources defined?
+          :If 0=ind←datasources.Name find database ⍝ try to find it
               r←601 ''('Datasource "',database,'" not found')
               :Return
           :Else ⍝ found it
-              ds←ind⊃ms.Datasources
+              ds←ind⊃datasources
               r←601 'SQAPL not available'
               :If 0=⊃#.SQA.Init''
                   (dsn opts user pwd)←{6::'' ⋄ ⍎⍵}¨'ds.'∘,¨'DSN' 'DriverOptions' 'User' 'Password'
@@ -62,3 +61,4 @@
     ∇
 
 :EndNamespace
+

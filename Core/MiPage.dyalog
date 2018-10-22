@@ -5,7 +5,7 @@
 
     :Field Public _PageName←'' ⍝ Page file name
     :Field Public _PageDate←'' ⍝ Page saved date
-    :field Public _Request     ⍝ HTTPRequest
+    :field Public _Request     ⍝ HttpRequest
     :field Public _Scripts←''
     :field Public _Styles←''
     :field Public _CssReset←''    ⍝ location of CSS Reset file (if any)

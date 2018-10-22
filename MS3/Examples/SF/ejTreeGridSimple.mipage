@@ -5,7 +5,7 @@
     ∇ Compose;levels;items
       :Access Public
      
-      items←#.MS3SiteUtils.FromCSV #.Files.GetVTV #.Boot.AppRoot,'Examples/Data/iqs.csv'
+      items←#.MS3SiteUtils.FromCSV #.Files.GetVTV #.DUI.AppRoot,'Examples/Data/iqs.csv'
       levels←(≢items){⍺=≢⍵:⍵ ⋄ ⍺ ∇ ⍵,(2+⊃⌽⍵)-?1+⊃⌽⍵}0  ⍝ generate levels
      
       Add _.h2'Here is a TreeGrid'

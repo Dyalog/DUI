@@ -20,8 +20,8 @@
     ∇ onServerStart;inst;class;mps
       :Access public override
 ⍝ Uncomment to pre-render index.mipage:
-     ⍝ ⎕SE.SALT.Load #.DUI.Root,'Code/Templates/MiPageSample.dyalog'
-     ⍝ inst←⎕NEW ⎕SE.SALT.Load #.DUI.Root,'index.mipage'
+     ⍝ ⎕SE.SALT.Load #.DUI.AppRoot,'Code/Templates/MiPageSample.dyalog'
+     ⍝ inst←⎕NEW ⎕SE.SALT.Load #.DUI.AppRoot,'index.mipage'
      ⍝ inst.Compose
      ⍝ C.index←inst.Render
     ∇

@@ -53,7 +53,7 @@
       List←{ ⍝ Files in site folder
           ⍺←1↓FILEEXT                                      ⍝ default .ext
           mods←' -rec -raw -full=2 -ext=',⍺                ⍝ subdirs no-format rooted spec-ext
-          list←(⎕SE.SALT.List #.DUI.Root,⍵,mods)[;1 2] ⍝ begin at application root (MS3/)
+          list←(⎕SE.SALT.List #.DUI.AppRoot,⍵,mods)[;1 2] ⍝ begin at application root (MS3/)
           f←~d←list[;1]≡¨⊂'<DIR>'                          ⍝ find dirs
           list←FwSl list[;2]                               ⍝ normalize slashes for WWW
           (d/list),←'/'                                    ⍝ mark dirs with final slashes
@@ -66,7 +66,7 @@
           :If (≢C.read.keys)≥i←C.read.keys⍳⊂page ⍝ is it cached, and if so, save position
               r←i⊃C.read.data                     ⍝ extract
           :Else
-              C.read.data,←⊂r←1 #.Files.ReadText #.DUI.Root,page,(~'.'∊page)/FILEEXT
+              C.read.data,←⊂r←1 #.Files.ReadText #.DUI.AppRoot,page,(~'.'∊page)/FILEEXT
               C.read.keys,←⊂page
           :EndIf
       :Else
@@ -464,7 +464,7 @@
       :Access public
       :If 0=C.⎕NC'NSS'
           C.NSS←1↓¨1↓'_'#.⎕NL ¯9
-          names types←0 1 ⎕NINFO⍠1⊢#.DUI.Root,'Examples/*'
+          names types←0 1 ⎕NINFO⍠1⊢#.DUI.AppRoot,'Examples/*'
           C.NSS∩←LastSeg¨names/⍨1=types
       :EndIf
       r←C.NSS
@@ -491,7 +491,7 @@
     ∇ C←C;scores;list;refs;srcs;control;i;info;ref;src;ctor;Read;Ø;demo
      ⍝ Return ref to cache (initialize cache if nonexistant)
       :Access public
-      Read←1 #.Files.ReadText #.DUI.Root∘, ⍝ no-cache reading
+      Read←1 #.Files.ReadText #.DUI.AppRoot∘, ⍝ no-cache reading
       :Hold CACHE                          ⍝ prevent clashes
           :If 9≠⎕NC CACHE                  ⍝ if cache is empty:
               Ø←⊂''

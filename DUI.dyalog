@@ -3,45 +3,190 @@
     (⎕ML ⎕IO)←1
 
     Server←⍬
-    Port←⍬   ⍝ port number or 0 to use port in Server.xml
-    Root←''
+    MSPort←⍬   ⍝ port number or 0 to use port in Server.xml
+    AppRoot←''
+    HomePage←''
     WC2Root←''
     Debug←1
     Name←''
-    Initialized←0 
+    Framework←''
+    Initialized←0
 
-    :section Startup/Shutdown
 
-    ∇ Run2 args
-      AppRoot←folderize root  ⍝ application (website) root
-      Load AppRoot ⍝ load essential objects
-      ms←Init ConfigureServer AppRoot ⍝ read configuration and create server instance
-      Configure ms
-      ms.Run
+    ∇ (r msg)←Run args;r;iname;smsg
+    ⍝ args - {AppRoot} {MSPort} {WC2Root}
+      :Access public shared
+      AppRoot MSPort WC2Root←args defaults AppRoot ⍬ WC2Root
+      (r msg)←Start
     ∇
 
-    ∇ {msroot}RunWC2 root
-      :If 0≠⎕NC'msroot' ⋄ MSRoot←msroot ⋄ :EndIf
-      AppRoot←folderize root  ⍝ application (website) root
-      Load AppRoot ⍝ load essential objects
-      !!!ms←1 Init ConfigureServer AppRoot ⍝ read configuration and create server instance
-      Configure ms
-      {ms.Run}
+    ∇ (r msg)←Start
+      :Access public
+      :If 0=⊃(r msg)←Initialize
+          (r msg)←Server.Run
+      :EndIf
     ∇
 
-    ∇ Load AppRoot;filterOut;files;HTML;f;failed;dir;name;file;folder;callingEnv
+    ∇ (r msg)←Stop
+      :Access public
+      End
+    ∇
+
+    ∇ End;classes;z;m
+      ⍝ Clean up the workspace
+     
+      :If 9=⎕NC'Server'
+          :Trap 0
+              Server.End
+          :EndTrap
+          {}try'⎕EX⍕⊃⊃⎕CLASS Server.SessionHandler'
+          {}try'⎕EX⍕⊃⊃⎕CLASS Server.Authentication'
+          {}try'⎕EX⍕⊃⊃⎕CLASS Server.Logger'
+          {}try'⎕EX⍕¨∪∊ ⎕CLASS¨Server.Encoders'
+          ⎕EX⍕⊃⊃⎕CLASS Server
+          ⎕EX'Server'
+      :EndIf
+     
+      :If 9=#.⎕NC'SQA'
+          {}try'SQA.Close''.'''
+      :EndIf
+     
+      :If 0≠⍴classes←↓#.⎕NL 9.4
+      :AndIf 0≠⍴classes←(m←2=⊃∘⍴¨z←⎕CLASS¨#⍎¨classes)/classes
+      :AndIf 0≠⎕NC'#.MiPage'
+          classes←(#.MiPage≡¨2 1∘⊃¨m/z)/classes
+          #.⎕EX↑⍕¨classes ⍝ Erase loaded classes
+      :EndIf
+     
+      ⎕EX'#.MiPage'
+      :If Framework≡'MiServer'
+          {}try'#.DRC.Close ''.'''
+          ⎕EX'#.DRC'
+          #.Conga.UnloadSharedLib
+      :EndIf
+      Server←⍬
+      MSPort←⍬
+      AppRoot←''
+      WC2Root←''
+      Debug←1
+      Name←''
+      Framework←''
+      Initialized←0
+     
+      {}⎕WA
+    ∇
+
+    ∇ r←Initialize;t;path;config;class;e;mask;html;miserv;appRoot;isDir
+      :Access public
+      :Trap Debug↓0
+     
+          →EXIT⍴⍨1=⊃r←(17>APLVersion)/1 'Dyalog v17.0 or later is required to use WC2'
+     
+⍝          :If Initialized
+⍝              →EXIT⊣r←¯1 'Already initialized'
+⍝          :EndIf
+     
+    ⍝ Validate path to WC2 framework
+     
+          :If 0∊⍴WC2Root
+          :AndIf ~0∊⍴t←SourceFile ⍬
+              WC2Root←⊃1 ⎕NPARTS⊃1 ⎕NPARTS t
+          :EndIf
+     
+          :If ~⎕NEXISTS WC2Root←∊1 ⎕NPARTS WC2Root,'/'
+              →EXIT⊣r←2 'WC2 folder not found: "',(∊⍕WC2Root),'"'
+          :EndIf
+     
+          :If ~⎕NEXISTS WC2Root,'Core/HtmlElement.dyalog'
+              →EXIT⊣r←3 'WC2 folder does does not appear to contain WC2: "',WC2Root,'"'
+          :EndIf
+     
+     ⍝ Validate application path
+     
+          :If ~0∊⍴AppRoot
+              :If ⎕NEXISTS appRoot←∊1 ⎕NPARTS AppRoot
+                  (appRoot isDir)←0 1 ⎕NINFO appRoot
+                  :If isDir
+                      AppRoot←appRoot,('/'=⊢/AppRoot)↓'/'
+                  :Else
+                      (AppRoot HomePage)←{(1⊃⍵)(∊1↓⍵)}1 ⎕NPARTS appRoot
+                  :EndIf
+              :Else
+                  →EXIT⊣r←4 'Application path not found: "',AppRoot,'"'
+              :EndIf
+          :EndIf
+     
+          Load
+     
+          config←ConfigureServer(AppRoot MSPort WC2Root HomePage)
+          config.HomePage←HomePage
+          html←miserv←0
+          :If 0∊⍴MSPort ⍝ HTMLRenderer?
+              html←1
+              Framework←'HRServer'
+              Server←⎕NEW #.HRServer config
+          :Else
+              miserv←1
+              Framework←'MiServer'
+              Server←⎕NEW #.MiServer config
+          :EndIf
+     
+          Configure Server ⍝ add other configuration data
+     
+          path←WC2Root,'Extensions/'
+     
+          :If miserv
+              :If 0≠⍴config.SessionHandler
+                  class←⎕SE.SALT.Load path,config.SessionHandler
+                  Server.SessionHandler←⎕NEW class Server
+              :EndIf
+     
+              :If 0≠⍴config.Authentication
+                  class←⎕SE.SALT.Load path,config.Authentication
+                  Server.Authentication←⎕NEW class Server
+              :EndIf
+     
+              :If 0≠⍴config.SupportedEncodings
+                  {}⎕SE.SALT.Load path,'ContentEncoder'
+                  :For e :In config.SupportedEncodings
+                      class←⎕SE.SALT.Load path,e
+                      Server.Encoders,←⎕NEW class
+                  :EndFor
+                  :If ∨/mask←0≠1⊃¨Server.Encoders.Init
+                      2 Server.Log'Content Encoding Initialization failed for:',∊' ',¨mask/Server.Encoders.Encoding
+                      Server.Encoders←(~mask)/Server.Encoders
+                  :EndIf
+              :EndIf
+     
+              config.UseContentEncoding∧←0≠⍴Server.Encoders
+          :EndIf
+     
+          :If 0≠⍴config.Logger
+              class←⎕SE.SALT.Load path,config.Logger
+              Server.Logger←⎕NEW class Server
+          :EndIf
+               
+          Initialized←1
+          r←0 'DUI initialized'
+     
+      :Else ⍝ :Trap Debug
+          r←¯1('DUI initialization error: ',∊(4⍴↑⎕UCS 13)∘,¨2~⎕DM)
+      :EndTrap
+     
+     EXIT:
+    ∇
+
+
+    ∇ Load;filterOut;files;HTML;f;failed;dir;name;file;folder;callingEnv
       ⍝ Load required objects for MiServer
      
-      HtmlRenderer←{0::⍵ ⋄ HtmlRenderer}0
-     
-      :If 0=#.⎕NC'Files' ⋄ ⎕SE.SALT.Load MSRoot,'Utils/Files -target=#' ⋄ :EndIf
+      :If 0=#.⎕NC'Files' ⋄ ⎕SE.SALT.Load WC2Root,'Utils/Files -target=#' ⋄ :EndIf
      
       filterOut←{⍺←'' ⋄ ⍺{0∊⍴⍺:⍵ ⋄ ⍺{∊¨↓⍵⌿⍨~⍵[;2]∊eis ⍺}↑⎕NPARTS¨⍵}⊃#.Files.Dir ⍵,'/*.dyalog'}
      
-      files←'Boot'filterOut MSRoot,'Core'
-      files,←'Files'filterOut MSRoot,'Utils' ⍝ find utility libraries
-      files,←filterOut MSRoot,'Extensions'
-     
+      files←'Boot'filterOut WC2Root,'Core'
+      files,←'Files'filterOut WC2Root,'Utils' ⍝ find utility libraries
+      files,←filterOut WC2Root,'Extensions'
      
       failed←''
       :For f :In files
@@ -53,7 +198,7 @@
       :EndFor
      
      
-      HTML←'_JQ' '_JS'{⍵[⍋⍺⍳(↑⎕NPARTS¨⍵)[;2]]}filterOut MSRoot,'HTML' ⍝ prioritize loading of _JQ and _JS
+      HTML←'_JQ' '_JS'{⍵[⍋⍺⍳(↑⎕NPARTS¨⍵)[;2]]}filterOut WC2Root,'HTML' ⍝ prioritize loading of _JQ and _JS
      
       #.SupportedHtml5Elements.Build_html_namespace
      
@@ -73,16 +218,14 @@
           disperror ⎕SE.SALT.Load∊'"',file,'" -target=#.',f
       :EndFor
      
-      LoadFromFolder MSRoot,'Loadable'
+      LoadFromFolder WC2Root,'Loadable'
      
       'Pages'#.⎕NS'' ⍝ Container Space for loaded classes
       #.Pages.(MiPage RESTfulPage)←#.(MiPage RESTfulPage)
      
-      'CachedPages'#.⎕NS'' ⍝ Container for cached pages
+      Build_ ⍝ build the _ namespace
      
-      BuildEAWC ⍝ build the Easy As ⎕WC namespace
-     
-⍝ Now load any code from the MiSite
+      ⍝ Now load any code from the AppRoot
      
       :If ~0∊⍴AppRoot
           :Trap 22
@@ -97,14 +240,6 @@
       :EndIf
     ∇
 
-    ∇ Cleanup
-      #.⎕EX¨classes
-      #.⎕EX¨utils
-      #.⎕EX'Pages'
-      #.⎕EX'CachedPages'
-      #.⎕EX¨'MiServer' 'HTTPRequest'
-    ∇
-
     ∇ ms←{HtmlRenderer}Init Config;path;class;classes;e;res;mask
      ⍝ Create instances of MiServer, Session and Authentication Handlers
      
@@ -116,7 +251,7 @@
           ms.Log←{⎕←⍵}
       :Else
           ms←⎕NEW(#⍎Config.ClassName)Config
-          path←MSRoot,'Extensions/'
+          path←WC2Root,'Extensions/'
      
           :If 0≠⍴Config.SessionHandler
               class←⎕SE.SALT.Load path,Config.SessionHandler
@@ -148,42 +283,8 @@
       :EndIf
     ∇
 
-    ∇ End;classes;z;m
-      ⍝ Clean up the workspace
-     
-      :If 9=⎕NC'ms'
-          :Trap 0
-              ms.End
-          :EndTrap
-          {}try'⎕EX⍕⊃⊃⎕CLASS ms.SessionHandler'
-          {}try'⎕EX⍕⊃⊃⎕CLASS ms.Authentication'
-          {}try'⎕EX⍕⊃⊃⎕CLASS ms.Logger'
-          {}try'⎕EX⍕¨∪∊ ⎕CLASS¨ms.Encoders'
-          ⎕EX⍕⊃⊃⎕CLASS ms
-          ⎕EX'ms'
-      :EndIf
-     
-      :If 9=⎕NC'SQA'
-          {}try'SQA.Close''.'''
-      :EndIf
-     
-      :If 0≠⍴classes←↓#.⎕NL 9.4
-      :AndIf 0≠⍴classes←(m←2=⊃∘⍴¨z←⎕CLASS¨#⍎¨classes)/classes
-      :AndIf 0≠⎕NC'#.MiPage'
-          classes←(#.MiPage≡¨2 1∘⊃¨m/z)/classes
-          #.⎕EX↑⍕¨classes ⍝ Erase loaded classes
-      :EndIf
-     
-      ⎕EX'#.MiPage'
-      ⎕EX'AppRoot'
-      {}try'#.DRC.Close ''.'''
-      ⎕EX'#.DRC'
-      #.Conga.UnloadSharedLib
-      {}⎕WA
-    ∇
-
-    ∇ BuildEAWC;src;sources;fields;source;list;mask;refs;target
-     ⍝ Build the Easy As ⎕WC namespace from core classes and its own source
+    ∇ Build_;src;sources;fields;source;list;mask;refs;target
+     ⍝ Build the _ namespace from core classes and its own source
      ⍝ Also build the #._ namespace with shortcuts
       sources←#._html #._SF #._JQ #._DC #._JS
 ⍝      fields←''
@@ -217,8 +318,6 @@
       :EndFor
     ∇
 
-    :endsection
-
     :section Configuration
 
     ∇ Configure ms
@@ -227,6 +326,7 @@
       ConfigureResources ms
       ConfigureContentTypes ms
       ms AddConfiguration'MappingHandlers'
+      ms AddConfiguration'HRServer'
     ∇
 
     ∇ ms AddConfiguration name;conf
@@ -255,11 +355,11 @@
 
     ∇ config←{element}ReadConfiguration type;serverconfig;file;siteconfig;thing;ind;mask
     ⍝ Attempt to read configuration file
-    ⍝ 1) from server root MSRoot
+    ⍝ 1) from server root WC2Root
     ⍝ 2) from site root AppRoot
     ⍝ merging the two if they both exist - site settings overrule server settings
       config←''
-      :If #.Files.Exists file←MSRoot,'Config/',type,'.xml'
+      :If #.Files.Exists file←WC2Root,'Config/',type,'.xml'
           config←serverconfig←(#.XML.ToNS #.Files.ReadText file)⍎type
       :EndIf
       :If #.Files.Exists file←AppRoot,'Config/',type,'.xml'
@@ -287,23 +387,24 @@
       :EndIf
     ∇
 
-    ∇ Config←ConfigureServer AppRoot;file
+    ∇ Config←ConfigureServer(AppRoot MSPort WC2Root HomePage);file
     ⍝ configure server level settings, setting defaults for needed ones that are not supplied
+     
       Config←ReadConfiguration'Server'
      
       Config.AllowedHTTPMethods←{⍵⊆⍨~⍵∊' ,'}#.Strings.lc Config Setting'AllowedHTTPMethods' 0 'get,post'
       Config.AppRoot←AppRoot
       Config.Authentication←Config Setting'Authentication' 0 'SimpleAuth'
       Config.CertFile←Config Setting'CertFile' 0 ''
-      Config.ClassName←Config Setting'ClassName' 0 'MiServer'
+    ⍝ Config.ClassName←Config Setting'ClassName' 0 'MiServer'
       Config.CloseOnCrash←Config Setting'CloseOnCrash' 1 0
       Config.Debug←Config Setting'Debug' 1 0
       Config.DecodeBuffers←Config Setting'DecodeBuffers' 1 1 ⍝ allow Conga to decode HTTP messages (1)
       Config.DefaultExtension←Config Setting'DefaultExtension' 0 '.mipage'
-      Config.DefaultPage←Config Setting'DefaultPage' 0 'index.mipage'
       Config.DirectFileSize←{⍵[⍋⍵]}0⌈⌊2↑Config Setting'DirectFileSize'(,1)⍬
       Config.FIFOMode←Config Setting'FIFOMode' 1 1 ⍝ Conga FIFO mode default to on (1)
       Config.FormatHtml←Config Setting'FormatHtml' 1 0
+      Config.HomePage←(0∊⍴HomePage)⊃HomePage(Config Setting'HomePage' 0 'index')
       Config.Host←Config Setting'Host' 0 'localhost'
       Config.HTTPCacheTime←'m'#.Dates.ParseTime Config Setting'HTTPCacheTime' 0 '0' ⍝ default to off (0)
       Config.IdleTimeout←'s'#.Dates.ParseTime Config Setting'IdleTimeout' 0 '0' ⍝ default to none (0)
@@ -311,14 +412,12 @@
       Config.Lang←Config Setting'Lang' 0 'en'
       Config.LogMessageLevel←Config Setting'LogMessageLevel' 1 1 ⍝ default to error messages only
       Config.Logger←Config Setting'Logger' 0 ''
-      Config.MSRoot←MSRoot
       Config.Name←Config Setting'Name' 0 'MiServer'
-      Config.Port←Config Setting'Port' 1 8080
-      Config.Ports←Config Setting'Ports'(,1)⍬
+      :If ~0∊⍴MSPort ⋄ Config.MSPort←⊃(MSPort=0)↓MSPort,Config Setting'MSPort' 1 8080 ⋄ :EndIf
+      Config.MSPorts←Config Setting'MSPorts'(,1)⍬
       Config.Production←Config Setting'Production' 1 0 ⍝ production mode?  (0/1 = development debug framework en/disabled)
       Config.RESTful←Config Setting'RESTful' 1 0 ⍝ RESTful web service?
       Config.RootCertDir←Config Setting'RootCertDir' 0 ''
-      Config.Root←AppRoot
       Config.SSLFlags←Config Setting'SSLFlags' 1(32+64)  ⍝ Accept Without Validating, RequestClientCertificate
       Config.Secure←Config Setting'Secure' 1 0
       Config.Server←Config Setting'Server' 0 ''
@@ -327,6 +426,7 @@
       Config.SupportedEncodings←{(⊂'')~⍨1↓¨(⍵=⊃⍵)⊂⍵}',',Config Setting'SupportedEncodings' 0
       Config.TrapErrors←Config Setting'TrapErrors' 1 0
       Config.WaitTimeout←#.Dates.ParseTime Config Setting'WaitTimeout' 0 '5000ms' ⍝ 5000 msec (5 second timeout)
+      Config.WC2Root←WC2Root
       Config.UseContentEncoding←Config Setting'UseContentEncoding' 1 0 ⍝ aka HTTP Compression default off (0)
      
       :If 0≠⎕NC'#.DrA' ⍝ Transfer DrA config options
@@ -344,7 +444,7 @@
 
     ∇ ConfigureDatasources ms;file;ds;name;tmp;orig;dyalog
       ⍝ load any datasource definitions
-      :If ~0∊⍴ms.Datasources←'Name'ReadConfiguration'Datasources'
+      :If ~0∊⍴ms.Config.Datasources←'Name'ReadConfiguration'Datasources'
           :For ds :In ms.Datasources
               :For name :In ds.⎕NL ¯2
                   orig←tmp←ds.⍎name
@@ -433,7 +533,7 @@
     ∇ file←Config Virtual page;mask;f;ind;t;path;root
       :Access public shared
     ⍝ checks for virtual directory
-      root←(-'/\'∊⍨¯1↑root)↓root←Config.Root
+      root←(-'/\'∊⍨¯1↑root)↓root←Config.AppRoot
       page←('/\'∊⍨1↑page)↓page
       file←root,'/',page
       :If 0<⍴Config.Virtual
@@ -495,13 +595,14 @@
         ∇
 
         ∇ r←ns Setting pars;name;num;default;mask
+          :Access public shared
     ⍝ returns setting from a config style namespace or provides a default if it doesn't exist
     ⍝ pars - name [num] [default]
     ⍝ ns - namespace reference
     ⍝ name - name of the setting
     ⍝ num - 1 if setting is numeric scalar, (,1) if numeric vector is allowed, 0 otherwise
     ⍝ default - default value if not found
-          pars←eis pars
+          pars←,⊆pars
           (name num)←2↑pars,(⍴pars)↓'' 0 ''
           :If 2<⍴pars ⋄ default←3⊃pars
           :Else ⋄ default←(1+num)⊃''⍬
@@ -513,14 +614,16 @@
           :If 0=⍴⍴r ⋄ r←⊃r ⋄ :EndIf
         ∇
 
-        eis←{(,∘⊂)⍣((326∊⎕DR ⍵)<2>|≡⍵),⍵} ⍝ Enclose if simple
-
-          tonum←{⍺←0
+        ∇ r←a tonum w
+          :Access public shared
+          r←{⍺←0
               1∊⍺:tonumvec ⍵
               w←⍵ ⋄ ((w='-')/w)←'¯'
-              ⊃⊃{~∧/⍺:⎕SIGNAL 11 ⋄ ⍵}/⎕VFI w}
+              ⊃⊃{~∧/⍺:⎕SIGNAL 11 ⋄ ⍵}/⎕VFI w}w
+        ∇
 
         ∇ r←tonumvec v;to;minus;digits;c;mask
+          :Access public shared
     ⍝ tonum vector version
     ⍝ allows for specific of ranges and comma or space delimited numbers
     ⍝ tonumvec '8080-8090'  or '5,7-9,11-15'
@@ -552,8 +655,9 @@
     isWin←'Win'≡3↑1⊃#.⎕WG'APLVersion'
     fileSep←'/\'[1+isWin]
     isRelPath←{{~'/\'∊⍨(⎕IO+2×isWin∧':'∊⍵)⊃⍵}3↑⍵}
-        MSRoot←{('.'=⊃⍵)∨isRelPath ⍵:'.',fileSep,⍵ ⋄ ⍵}{(1-⌊/'/\'⍳⍨⌽⍵)↓⍵}⎕WSID
-      tonum←{⍺←0
+      tonum←{
+          2|⎕DR ⍵:⍵
+          ⍺←0
           1∊⍺:tonumvec ⍵
           w←⍵ ⋄ ((w='-')/w)←'¯'
           ⊃⊃{~∧/⍺:⎕SIGNAL 11 ⋄ ⍵}/⎕VFI w}
@@ -601,7 +705,7 @@
     ∇
 
     ∇ r←SubstPath r
-      r←(#.Strings.subst∘('%ServerRoot%'(¯1↓MSRoot)))r
+      r←(#.Strings.subst∘('%ServerRoot%'(¯1↓WC2Root)))r
       r←(#.Strings.subst∘('%SiteRoot%'(¯1↓AppRoot)))r
     ∇
 
@@ -659,98 +763,13 @@
     ∇
     :endsection
 
-⍝⍝--- Constructors ---
-⍝    ∇ make
-⍝      :Access public
-⍝      :Implements constructor
-⍝    ∇
-⍝
-⍝    ∇ make1 args
-⍝      :Access public
-⍝      :Implements constructor
-⍝      Root Port WC2Root←args defaults''⍬''
-⍝    ∇
-
-⍝--- Primary Methods ---
-⍝    ∇ instance←New args
-⍝      :Access public shared
-⍝    ⍝ args - {Root} {Port} {WC2Root}
-⍝      instance←⎕NEW ⎕THIS args
-⍝    ∇
-
-    ∇ (r msg)←Start
-      :Access public
-      :If 0≠⊃(r msg)←Initialize
-          Server.Run&0
-      :EndIf
-    ∇
-
-    ∇ (r msg)←Stop
-      :Access public
-    ∇
-
-    ∇ (r msg)←Run args;r;iname;smsg
-      :Access public shared
-    ⍝ args - {Root} {Port} {WC2Root}
-      Root Port WC2Root←args defaults''⍬''
-      (r msg)←Start
-    ∇
-
-    ∇ r←Initialize;t;path
-      :Access public
-      :Trap Debug↓0
-     
-          →EXIT⍴⍨1=⊃r←(17>APLVersion)/1 'Dyalog v17.0 or later is required to use WC2'
-     
-          :If Initialized
-              →EXIT⊣r←¯1 'Already initialized'
-          :EndIf
-     
-    ⍝ Validate path to WC2 framework
-     
-          :If 0∊⍴WC2Root
-          :AndIf ~0∊⍴t←SourceFile ⍬
-              WC2Root←⊃1 ⎕NPARTS⊃1 ⎕NPARTS t
-          :EndIf
-     
-          :If ~⎕NEXISTS WC2Root←∊1 ⎕NPARTS WC2Root,'/'
-              →EXIT⊣r←2 'WC2 folder not found: "',(∊⍕WC2Root),'"'
-          :EndIf
-     
-          :If ~⎕NEXISTS WC2Root,'Core/HtmlElement.dyalog'
-              →EXIT⊣r←3 'WC2 folder does does not appear to contain WC2: "',WC2Root,'"'
-          :EndIf
-     
-     ⍝ Validate application path
-     
-          :If ~0∊⍴Root
-          :AndIf ~⎕NEXISTS Root←∊1 ⎕NPARTS Root,'/'
-              →EXIT⊣r←4 'Application path not found: "',Root,'"'
-          :EndIf
-     
-          ⎕SE.SALT.Load WC2Root,'Core/Boot.dyalog -target=#'
-          #.Boot.(MSRoot AppRoot)←WC2Root Root
-          #.Boot.Load Root
-          Server←#.Boot.MakeServer
-          #.Boot.ms←1 #.Boot.Init #.Boot.ConfigureServer Root
-          #.Boot.(Configure ms)
-          Initialized←1
-          r←0 'DUI initialized'
-     
-      :Else ⍝ :Trap Debug
-          r←¯1('DUI initialization error: ',∊(4⍴↑⎕UCS 13)∘,¨2~⎕DM)
-      :EndTrap
-     
-     EXIT:
-    ∇
-
 ⍝--- Utilities ---
     APLVersion←{⊃(//)⎕VFI ⍵/⍨2>+\'.'=⍵}2⊃#.⎕WG 'APLVersion'
 
       SourceFile←{
           0::''
           6::∊1 ⎕NPARTS 4⊃5179⌶me
-          ∊1 ⎕NPARTS #⍎(me←⍕⊃⊃⎕CLASS ⎕THIS),'.SALT_Data.SourceFile'
+          ∊1 ⎕NPARTS #⍎(me←⍕⎕THIS),'.SALT_Data.SourceFile'
       }
 
     defaults←{(,⊆⍺){⍺,(≢⍺)↓⍵}⍵}

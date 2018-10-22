@@ -36,7 +36,7 @@
     ∇ r←makeCommon
       →0↓⍨0∊⍴r←(17>APLVersion)/⊂('EN' 11)('Message' 'Dyalog v17.0 or later is required to use HTMLRenderer-based features')
       Props←⎕NS''
-      _Config←#.Boot.ms.Config
+      _Config←#.DUI.Server.Config
       _PageName←3⊃⎕SI,⊂'WC2Page'
     ∇
 
@@ -110,7 +110,7 @@
               :If ' '∨.≠handler←⊃_Config.MappingHandlers.handler/⍨<\_Config.MappingHandlers.ext≡¨⊂'.',ext
                   (mimeType content)←⍎'filename #.MappingHandlers.',handler,' request'
               :Else
-                  mimeType←#.Boot.ms.Config.ContentTypes tableLookup ext
+                  mimeType←_Config.ContentTypes tableLookup ext
                   content←{{(⎕NUNTIE ⍵)⊢⎕NREAD ⍵,(⎕DR' '),¯1}⍵ ⎕NTIE 0}filename
               :EndIf
               r[7]←mimeType

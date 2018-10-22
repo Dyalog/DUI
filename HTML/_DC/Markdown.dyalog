@@ -30,7 +30,7 @@
       content←Content
       :If ~0∊⍴File
           :If #.DUI.isRelPath file←File
-              file,⍨←#.DUI.Root
+              file,⍨←#.DUI.AppRoot
           :EndIf
           :If #.Files.Exists file
               Content←⊃,/('b'≠1↑#.Strings.lc ContentPosition)⌽(#.Strings.vtv Content)(1 #.Files.ReadText file)

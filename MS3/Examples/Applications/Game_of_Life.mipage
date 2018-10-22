@@ -34,7 +34,7 @@
       ⍝ #world table {border-collapse: collapse;}
       ⍝ #step {width: 3em;}
      
-      FILES←¯4↓¨⊃¨↓#.Files.List #.Boot.AppRoot,'Examples/Data/Life/*.txt'
+      FILES←¯4↓¨⊃¨↓#.Files.List #.DUI.AppRoot,'Examples/Data/Life/*.txt'
       WORLD←Load INIT
       HISTORY←,⊂⌊WORLD
      
@@ -65,7 +65,7 @@
       r←Reset WORLD
     ∇
 
-    Load←{⊃⍪/,/(3 3⍴¯5↑1)×⊂↑'*'=#.Files.GetVTV #.Boot.AppRoot,'Examples/Data/Life/',⍵,'.txt'}
+    Load←{⊃⍪/,/(3 3⍴¯5↑1)×⊂↑'*'=#.Files.GetVTV #.DUI.AppRoot,'Examples/Data/Life/',⍵,'.txt'}
 
     ∇ r←Edit
       :Access Public

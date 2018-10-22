@@ -14,7 +14,7 @@
    ⍝ page also a useful example for DataTable-features. 
      
      
-      fa←#.Boot.ms.Config.Virtual{(⍺.alias⍳⊂⍵)⊃⍺.path,⊂''}'FontAwesome5' ⍝ get path
+      fa←#.DUI.Server.Config.Virtual{(⍺.alias⍳⊂⍵)⊃⍺.path,⊂''}'FontAwesome5' ⍝ get path
       json←⎕JSON 1⊃⎕NGET fa,'metadata/icons.json'                                
      
    ⍝ A bit of CSS to emphasize the search-input more:
