@@ -53,9 +53,14 @@
 
  :If {6::⍵ ⋄ 1⊣loadfirst}0 ⋄ Load site ⋄ :EndIf
 
+ :If 0∊⍴WC2Root ⋄ WC2Root←⊃1 ⎕NPARTS ⎕WSID ⋄ :EndIf
+ WC2Root←folderize WC2Root
+
  :If 0∊⍴AppRoot
      :If 0∊⍴AppRoot←2 ⎕NQ'.' 'GetEnvironment' 'AppRoot'
-         ⎕←'      Start ''./MS3'' ⍝ Run the DUI demonstration site'
+         :If ⎕NEXISTS WC2Root,'MS3/'
+             ⎕←'      Start ''',WC2Root,'/MS3/'' ⍝ Run the DUI demonstration site'
+         :EndIf
          :Return
      :Else
          MSPort←2 ⎕NQ'.' 'GetEnvironment' 'MSPort'
@@ -63,16 +68,13 @@
      :EndIf
  :EndIf
 
- :If 0∊⍴WC2Root ⋄ WC2Root←⊃1 ⎕NPARTS ⎕WSID ⋄ :EndIf
- WC2Root←folderize WC2Root
-
  :Trap 912 ⍝ 912 is signalled by DrA in the event of a server failure
 
      :If 0=⎕NC'DUI'
          ⎕SE.SALT.Load WC2Root,'DUI'
      :EndIf
 
-     :If #.Files.DirExists AppRoot
+     :If ⎕NEXISTS AppRoot,'/'
          DUI.Run AppRoot MSPort WC2Root
      :Else
          r←'DUI NOT started - "',AppRoot,'" not found'
