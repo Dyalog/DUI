@@ -31,14 +31,6 @@
      ⎕TRAP←0 'E' '⎕PW←2000⋄{⍵.({⍵,⍪⍎¨⍵}↓⎕nl 2)}⎕dmx ⋄ ⎕off 12'
  :EndIf
 
- :If ~0∊⍴2 ⎕NQ'.' 'GetEnvironment' 'AttachDebugger'
-     :For i :In ⌽⍳60
-         ⎕←'Waiting for debugger...',⍕i
-         {}⎕DL 1
-     :EndFor
-     ∘∘∘ ⍝ intentional
- :EndIf
-
  :If 9.1=#.⎕NC⊂'DUI'
      :If #.DUI.isRunning
          ⎕←'DUI is currently running "',(#.DUI.AppRoot),'".'
@@ -59,7 +51,7 @@
  :If 0∊⍴AppRoot
      :If 0∊⍴AppRoot←2 ⎕NQ'.' 'GetEnvironment' 'AppRoot'
          :If ⎕NEXISTS WC2Root,'MS3/'
-             ⎕←'      Start ''',WC2Root,'/MS3/'' ⍝ Run the DUI demonstration site'
+             ⎕←'      Start ''',WC2Root,'MS3/'' ⍝ Run the DUI demonstration site'
          :EndIf
          :Return
      :Else

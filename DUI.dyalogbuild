@@ -8,4 +8,4 @@ APL   : wsSource/*.dyalog, Target=#
 APL   : DUI.dyalog
 EXEC  : MakeSALTns
 EXEC  : ⎕EX 'MakeSALTns'
-LX    : Start ''
+LX    : ⍎(⎕IO+0∊⍴2⎕NQ'.' 'GetEnvironment' 'AttachDebugger')⊃'⎕←''Start not run because AttachDebugger was set''' 'Start '''''
