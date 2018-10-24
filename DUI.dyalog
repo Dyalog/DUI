@@ -23,7 +23,6 @@
     ∇ (r msg)←Start
       :Access public
       :If 0=⊃(r msg)←Initialize
-          ∘∘∘
           (r msg)←Server.Run
       :EndIf
     ∇

@@ -31,7 +31,7 @@
      ⎕TRAP←0 'E' '⎕PW←2000⋄{⍵.({⍵,⍪⍎¨⍵}↓⎕nl 2)}⎕dmx ⋄ ⎕off 12'
  :EndIf
 
- :If ~0∊⍴2 ⎕NC'.' 'GetEnvironment' 'AttachDebugger'
+ :If ~0∊⍴2 ⎕NQ'.' 'GetEnvironment' 'AttachDebugger'
      ∘∘∘ ⍝ remote debugging entry point
  :EndIf
 
