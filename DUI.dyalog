@@ -36,15 +36,19 @@
       ⍝ Clean up the workspace
      
       :If 9=⎕NC'Server'
-          :Trap 0
-              Server.End
-          :EndTrap
-          {}try'⎕EX⍕⊃⊃⎕CLASS Server.SessionHandler'
-          {}try'⎕EX⍕⊃⊃⎕CLASS Server.Authentication'
-          {}try'⎕EX⍕⊃⊃⎕CLASS Server.Logger'
-          {}try'⎕EX⍕¨∪∊ ⎕CLASS¨Server.Encoders'
-          ⎕EX⍕⊃⊃⎕CLASS Server
-          ⎕EX'Server'
+          :If 'HRServer'≡Framework
+              Server.Close
+          :Else
+              :Trap 0
+                  Server.End
+              :EndTrap
+              {}try'⎕EX⍕⊃⊃⎕CLASS Server.SessionHandler'
+              {}try'⎕EX⍕⊃⊃⎕CLASS Server.Authentication'
+              {}try'⎕EX⍕⊃⊃⎕CLASS Server.Logger'
+              {}try'⎕EX⍕¨∪∊ ⎕CLASS¨Server.Encoders'
+              ⎕EX⍕⊃⊃⎕CLASS Server
+              ⎕EX'Server'
+          :EndIf
       :EndIf
      
       :If 9=#.⎕NC'SQA'
@@ -82,11 +86,11 @@
      
           →EXIT⍴⍨1=⊃r←(17>APLVersion)/1 'Dyalog v17.0 or later is required to use WC2'
      
-⍝          :If Initialized
-⍝              →EXIT⊣r←¯1 'Already initialized'
-⍝          :EndIf
+     ⍝          :If Initialized
+     ⍝              →EXIT⊣r←¯1 'Already initialized'
+     ⍝          :EndIf
      
-    ⍝ Validate path to WC2 framework
+         ⍝ Validate path to WC2 framework
      
           :If 0∊⍴WC2Root
           :AndIf ~0∊⍴t←SourceFile ⍬
@@ -101,7 +105,7 @@
               →EXIT⊣r←3 'WC2 folder does does not appear to contain WC2: "',WC2Root,'"'
           :EndIf
      
-     ⍝ Validate application path
+          ⍝ Validate application path
      
           :If ~0∊⍴AppRoot
               :If ⎕NEXISTS appRoot←∊1 ⎕NPARTS AppRoot
@@ -112,7 +116,7 @@
                       (AppRoot HomePage)←{(1⊃⍵)(∊1↓⍵)}1 ⎕NPARTS appRoot
                   :EndIf
               :Else
-                  →EXIT⊣r←4 'Application path not found: "',AppRoot,'"'
+                  →EXIT⊣r←4 ('Application path not found: "',AppRoot,'"')
               :EndIf
           :EndIf
      

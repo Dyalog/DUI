@@ -37,12 +37,6 @@
 
 ⍝ Fields related to the Response
 
-    ∇ foo arg
-      :Implements trigger Server
-      'Server changed'⎕XSI
-    ∇
-
-
     :Field Public Instance Response
 
     GetFromTableCS←{{0∊⍴⍵:'' ⋄ 1=⍴⍵:⊃⍵ ⋄ ⍵}⍵[;2]/⍨⍵[;1]∊⊂⍺} ⍝ Case Sensitive
