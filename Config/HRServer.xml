@@ -1,2 +1,5 @@
 <HRServer>
+  <Size>50 50</Size>
+  <Coord>Prop</Coord>
+  <Debug>1</Debug>
 </HRServer>

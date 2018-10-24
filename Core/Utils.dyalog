@@ -29,10 +29,25 @@
     tohex←1∘hex
     fromhex←0∘hex
     vectorize←{1≥|≡⍵:,⍵ ⋄ ∇¨⍵} ⍝ turn scalars into vectors
-    
+
     rank2depth←{S←↓⍣(¯1+≢⍴⍵) ⋄ 1<|≡⍵:S ∇¨⍵ ⋄ S ⍵}
 
     WSRoot←{⍵↓⍨-⊥⍨('/\'⊃⍨1+'Win'≡3↑⊃'.'⎕WG'APLVersion')≠⍵}⎕WSID
+
+      jshow←{
+ ⍝ "compact" non-compact JSON display
+          dtb←{⍵/⍨⌽∨\' '≠⌽⍵}
+          dltb←{⍵/⍨{(∨\⍵)∧⌽∨\⌽⍵}' '≠⍵}
+          t←(⎕JSON⍠'Compact' 0)⍵
+          t←dltb¨t{⍺⊆⍨~⍺∊⍵ ⍺}⎕UCS 13
+          commas←','=last←⊢/¨t
+          close←'}'∊¨t
+          open←'{'=last
+          t←(' '⍴¨⍨2×(~close)×(open-⍨+\open)-+\close),¨t
+          punc←{∧/⍵∊' }[],'}¨t
+          (punc/t)~←' '
+          ∊t,¨(open∨commas)/¨⎕UCS 13
+      }
 
     ∇ r←Platform
     ⍝ return our best guess for the platform we're running on
@@ -42,4 +57,4 @@
           :EndIf
       :EndIf
     ∇
-:EndNamespace                       
+:EndNamespace

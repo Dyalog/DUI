@@ -23,6 +23,7 @@
     ∇ (r msg)←Start
       :Access public
       :If 0=⊃(r msg)←Initialize
+          ∘∘∘
           (r msg)←Server.Run
       :EndIf
     ∇
@@ -76,7 +77,7 @@
       {}⎕WA
     ∇
 
-    ∇ r←Initialize;t;path;config;class;e;mask;html;miserv;appRoot;isDir
+    ∇ r←Initialize;t;path;config;class;e;mask;hrserv;miserv;appRoot;isDir
       :Access public
       :Trap Debug↓0
      
@@ -119,10 +120,9 @@
           Load
      
           config←ConfigureServer(AppRoot MSPort WC2Root HomePage)
-          config.HomePage←HomePage
-          html←miserv←0
+          hrserv←miserv←0
           :If 0∊⍴MSPort ⍝ HTMLRenderer?
-              html←1
+              hrserv←1
               Framework←'HRServer'
               Server←⎕NEW #.HRServer config
           :Else
@@ -165,7 +165,7 @@
               class←⎕SE.SALT.Load path,config.Logger
               Server.Logger←⎕NEW class Server
           :EndIf
-               
+     
           Initialized←1
           r←0 'DUI initialized'
      
@@ -237,49 +237,6 @@
                   disperror ⎕SE.SALT.Load AppRoot,'/Code/Templates/* -target=#.Pages'
               :EndIf
           :EndTrap
-      :EndIf
-    ∇
-
-    ∇ ms←{HtmlRenderer}Init Config;path;class;classes;e;res;mask
-     ⍝ Create instances of MiServer, Session and Authentication Handlers
-     
-      HtmlRenderer←{0::⍵ ⋄ HtmlRenderer}0  ⍝ using HTMLRenderer?
-     
-      :If 0≠HtmlRenderer
-          ms←⎕NS''
-          ms.Config←Config
-          ms.Log←{⎕←⍵}
-      :Else
-          ms←⎕NEW(#⍎Config.ClassName)Config
-          path←WC2Root,'Extensions/'
-     
-          :If 0≠⍴Config.SessionHandler
-              class←⎕SE.SALT.Load path,Config.SessionHandler
-              ms.SessionHandler←⎕NEW class ms
-          :EndIf
-     
-          :If 0≠⍴Config.Authentication
-              class←⎕SE.SALT.Load path,Config.Authentication
-              ms.Authentication←⎕NEW class ms
-          :EndIf
-     
-          :If 0≠⍴Config.SupportedEncodings
-              {}⎕SE.SALT.Load path,'ContentEncoder'
-              :For e :In Config.SupportedEncodings
-                  class←⎕SE.SALT.Load path,e
-                  ms.Encoders,←⎕NEW class
-              :EndFor
-              :If ∨/mask←0≠1⊃¨res←ms.Encoders.Init
-                  2 ms.Log'Content Encoding Initialization failed for:',∊' ',¨mask/ms.Encoders.Encoding
-                  ms.Encoders←(~mask)/ms.Encoders
-              :EndIf
-          :EndIf
-          Config.UseContentEncoding∧←0≠⍴ms.Encoders
-     
-          :If 0≠⍴Config.Logger
-              class←⎕SE.SALT.Load path,Config.Logger
-              ms.Logger←⎕NEW class ms
-          :EndIf
       :EndIf
     ∇
 
@@ -404,7 +361,7 @@
       Config.DirectFileSize←{⍵[⍋⍵]}0⌈⌊2↑Config Setting'DirectFileSize'(,1)⍬
       Config.FIFOMode←Config Setting'FIFOMode' 1 1 ⍝ Conga FIFO mode default to on (1)
       Config.FormatHtml←Config Setting'FormatHtml' 1 0
-      Config.HomePage←(0∊⍴HomePage)⊃HomePage(Config Setting'HomePage' 0 'index')
+      Config.HomePage←(1+0∊⍴HomePage)⊃HomePage(Config Setting'HomePage' 0 'index')
       Config.Host←Config Setting'Host' 0 'localhost'
       Config.HTTPCacheTime←'m'#.Dates.ParseTime Config Setting'HTTPCacheTime' 0 '0' ⍝ default to off (0)
       Config.IdleTimeout←'s'#.Dates.ParseTime Config Setting'IdleTimeout' 0 '0' ⍝ default to none (0)
@@ -529,7 +486,6 @@
       :EndIf
     ∇
 
-
     ∇ file←Config Virtual page;mask;f;ind;t;path;root
       :Access public shared
     ⍝ checks for virtual directory
@@ -561,22 +517,22 @@
     ∇ ConfigureContentTypes ms;file;ct;inds;exts;types;mask;exp;n
       ⍝ load supported content types
       ms.Config.ContentTypes←0 2⍴⊂''
-      :If ~0∊⍴ct←ReadConfiguration'ContentTypes'
+      :If ~0∊⍴ct←'ext'ReadConfiguration'ContentTypes'
           exts←#.Strings.lc¨ct Setting'ext'
           types←ct Setting'type'
           :If ~0∊⍴inds←{⍵/⍳⍴⍵}∊','∊¨exts
               mask←(⍴exts)⍴1
-              exp←{⎕ML←3 ⋄ (⍵≠',')⊂⍵}¨exts[inds]
+              exp←{⍵⊆⍨⍵≠','}¨exts[inds]
               mask[inds]←n←⍬∘⍴∘⍴¨exp
               (exts types)←mask∘/¨exts types
               exts[(n/inds)++\~∊n↑¨1]←⊃,/exp
           :EndIf
-          ms.Config.ContentTypes←exts,[1.1]types
+          inds←∪⌽{(1+≢⍵)-⍳⍨⍵}⌽exts ⍝ unique exts, preferring site over server
+          ms.Config.ContentTypes←exts[inds],[1.1]types[inds]
       :Else
           1 ms.Log'No content types defined?'
       :EndIf
     ∇
-
 
     :Class ConfigSpace
         :field public config

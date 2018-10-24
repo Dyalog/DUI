@@ -133,6 +133,7 @@
     ∇ End
     ⍝ Called by destructor
       :Access Public
+      ⎕←⊃⎕XSI
       {0:: ⋄ Logger.Stop ⍬}⍬
       #.HttpRequest.Server←''
       Cleanup ⍝ overridable
@@ -140,7 +141,7 @@
     ∇
     :endsection
 
-    ∇ r←RunServer arg;props
+    ∇ RunServer arg;props;rdp
       ⍝ arg: dummy
      
       Stop←0
@@ -154,15 +155,21 @@
       onServerStart ⍝ meant to be overridden
      
       idletime←#.Dates.DateToIDN ⎕TS
-      props←{0∊⍴n←⍵.⎕NL ¯2:'' ⋄ ⍵{⍵({∧/⊃(m n)←⎕VFI ⍵:n ⋄ ⍵}⍺⍎⍵)}¨n}Config.HRServer
-      props,←('Event'('onHTTPRequest' 'HandleRequest'))('InterceptedURLs'(1 2⍴'dyalog_root*'1))
+      props←{
+          0∊⍴n←(⍵.⎕NL ¯2)~⊂'Debug':''
+          ⍵{⍵({∧/⊃(m n)←⎕VFI⍕⍵:n ⋄ ⍵}⍺⍎⍵)}¨n
+      }Config.HRServer
+      props,←('Event'('onHTTPRequest' 'HandleRequest'))('InterceptedURLs'(1 2⍴'*dyalog_root*' 1))
       _Renderer←⎕NEW'HTMLRenderer'props
+      :If {0::0 ⋄ 1=⊃2⊃⎕VFI⍕Config.HRServer.Debug}⍬
+      :AndIf ~0∊⍴rdp←2 ⎕NQ'.' 'GetEnvironment' '-remote-debugging-port'
+          ⎕SH&'open http://localhost:',rdp
+          {}⍞⊣⍞←'Wait for browser to open, then press enter'
+      :EndIf
       _Renderer.Wait
-      :While ~Stop
-      :EndWhile
      
      RESUME: ⍝ Error Trapped and logged
-      1 Log r←'HRServer stopped '
+      1 Log'HRServer stopped'
       :If Config.CloseOnCrash
           ⎕OFF
       :EndIf
@@ -243,25 +250,17 @@
       :EndIf
     ∇
 
-    ∇ r←HandleRequest arg
+    ∇ r←HandleRequest arg;tn;res;REQ;ext;filename
     ⍝ arg - HTMLRenderer callback data
       r←arg
-      ∘∘∘
-     
-     
-      REQ←conns.Req
-      REQ.Server←⎕THIS ⍝ Request will also contain reference to the Server
+      REQ←⎕NEW #.HttpRequest arg
       res←REQ.Response
-      startsize←length←0
+      REQ.Host←'dyalog_root'
      
       :If 200=res.Status
-          :If 2=conns.⎕NC'PeerAddr' ⋄ REQ.PeerAddr←conns.PeerAddr ⋄ :EndIf       ⍝ Add Client Address Information
-          8 Log REQ.(PeerAddr Method Page)
-     
-          :If 2=conns.⎕NC'PeerCert' ⋄ REQ.PeerCert←conns.PeerCert ⋄ :EndIf       ⍝ Add Client Cert Information
      
           REQ.OrigPage←REQ.Page ⍝ capture the original page
-          REQ.Page←Config.DefaultPage{∧/⍵∊'/\':'/',⍺ ⋄ '/\'∊⍨¯1↑⍵:⍵,⍺ ⋄ ⍵}REQ.Page ⍝ no page specified? use the default
+          REQ.Page←Config.HomePage{∧/⍵∊'/\':'/',⍺ ⋄ '/\'∊⍨¯1↑⍵:⍵,⍺ ⋄ ⍵}REQ.Page ⍝ no page specified? use the default
           REQ.Page,←(~'.'∊{⍵/⍨⌽~∨\'/'=⌽⍵}REQ.Page)/Config.DefaultExtension ⍝ no extension specified? use the default
           ext←⊃¯1↑#.Files.SplitFilename filename←Config Virtual REQ.Page
      
@@ -283,66 +282,42 @@
                   REQ.Fail 405 ⍝ Method Not Allowed
               :EndIf
           :EndIf
-     
-          cacheMe←encodeMe←0
-          :If 200=res.Status
-              :If Config.UseContentEncoding
-              :AndIf ~0∊⍴enc←','#.Utils.penclose' '~⍨REQ.GetHeader'accept-encoding' ⍝ check if client supports encoding
-              :AndIf encodeMe←~(⊂ext)∊'png' 'gif' 'jpg' 'mp4' ⍝ don't try to compress compressed graphics, should probably add zip files, etc
-     
-                  :If 1=res.File ⍝ Sending a file?  (See HttpRequest.ReturnFile)
-                      cacheMe←0≠Config.HTTPCacheTime
-                      (startsize length)←0,2 ⎕NINFO file←res.HTML
-                      :If encodeMe←∧/2≤/1⌽length,⍨⌽Config.DirectFileSize ⍝ see if it falls within the size parameters
-                          :Trap 0
-                              tn←file ⎕NTIE 0
-                              res.HTML←⎕NREAD tn 83 length 0
-                              ⎕NUNTIE tn
-                          :Else
-                              encodeMe←length←res.(HTML File)←0
-                              REC.Fail 500 404[1+⎕EN=22]
-                              →SEND
-                          :EndTrap
-                      :EndIf
-                  :EndIf
-              :EndIf
-     
-              :If cacheMe ⍝ if cacheable, set expires
-              :AndIf 0<Config.HTTPCacheTime
-                  res.Headers⍪←'Expires'(Config.HTTPCacheTime #.Dates.HTTPDate ⎕TS)
-              :EndIf
-          :EndIf
+      :EndIf
+      :If res.(File Status)∧.=1 200
+          :Trap 22
+              tn←res.HTML ⎕NTIE 0
+              res.HTML←⎕NREAD tn,(⎕DR' '),¯1 0
+              ⎕NUNTIE tn
+          :Else
+              REQ.Fail 404
+          :EndTrap
       :EndIf
      
      SEND:
       res.Headers⍪←{0∊⍴⍵:'' '' ⋄ 'Server'⍵}Config.Server
-      status←(⊂'HTTP/1.1'),res.((⍕Status)StatusText)
-      :If res.File>encodeMe
-          response←''res.HTML
-      :Else
-          response←res.HTML
-          :If 160=⎕DR response
-              response←'UTF-8'⎕UCS response
-          :EndIf
-      :EndIf
-      done←length≤offset←⍴res.HTML
       res.MSec-⍨←⎕AI[3]
-      res.Bytes←startsize length
+      res.Bytes←2⍴⍴res.HTML
+      r[4]←1
+      r[5]←res.Status
+      r[6]←⊂res.StatusText
+      r[7]←⊂{⍵/⍨∧\⍵≠';'}'text/html'(res.Headers GetFromTableDefault)'content-type'
+      r[9]←⊆LF,⍨∊LF,⍨¨⊃¨{⍺,': ',⍕⍵}/¨↓res.Headers
+      r[10]←⊂UnicodeToHtml res.HTML
      
-      :If 0≠1⊃z←#.DRC.Send obj(status,res.Headers response)
-          (1+(1⊃z)∊1008 1119)Log'"HandleRequest" closed socket ',obj,' due to error: ',(⍕z),' sending response'
-      :EndIf
-     
-      conns.(LastActive Active)←0
-     
-      :If REQ.CloseConnection
-          ConnectionDelete conns
-      :Else
-          conns.Active←0
-      :EndIf
-     
-      8 Log REQ.PeerAddr status
+      8 Log REQ.PeerAddr REQ.OrigPage(res.((⍕Status)StatusText))
       Logger.Log REQ
+    ∇
+
+    ∇ r←UnicodeToHtml txt;u;ucs
+      :Access public shared
+    ⍝ converts chars ⎕UCS >255 to HTML safe format
+      :If ~2|⎕DR txt
+          r←,⍕txt
+      :EndIf
+      :If 0<+/u←255<ucs←⎕UCS r
+          (u/r)←(~∘' ')¨↓'G<&#ZZZ9;>'⎕FMT u/ucs
+          r←∊r
+      :EndIf
     ∇
 
     ∇ file HandleMSP REQ;⎕TRAP;inst;class;z;props;lcp;args;i;ts;date;n;expired;data;m;oldinst;names;html;sessioned;page;root;MS3;token;mask;resp;t;RESTful;APLJax;flag;path;name;ext;list;fn;msg
@@ -602,6 +577,8 @@
 
     :section Misc
 
+    GetFromTableDefault←{⍺←'' ⋄ ⍺{0∊⍴⍵:⍺ ⋄ ⍵}⍵ {((819⌶⍵[;1])⍳⊆819⌶⍺)⊃⍵[;2],⊂''} ⍺⍺} ⍝ default_value (table ∇) value
+
     ∇ r←flag Debugger w
       :If flag
           ⎕←'* Callback debugging active on this page, press Ctrl-Enter to trace into Callback function'
@@ -640,10 +617,6 @@
       :EndIf
     ∇
 
-    ∇ r←isWin
-      r←'Win'≡3↑1⊃'.'⎕WG'APLVersion'
-    ∇
-
     ∇ (list filename)←Config FindRESTfulURI REQ;page;n;inds;i
     ⍝ RESTful URIs can be ambiguous
     ⍝ For example:  is /Misc/ws/ws
@@ -655,7 +628,6 @@
       inds←⌽{⍵/⍳⍴⍵}'/'=REQ.OrigPage
       :For i :In inds
           page←(i-1)↑REQ.OrigPage
-          ⍝page←Config.DefaultPage{∧/⍵∊'/\':'/',⍺ ⋄ '/\'∊⍨¯1↑⍵:⍵,⍺ ⋄ ⍵}page ⍝ no page specified? use the default
           page,←(~'.'∊{⍵/⍨⌽~∨\'/'=⌽⍵}page)/Config.DefaultExtension ⍝ no extension specified? use the default
           filename←Config Virtual page
           :If 1=⊃⍴list←''#.Files.List filename

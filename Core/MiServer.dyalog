@@ -480,7 +480,6 @@
       →0↓⍨conns.Req.Complete ⍝ exit if request is not complete
      
       REQ←conns.Req
-      REQ.Server←⎕THIS ⍝ Request will also contain reference to the Server
       res←REQ.Response
       startsize←length←0
      
@@ -491,7 +490,7 @@
           :If 2=conns.⎕NC'PeerCert' ⋄ REQ.PeerCert←conns.PeerCert ⋄ :EndIf       ⍝ Add Client Cert Information
      
           REQ.OrigPage←REQ.Page ⍝ capture the original page
-          REQ.Page←Config.DefaultPage{∧/⍵∊'/\':'/',⍺ ⋄ '/\'∊⍨¯1↑⍵:⍵,⍺ ⋄ ⍵}REQ.Page ⍝ no page specified? use the default
+          REQ.Page←Config.HomePage{∧/⍵∊'/\':'/',⍺ ⋄ '/\'∊⍨¯1↑⍵:⍵,⍺ ⋄ ⍵}REQ.Page ⍝ no page specified? use the default
           REQ.Page,←(~'.'∊{⍵/⍨⌽~∨\'/'=⌽⍵}REQ.Page)/Config.DefaultExtension ⍝ no extension specified? use the default
           ext←⊃¯1↑#.Files.SplitFilename filename←Config Virtual REQ.Page
      
@@ -910,7 +909,6 @@
       inds←⌽{⍵/⍳⍴⍵}'/'=REQ.OrigPage
       :For i :In inds
           page←(i-1)↑REQ.OrigPage
-          ⍝page←Config.DefaultPage{∧/⍵∊'/\':'/',⍺ ⋄ '/\'∊⍨¯1↑⍵:⍵,⍺ ⋄ ⍵}page ⍝ no page specified? use the default
           page,←(~'.'∊{⍵/⍨⌽~∨\'/'=⌽⍵}page)/Config.DefaultExtension ⍝ no extension specified? use the default
           filename←Config Virtual page
           :If 1=⊃⍴list←''#.Files.List filename
