@@ -32,7 +32,11 @@
  :EndIf
 
  :If ~0∊⍴2 ⎕NQ'.' 'GetEnvironment' 'AttachDebugger'
-     ∘∘∘ ⍝ remote debugging entry point
+     :For i :In ⌽⍳60
+         ⎕←'Waiting for debugger...',⍕i
+         {}⎕DL 1
+     :EndFor
+     ∘∘∘ ⍝ intentional
  :EndIf
 
  :If 9.1=#.⎕NC⊂'DUI'
