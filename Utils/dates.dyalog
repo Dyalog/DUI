@@ -49,7 +49,7 @@
 
     ∇ TS←IDNToDate SM                ⍝ Convert IDN to date format : 3↑⎕TS ← IDN (akd TS_SM)
       TS←3↑2 ⎕NQ'.' 'IDNToDate'(⌊SM)
-      TS,←⌊0.5+24 60 60 1000⊤86400000×1|SM
+      TS,←⌊0.5+24 60 60 1000⊤86400000×1|⍬⍴SM
     ∇
 
     ∇ new←ts IdnAdd t

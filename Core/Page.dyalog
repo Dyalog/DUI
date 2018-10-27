@@ -39,6 +39,7 @@
       Props←⎕NS''
       _Config←#.DUI.Server.Config
       _PageName←3⊃⎕SI,⊂'WC2Page'
+      _PageRef←⎕THIS
     ∇
 
     ∇ Close

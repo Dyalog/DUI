@@ -182,5 +182,33 @@
       r←'true'≡GetHeader'isAPLJax'
     ∇
 
+    ∇ r←_what
+      :Access public
+      r←GetData'_what'
+    ∇
+    ∇ r←_event
+      :Access public
+      r←_Request.GetData'_event'
+    ∇
+    ∇ r←_value
+      :Access public
+      r←_Request.GetData'_value'
+    ∇
+    ∇ r←_selector
+      :Access public
+      r←←_Request.GetData'_selector'
+    ∇
+    ∇ r←_target
+      :Access public
+      r←_Request.GetData'_target'
+    ∇
+    ∇ r←_currentTarget
+      :Access public
+      r←_Request.GetData'_currentTarget'
+    ∇
+    ∇ r←_callback
+      :Access public
+      r←_Request.GetData'_callback'
+    ∇          
 
-:EndClass                     
+:EndClass

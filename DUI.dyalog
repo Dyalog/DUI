@@ -80,7 +80,7 @@
       {}⎕WA
     ∇
 
-    ∇ r←Initialize;t;path;config;class;e;mask;hrserv;miserv;appRoot;isDir
+    ∇ r←Initialize;t;path;config;class;e;mask;hrserv;miserv;appRoot;type
       :Access public
       :Trap Debug↓0
      
@@ -109,8 +109,8 @@
      
           :If ~0∊⍴AppRoot
               :If ⎕NEXISTS appRoot←∊1 ⎕NPARTS AppRoot
-                  (appRoot isDir)←0 1 ⎕NINFO appRoot
-                  :If isDir
+                  (appRoot type)←0 1 ⎕NINFO appRoot
+                  :If type=1
                       AppRoot←appRoot,('/'=⊢/AppRoot)↓'/'
                   :Else
                       (AppRoot HomePage)←{(1⊃⍵)(∊1↓⍵)}1 ⎕NPARTS appRoot
