@@ -16,6 +16,7 @@
     :Field Public StartTime←⍬
     :field Public Connections←⍬ ⍝ list of connections
     :field Public Overrides
+    :field Public ReadOnly Framework←'MiServer'
     :Field ServerName
 
     ⎕TRAP←0/⎕TRAP ⋄ (⎕ML ⎕IO)←1 1

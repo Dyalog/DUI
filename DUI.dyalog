@@ -140,12 +140,12 @@
      
           path←WC2Root,'Extensions/'
      
+          :If 0≠⍴config.SessionHandler
+              class←⎕SE.SALT.Load path,config.SessionHandler
+              Server.SessionHandler←⎕NEW class Server
+          :EndIf
+          
           :If miserv
-              :If 0≠⍴config.SessionHandler
-                  class←⎕SE.SALT.Load path,config.SessionHandler
-                  Server.SessionHandler←⎕NEW class Server
-              :EndIf
-     
               :If 0≠⍴config.Authentication
                   class←⎕SE.SALT.Load path,config.Authentication
                   Server.Authentication←⎕NEW class Server

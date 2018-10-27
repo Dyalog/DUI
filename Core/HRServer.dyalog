@@ -11,9 +11,9 @@
     :Field Public PageTemplates←⍬
     :Field Public Datasources←⍬
     :Field Public StartTime←⍬
-    :field Public Overrides
+    :Field Public Overrides
     :Field ServerName
-
+    :Field Public ReadOnly Framework←'HRServer'
     :Field Public _Renderer←''
 
     ⎕TRAP←0/⎕TRAP ⋄ (⎕ML ⎕IO)←1 1
@@ -134,8 +134,8 @@
     ⍝ Called by destructor
       :Access Public
       {0:: ⋄ Logger.Stop ⍬}⍬
-      #.HttpRequest.Server←⍬
-      #.DUI.Server←⍬
+      {0:: ⋄ #.HttpRequest.Server←⍬}⍬
+      {0:: ⋄ #.DUI.Server←⍬}⍬
       Cleanup ⍝ overridable
       TID←¯1
       ⎕DL 3 ⍝ pause for cleanup
@@ -187,8 +187,8 @@
       Logger←⎕NS''
       Application←⎕NS''
       Overrides←⎕NS''
-     
-      SessionHandler.GetSession←{}   ⍝ So we can always
+      SessionHandler.Session←⎕NS''
+      SessionHandler.GetSession←{⍵.Session←Session}   ⍝ So we can always
       SessionHandler.HouseKeeping←{} ⍝    call these fns
       Authentication.Authenticate←{} ⍝    without worrying
       Logger.Log←{}
@@ -345,7 +345,7 @@
      
       MS3←RESTful←expired←0
       APLJax←REQ.isAPLJax
-     
+
       :If sessioned←326=⎕DR REQ.Session ⍝ do we think we have a session handler active?
       :AndIf 0≠⍴REQ.Session.Pages     ⍝ Look for existing Page in Session
       :AndIf (n←⍴REQ.Session.Pages)≥i←REQ.Session.Pages._PageName⍳⊂REQ.Page

@@ -5,7 +5,7 @@
 ⍝ is in the list of valid sessions. If it is, assign the Session property of the request.
 ⍝ If it isn't, create a new session and set the cookie
 
-    :Field Public Sessions ⍝ Should be private, really 
+    :Field Public Sessions ⍝ Should be private, really
     :Field Public Server
 
     :Class Page
@@ -30,51 +30,53 @@
       :Access Public
       :Implements Constructor
     ⍝ Initialize Session handler
-     
-      Sessions←0⍴⎕NEW Session
-      root←server.Config.AppRoot
-      Timeout←server.Config.SessionTimeout
-      timeout←Timeout÷24×60 ⍝ Convert minutes to fractions of a day
-     
-      :Trap 22
-          tn←(root,'sessions.dcf')⎕FCREATE 0
-          (0 ¯1 0)⎕FSTAC tn
-          0 ⎕FAPPEND tn ⍝ Session Number
-          ⎕FUNTIE tn
-      :EndTrap
-      tn←(root,'sessions.dcf')⎕FSTIE 0
-      NextSession←⎕FREAD tn,1
-      ⎕FUNTIE tn
       Server←server
+      Sessions←(Server.Framework≡'HRServer')⍴⎕NEW Session
+      root←Server.Config.AppRoot
+      Timeout←Server.Config.SessionTimeout
+      timeout←Timeout÷24×60 ⍝ Convert minutes to fractions of a day
+      :If Server.Framework≡'MiServer'
+          :Trap 22
+              tn←(root,'sessions.dcf')⎕FCREATE 0
+              (0 ¯1 0)⎕FSTAC tn
+              0 ⎕FAPPEND tn ⍝ Session Number
+              ⎕FUNTIE tn
+          :EndTrap
+          tn←(root,'sessions.dcf')⎕FSTIE 0
+          NextSession←⎕FREAD tn,1
+          ⎕FUNTIE tn
+      :EndIf
     ∇
 
     ∇ GetSession req;c;tn;now;session;ns;new;t_out;i;r
       :Access Public
     ⍝ Return session. Right argument is a HttpRequest.
+      :If 'HRServer'≡Server.Framework
+          req.Session←⊃Sessions
+      :Else
+          :Hold 'Sessions'
+              session←req.GetCookie'Session'
+              now←#.Dates.DateToIDN ⎕TS
      
-      :Hold 'Sessions'
-          session←req.GetCookie'Session'
-          now←#.Dates.DateToIDN ⎕TS
+              :If new←(1⊃⍴Sessions)<i←Sessions.Cookie⍳⊂session ⍝ Cookie is not in the table
+                  c←SessionCookie NextSession
+                  Sessions←Sessions,r←⎕NEW Session
+                  r.(ID User LastActive Cookie State Server)←NextSession''now c(⎕NS'')Server
+                  NextSession←(2*30)|NextSession+1
+                  tn←(req.Server.Config.AppRoot,'sessions.dcf')⎕FSTIE 0
+                  NextSession ⎕FREPLACE tn,1
+                  ⎕FUNTIE tn
+                  req.SetCookie'Session'c'/' 30 'HttpOnly'
+                  req.Session←r
+                  req.Server.onSessionStart req
      
-          :If new←(1⊃⍴Sessions)<i←Sessions.Cookie⍳⊂session ⍝ Cookie is not in the table
-              c←SessionCookie NextSession
-              Sessions←Sessions,r←⎕NEW Session
-              r.(ID User LastActive Cookie State Server)←NextSession''now c(⎕NS'')Server
-              NextSession←(2*30)|NextSession+1
-              tn←(req.Server.Config.AppRoot,'sessions.dcf')⎕FSTIE 0
-              NextSession ⎕FREPLACE tn,1
-              ⎕FUNTIE tn
-              req.SetCookie'Session'c '/' 30 'HttpOnly'
-              req.Session←r
-              req.Server.onSessionStart req
-     
-          :Else ⍝ Old session
-              (r←i⊃Sessions).LastActive←now ⍝ Just register activity
-              r.New←0
-              req.Session←r
-          :EndIf
-     
-      :EndHold
+              :Else ⍝ Old session
+                  (r←i⊃Sessions).LastActive←now ⍝ Just register activity
+                  r.New←0
+                  req.Session←r
+              :EndIf
+          :EndHold
+      :EndIf
     ∇
 
     ∇ KillSessions ids;mask;i
@@ -92,15 +94,16 @@
     ∇ Logout req;session;i;z
       :Access Public Instance
      ⍝ End session due to user request
-     
-      session←req.GetCookie'Session'
-      :If (1⊃⍴Sessions)≥i←Sessions.Cookie⍳⊂session ⍝ Cookie is in the table
-          req.Server.onSessionEnd(i⊃Sessions)
-          req.DelCookie'Session'
-          :If 0≠⍴z←req.Session.AuthCookieName ⋄ req.DelCookie z ⋄ :EndIf
-          req.Return'Logged out ...'
-      :Else
-          req.Return'No session established ...'
+      :If Server.Framework≡'MiServer'
+          session←req.GetCookie'Session'
+          :If (1⊃⍴Sessions)≥i←Sessions.Cookie⍳⊂session ⍝ Cookie is in the table
+              req.Server.onSessionEnd(i⊃Sessions)
+              req.DelCookie'Session'
+              :If 0≠⍴z←req.Session.AuthCookieName ⋄ req.DelCookie z ⋄ :EndIf
+              req.Return'Logged out ...'
+          :Else
+              req.Return'No session established ...'
+          :EndIf
       :EndIf
     ∇
 
@@ -123,20 +126,21 @@
     ∇ HouseKeeping Server;now;m;i;p
     ⍝ Check to see if any sessions have expired due to inactivity
     ⍝ Call any page application callbacks (_Close) if necessary
-     
       :Access Public
-      now←#.Dates.DateToIDN ⎕TS
-      :If ∨/m←Sessions.LastActive<now-timeout
-          :Hold 'Sessions'
-              :For i :In m/⍳⍴m
-                  Server.onSessionEnd i⊃Sessions
-                  :If 0≠⍴p←(i⊃Sessions).Pages
-                  :AndIf 0≠⊃p.⎕NC⊂'_Close'
-                      p._Close i⊃Sessions
-                  :EndIf
-              :EndFor
-              Sessions←(~m)/Sessions
-          :EndHold
+      :If Server.Framework≡'MiServer'
+          now←#.Dates.DateToIDN ⎕TS
+          :If ∨/m←Sessions.LastActive<now-timeout
+              :Hold 'Sessions'
+                  :For i :In m/⍳⍴m
+                      Server.onSessionEnd i⊃Sessions
+                      :If 0≠⍴p←(i⊃Sessions).Pages
+                      :AndIf 0≠⊃p.⎕NC⊂'_Close'
+                          p._Close i⊃Sessions
+                      :EndIf
+                  :EndFor
+                  Sessions←(~m)/Sessions
+              :EndHold
+          :EndIf
       :EndIf
     ∇
 
