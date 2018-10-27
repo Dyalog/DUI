@@ -85,7 +85,8 @@
               r←0
           :EndIf
       :CaseList 0 1
-          r←{(isChar ⍵)∧1∊⍴⍴1/⍵}w
+          r←{isChar ⍵}w
+⍝          r←{(isChar ⍵)∧1∊⍴⍴1/⍵}w
       :Else
           r←0
       :EndSelect

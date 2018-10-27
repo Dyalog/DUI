@@ -84,7 +84,7 @@
       :Access public
       :Trap Debug↓0
      
-          →EXIT⍴⍨1=⊃r←(17>APLVersion)/1 'Dyalog v17.0 or later is required to use WC2'
+          →EXIT⍴⍨1=⊃r←(17>APLVersion)/1 'Dyalog v17.0 or later is required to use DUI'
      
      ⍝          :If Initialized
      ⍝              →EXIT⊣r←¯1 'Already initialized'
@@ -116,7 +116,7 @@
                       (AppRoot HomePage)←{(1⊃⍵)(∊1↓⍵)}1 ⎕NPARTS appRoot
                   :EndIf
               :Else
-                  →EXIT⊣r←4 ('Application path not found: "',AppRoot,'"')
+                  →EXIT⊣r←4('Application path not found: "',AppRoot,'"')
               :EndIf
           :EndIf
      
@@ -133,6 +133,8 @@
               Framework←'MiServer'
               Server←⎕NEW #.MiServer config
           :EndIf
+     
+          #.HttpRequest.Server←Server
      
           Configure Server ⍝ add other configuration data
      

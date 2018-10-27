@@ -133,11 +133,12 @@
     ∇ End
     ⍝ Called by destructor
       :Access Public
-      ⎕←⊃⎕XSI
       {0:: ⋄ Logger.Stop ⍬}⍬
-      #.HttpRequest.Server←''
+      #.HttpRequest.Server←⍬
+      #.DUI.Server←⍬
       Cleanup ⍝ overridable
       TID←¯1
+      ⎕DL 3 ⍝ pause for cleanup
     ∇
     :endsection
 
@@ -167,13 +168,12 @@
           {}⍞⊣⍞←'Wait for browser to open, then press enter'
       :EndIf
       _Renderer.Wait
-     
      RESUME: ⍝ Error Trapped and logged
       1 Log'HRServer stopped'
       :If Config.CloseOnCrash
           ⎕OFF
       :EndIf
-      →0
+      End
     ∇
 
 
@@ -197,13 +197,11 @@
       Config←config
      
       PageTemplates←#.Pages.⎕NL ¯9.4
-     
-      #.HttpRequest.Server←⎕THIS
     ∇
 
     ∇ UnMake
       :Implements Destructor
-      :Trap 0 ⋄ End ⋄ :EndTrap
+      End
     ∇
 
     :endsection

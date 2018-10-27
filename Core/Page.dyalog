@@ -12,6 +12,7 @@
     :field public Props
     :field public Coord←'ScaledPixel'
     :field public Size←⍬ ⍬
+    :field public Debug←0
     :field public ReadOnly NL←⎕UCS 10
     :field public shared APLVersion←{⊃(//)⎕VFI ⍵/⍨2>+\'.'=⍵}2⊃#.⎕WG 'APLVersion'
 
@@ -47,9 +48,16 @@
       :EndTrap
     ∇
 
-    ∇ Run
+    ∇ Run;port
       :Access public
       :If 0∊⍴_Renderer
+          :If Debug
+              :If ~0∊⍴port←2 ⎕NQ'.' 'GetEnvironment' '-remote-debugging-port'
+                  ⎕SH'open http://localhost:',port
+              :Else
+                  ⎕←'-remote-debugging-port not defined'
+              :End
+          :End
           run&0
       :Else
           Reset

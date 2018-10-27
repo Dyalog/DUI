@@ -367,8 +367,6 @@
       Config←config
      
       PageTemplates←#.Pages.⎕NL ¯9.4
-     
-      #.HttpRequest.Server←⎕THIS
     ∇
 
     ∇ UnMake
