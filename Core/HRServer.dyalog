@@ -254,10 +254,10 @@
       REQ←⎕NEW #.HttpRequest arg
       res←REQ.Response
       REQ.Host←'dyalog_root'
+      REQ.OrigPage←REQ.Page ⍝ capture the original page
      
       :If 200=res.Status
      
-          REQ.OrigPage←REQ.Page ⍝ capture the original page
           REQ.Page←Config.HomePage{∧/⍵∊'/\':'/',⍺ ⋄ '/\'∊⍨¯1↑⍵:⍵,⍺ ⋄ ⍵}REQ.Page ⍝ no page specified? use the default
           REQ.Page,←(~'.'∊{⍵/⍨⌽~∨\'/'=⌽⍵}REQ.Page)/Config.DefaultExtension ⍝ no extension specified? use the default
           ext←⊃¯1↑#.Files.SplitFilename filename←Config Virtual REQ.Page
@@ -345,7 +345,7 @@
      
       MS3←RESTful←expired←0
       APLJax←REQ.isAPLJax
-
+     
       :If sessioned←326=⎕DR REQ.Session ⍝ do we think we have a session handler active?
       :AndIf 0≠⍴REQ.Session.Pages     ⍝ Look for existing Page in Session
       :AndIf (n←⍴REQ.Session.Pages)≥i←REQ.Session.Pages._PageName⍳⊂REQ.Page
