@@ -33,11 +33,33 @@
 ⍝ ↓↓↓--- Methods which are usually overridden ---
 
     ∇ {r}←Override
-      r←{
-          0::{Log ⎕JSON ⎕DMX ⋄ 1} ⍝ log any error
-          0≠⎕NC'Overrides.',2⊃⎕SI:1⊣Overrides⍎2⊃⎕SI ⍝ execute override function if found
-          0 ⍝ otherwise nothing done
-      }⍬
+      ⍝ 181103, MBaas:
+      ⍝ work out syntax of the overridden call and call suitable Override-fn using same syntax and arguments
+      ⍝ this stuff can perhaps be condensed, but for testing I preferred the verbose variant ;-)
+      :Select 1 2⊃⎕AT 2⊃⎕SI
+      :Case 0⍝ niladic
+          r←{
+         ⍝  0::{Log ⎕JSON ⎕DMX ⋄ 1} ⍝ log any error  - not happy with this strict mechanism - should consider the Debug-Setting!
+              85::1
+              0≠#.⎕NC'Overrides.',3⊃⎕SI:1⊣0(85⌶)'#.Overrides.',3⊃⎕SI ⍝ execute override function if found
+              0 ⍝ otherwise nothing done
+          }⍬
+      :Case 1  ⍝ monadic
+          r←{
+         ⍝  0::{Log ⎕JSON ⎕DMX ⋄ 1} ⍝ log any error  - not happy with this strict mechanism - should consider the Debug-Setting!
+              85::1
+              0≠#.⎕NC'Overrides.',3⊃⎕SI:1⊣0(85⌶)'#.Overrides.',(3⊃⎕SI),' ⍵' ⍝ execute override function if found
+              0 ⍝ otherwise nothing done
+          }⍎{(∧\⍵≠';')/⍵}2⊃' '#.Strings.split(⎕CR 2⊃⎕SI)[1;]
+      :Case 2   ⍝ dyadic
+          r←(⍎1⊃' '#.Strings.split(⎕CR 2⊃⎕SI)[1;]){
+         ⍝  0::{Log ⎕JSON ⎕DMX ⋄ 1} ⍝ log any error  - not happy with this strict mechanism - should consider the Debug-Setting!
+              85::1
+              0≠#.⎕NC'Overrides.',3⊃⎕SI:1⊣0(85⌶)'⍺ #.Overrides.',(3⊃⎕SI),' ⍵' ⍝ execute override function if found
+              0 ⍝ otherwise nothing done
+          }⍎{(∧\⍵≠';')/⍵}3⊃' '#.Strings.split(⎕CR 2⊃⎕SI)[1;]
+     
+      :EndSelect
     ∇
 
     ∇ onServerLoad
