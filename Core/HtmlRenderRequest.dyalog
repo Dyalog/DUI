@@ -188,27 +188,27 @@
     ∇
     ∇ r←_event
       :Access public
-      r←_Request.GetData'_event'
+      r←GetData'_event'
     ∇
     ∇ r←_value
       :Access public
-      r←_Request.GetData'_value'
+      r←GetData'_value'
     ∇
     ∇ r←_selector
       :Access public
-      r←←_Request.GetData'_selector'
+      r←GetData'_selector'
     ∇
     ∇ r←_target
       :Access public
-      r←_Request.GetData'_target'
+      r←GetData'_target'
     ∇
     ∇ r←_currentTarget
       :Access public
-      r←_Request.GetData'_currentTarget'
+      r←GetData'_currentTarget'
     ∇
     ∇ r←_callback
       :Access public
-      r←_Request.GetData'_callback'
-    ∇          
+      r←GetData'_callback'
+    ∇
 
 :EndClass

@@ -16,6 +16,7 @@
     ∇ (r msg)←Run args;r;iname;smsg
     ⍝ args - {AppRoot} {MSPort} {WC2Root}
       :Access public shared
+      {}⎕WA
       AppRoot MSPort WC2Root←args defaults AppRoot ⍬ WC2Root
       (r msg)←Start
     ∇
@@ -144,7 +145,7 @@
               class←⎕SE.SALT.Load path,config.SessionHandler
               Server.SessionHandler←⎕NEW class Server
           :EndIf
-          
+     
           :If miserv
               :If 0≠⍴config.Authentication
                   class←⎕SE.SALT.Load path,config.Authentication
