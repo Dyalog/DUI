@@ -8,16 +8,17 @@
     HomePage←''
     WC2Root←''
     Debug←1
+    NoLink←1 ⍝ set to 0 if you want DUI's objects to be linked to their source files
     Name←''
     Framework←''
     Initialized←0
 
 
     ∇ (r msg)←Run args;r;iname;smsg
-    ⍝ args - {AppRoot} {MSPort} {WC2Root}
+    ⍝ args - {AppRoot} {MSPort} {WC2Root} {NoLink}
       :Access public shared
       {}⎕WA
-      AppRoot MSPort WC2Root←args defaults AppRoot ⍬ WC2Root
+      (AppRoot MSPort WC2Root NoLink)←args defaults AppRoot MSPort WC2Root NoLink
       (r msg)←Start
     ∇
 
@@ -74,6 +75,7 @@
       AppRoot←''
       WC2Root←''
       Debug←1
+      Developer←0
       Name←''
       Framework←''
       Initialized←0
@@ -81,7 +83,7 @@
       {}⎕WA
     ∇
 
-    ∇ r←Initialize;t;path;config;class;e;mask;hrserv;miserv;appRoot;type
+    ∇ r←Initialize;t;path;config;class;e;mask;hrserv;miserv;appRoot;type;nolink
       :Access public
       :Trap Debug↓0
      
@@ -121,7 +123,9 @@
               :EndIf
           :EndIf
      
-          Load
+          nolink←NoLink/' -nolink'
+     
+          Load nolink
      
           config←ConfigureServer(AppRoot MSPort WC2Root HomePage)
           hrserv←miserv←0
@@ -142,20 +146,20 @@
           path←WC2Root,'Extensions/'
      
           :If 0≠⍴config.SessionHandler
-              class←⎕SE.SALT.Load path,config.SessionHandler
+              class←⎕SE.SALT.Load path,config.SessionHandler,nolink
               Server.SessionHandler←⎕NEW class Server
           :EndIf
      
           :If miserv
               :If 0≠⍴config.Authentication
-                  class←⎕SE.SALT.Load path,config.Authentication
+                  class←⎕SE.SALT.Load path,config.Authentication,nolink
                   Server.Authentication←⎕NEW class Server
               :EndIf
      
               :If 0≠⍴config.SupportedEncodings
-                  {}⎕SE.SALT.Load path,'ContentEncoder'
+                  {}⎕SE.SALT.Load path,'ContentEncoder',nolink
                   :For e :In config.SupportedEncodings
-                      class←⎕SE.SALT.Load path,e
+                      class←⎕SE.SALT.Load path,e,nolink
                       Server.Encoders,←⎕NEW class
                   :EndFor
                   :If ∨/mask←0≠1⊃¨Server.Encoders.Init
@@ -168,9 +172,11 @@
           :EndIf
      
           :If 0≠⍴config.Logger
-              class←⎕SE.SALT.Load path,config.Logger
+              class←⎕SE.SALT.Load path,config.Logger,nolink
               Server.Logger←⎕NEW class Server
-          :EndIf
+          :EndIf 
+          
+          #.Boot←⎕THIS ⍝ for compatibility with pre-existing MiSites
      
           Initialized←1
           r←0 'DUI initialized'
@@ -183,10 +189,10 @@
     ∇
 
 
-    ∇ Load;filterOut;files;HTML;f;failed;dir;name;file;folder;callingEnv
+    ∇ Load nolink;filterOut;files;HTML;f;failed;dir;name;file;folder;callingEnv
       ⍝ Load required objects for MiServer
      
-      :If 0=#.⎕NC'Files' ⋄ ⎕SE.SALT.Load WC2Root,'Utils/Files -target=#' ⋄ :EndIf
+      :If 0=#.⎕NC'Files' ⋄ ⎕SE.SALT.Load WC2Root,'Utils/Files -target=#',nolink ⋄ :EndIf
      
       filterOut←{⍺←'' ⋄ ⍺{0∊⍴⍺:⍵ ⋄ ⍺{∊¨↓⍵⌿⍨~⍵[;2]∊eis ⍺}↑⎕NPARTS¨⍵}⊃#.Files.Dir ⍵,'/*.dyalog'}
      
@@ -196,11 +202,11 @@
      
       failed←''
       :For f :In files
-          {326=⎕DR ⍵: ⋄ '***'≡3↑⍵:failed,←⊂(('<.+>'⎕S{1↓¯1↓⍵.Match})⍵)}⎕SE.SALT.Load f,' -target=#' ⍝ do not reload already loaded spaces
+          {326=⎕DR ⍵: ⋄ '***'≡3↑⍵:failed,←⊂(('<.+>'⎕S{1↓¯1↓⍵.Match})⍵)}⎕SE.SALT.Load f,' -target=#',nolink ⍝ do not reload already loaded spaces
       :EndFor
      
       :For file :In failed
-          disperror ⎕SE.SALT.Load∊'"',file,'" -target=#'
+          disperror ⎕SE.SALT.Load∊'"',file,'" -target=#',nolink
       :EndFor
      
      
@@ -214,17 +220,17 @@
       failed←''
       :For f :In HTML
           (folder name)←2↑⎕NPARTS f
-          disperror ⎕SE.SALT.Load f,' -target=#'
+          disperror ⎕SE.SALT.Load f,' -target=#',nolink
           :If #.Files.DirExists dir←folder,name,'/'
-              dir∘{326=⎕DR ⍵: ⋄ '***'≡3↑⍵:failed,←⊂⍺(('<.+>'⎕S{1↓¯1↓⍵.Match})⍵)}¨⎕SE.SALT.Load dir,'* -target=#.',name
+              dir∘{326=⎕DR ⍵: ⋄ '***'≡3↑⍵:failed,←⊂⍺(('<.+>'⎕S{1↓¯1↓⍵.Match})⍵)}¨⎕SE.SALT.Load dir,'* -target=#.',name,nolink
           :EndIf
       :EndFor
      
       :For (f file) :In failed
-          disperror ⎕SE.SALT.Load∊'"',file,'" -target=#.',f
+          disperror ⎕SE.SALT.Load∊'"',file,'" -target=#.',f,nolink
       :EndFor
      
-      LoadFromFolder WC2Root,'Loadable'
+      LoadFromFolder(WC2Root,'Loadable')NoLink
      
       'Pages'#.⎕NS'' ⍝ Container Space for loaded classes
       #.Pages.(MiPage RESTfulPage)←#.(MiPage RESTfulPage)
@@ -261,8 +267,11 @@
       :EndFor
     ∇
 
-    ∇ {root}LoadFromFolder path;type;name;nsName;parts;ns
+    ∇ {root}LoadFromFolder path;type;name;nsName;parts;ns;nolink
     ⍝ Loads an APL "project" folder
+      path←,⊆path
+      (path nolink)←2↑path,(≢path)↓path,1
+      :If ~0 2∊⍨10|⎕DR nolink ⋄ nolink←nolink/' -nolink' ⋄ :EndIf  ⍝ allow for character nolink
       root←{6::⍵ ⋄ root}#
       :For name type :In ↓{⍵[⍒⍵[;2];]}⍉↑0 1 #.Files.Dir path,'/*'
           nsName←∊1↓parts←1 ⎕NPARTS name
@@ -272,10 +281,10 @@
               :Case 0 ⋄ ns←nsName root.⎕NS''
               :Else ⋄ Log'"',name,'" is not a namespace'
               :EndSelect
-              ⎕SE.SALT.Load name,'/* -target=',⍕ns
+              ⎕SE.SALT.Load name,'/* -target=',(⍕ns),nolink
           :Else
               :If ~∨/∊(⎕NSI,¨'.')⍷⍨¨⊂'.',(2⊃1 ⎕NPARTS name),'.' ⍝ don't load it if we're being called from it
-                  ⎕SE.SALT.Load name,' -target=',⍕root
+                  ⎕SE.SALT.Load name,' -target=',(⍕root),nolink
               :EndIf
           :EndIf
       :EndFor

@@ -15,6 +15,7 @@
     :Field ServerName
     :Field Public ReadOnly Framework←'HRServer'
     :Field Public _Renderer←''
+    :Field Public Shared DEBUG←0
 
     ⎕TRAP←0/⎕TRAP ⋄ (⎕ML ⎕IO)←1 1
 
@@ -32,60 +33,79 @@
     :section Override
 ⍝ ↓↓↓--- Methods which are usually overridden ---
 
-    ∇ {r}←Override
-      r←{
+    ∇ {r}←OverrideNiladic
+      r←{__fn__←2⊃⎕SI
           0::{Log ⎕JSON ⎕DMX ⋄ 1} ⍝ log any error
-          0≠⎕NC'Overrides.',2⊃⎕SI:1⊣Overrides⍎2⊃⎕SI ⍝ execute override function if found
+          85::1
+          0≠⎕NC'Overrides.',__fn__:1⊣0(85⌶)'#.Overrides.',__fn__ ⍝ execute override function if found
           0 ⍝ otherwise nothing done
       }⍬
+    ∇
+
+    ∇ {r}←OverrideMonadic w
+      r←{__fn__←2⊃⎕SI
+          0::{Log ⎕JSON ⎕DMX ⋄ 1} ⍝ log any error
+          85::1
+          0≠⎕NC'Overrides.',__fn__:1⊣0(85⌶)'#.Overrides.',__fn__,' ⍵' ⍝ execute override function if found
+          0 ⍝ otherwise nothing done
+      }w
+    ∇
+
+    ∇ {r}←a OverrideDyadic w
+      r←a{__fn__←2⊃⎕SI
+          0::{Log ⎕JSON ⎕DMX ⋄ 1} ⍝ log any error
+          85::1
+          0≠⎕NC'Overrides.',__fn__:1⊣0(85⌶)'⍺ #.Overrides.',__fn__,' ⍵' ⍝ execute override function if found
+          0 ⍝ otherwise nothing done
+      }w
     ∇
 
     ∇ onServerLoad
       :Access Public Overridable
     ⍝ Handle any server initialization prior to starting
-      Override
+      OverrideNiladic
     ∇
 
     ∇ onServerStart
       :Access Public Overridable
     ⍝ Handle any server startup processing
-      Override
+      OverrideNiladic
     ∇
 
     ∇ onSessionStart req
       :Access Public Overridable
     ⍝ Process a new session
-      Override
+      OverrideMonadic req
     ∇
 
     ∇ onSessionEnd session
       :Access Public Overridable
     ⍝ Handle the end of a session
-      Override
+      OverrideMonadic session
     ∇
 
     ∇ onHandleRequest req
       :Access Public Overridable
     ⍝ Called whenever a new request comes in
-      Override
+      OverrideMonadic req
     ∇
 
     ∇ onHandleMSP req
       :Access Public Overridable
     ⍝ Called when MiPage invoked
-      Override
+      OverrideMonadic req
     ∇
 
     ∇ onIdle
       :Access Public Overridable
     ⍝ Idle time handler - called when the server has gone idle for a period of time
-      Override
+      OverrideNiladic
     ∇
 
     ∇ Error req
       :Access Public Overridable
     ⍝ Handle trapped errors
-      :If ~Override
+      :If ~OverrideMonadic req
           req.Response.HTML←'<font face="APL385 Unicode" color="red">',(⊃,/⎕DM,¨⊂'<br/>'),'</font>'
           req.Fail 500 ⍝ Internal Server Error
           1 Log ⎕DM
@@ -97,7 +117,7 @@
     ⍝ Logs server messages
     ⍝ levels implemented in MildServer are:
     ⍝ 1-error/important, 2-warning, 4-informational, 8-transaction (GET/POST)
-      :If ~Override
+      :If ~level OverrideDyadic msg
           :If Config.LogMessageLevel bit level ⍝ if set to display this level of message
               ⎕←msg ⍝ display it
           :EndIf
@@ -107,7 +127,7 @@
     ∇ Cleanup
       :Access Public overridable
     ⍝ Perform any site specific cleanup
-      Override
+      OverrideNiladic
     ∇
 
 ⍝ ↑↑↑--- End of Overridable methods ---
@@ -160,7 +180,7 @@
           0∊⍴n←(⍵.⎕NL ¯2)~⊂'Debug':''
           ⍵{⍵({∧/⊃(m n)←⎕VFI⍕⍵:n ⋄ ⍵}⍺⍎⍵)}¨n
       }Config.HRServer
-      props,←('Event'('onHTTPRequest' 'HandleRequest'))('InterceptedURLs'(1 2⍴'*dyalog_root*' 1))
+      props,←('Event'('onHTTPRequest' 'HandleRequest'))('InterceptedURLs'(1 2⍴'*dyalog_root*' 1))('URL' 'dyalog_root')
       _Renderer←⎕NEW'HTMLRenderer'props
       :If {0::0 ⋄ 1=⊃2⊃⎕VFI⍕Config.HRServer.Debug}⍬
       :AndIf ~0∊⍴rdp←2 ⎕NQ'.' 'GetEnvironment' '-remote-debugging-port'
@@ -197,6 +217,7 @@
       Config←config
      
       PageTemplates←#.Pages.⎕NL ¯9.4
+      :If 2=#.⎕NC'DEBUG' ⋄ DEBUG←#.DEBUG ⋄ :EndIf
     ∇
 
     ∇ UnMake
@@ -251,6 +272,7 @@
     ∇ r←HandleRequest arg;tn;res;REQ;ext;filename
     ⍝ arg - HTMLRenderer callback data
       r←arg
+      :If DEBUG≠0 ⋄ ⎕←∊' ',¨arg[11 8] ⋄ :EndIf
       REQ←⎕NEW #.HttpRequest arg
       res←REQ.Response
       REQ.Host←'dyalog_root'
