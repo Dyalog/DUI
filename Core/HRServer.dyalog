@@ -34,28 +34,28 @@
 ⍝ ↓↓↓--- Methods which are usually overridden ---
 
     ∇ {r}←OverrideNiladic
-      r←{__fn__←2⊃⎕SI
-          0::{Log ⎕JSON ⎕DMX ⋄ 1} ⍝ log any error
+      r←{__fn__←3⊃⎕SI
+          0::{{0::0⋄1 Log ⎕JSON ⎕DMX ⋄ 1}⍵}0 ⍝ log any error
           85::1
-          0≠⎕NC'Overrides.',__fn__:1⊣0(85⌶)'#.Overrides.',__fn__ ⍝ execute override function if found
+          0≠#.⎕NC'Overrides.',__fn__:1⊣0(85⌶)'#.Overrides.',__fn__ ⍝ execute override function if found
           0 ⍝ otherwise nothing done
       }⍬
     ∇
 
     ∇ {r}←OverrideMonadic w
-      r←{__fn__←2⊃⎕SI
-          0::{Log ⎕JSON ⎕DMX ⋄ 1} ⍝ log any error
+      r←{__fn__←3⊃⎕SI
+          0::{{0::0⋄1 Log ⎕JSON ⎕DMX ⋄ 1}⍵}0 ⍝ log any error
           85::1
-          0≠⎕NC'Overrides.',__fn__:1⊣0(85⌶)'#.Overrides.',__fn__,' ⍵' ⍝ execute override function if found
+          0≠#.⎕NC'Overrides.',__fn__:1⊣0(85⌶)'#.Overrides.',__fn__,' ⍵' ⍝ execute override function if found
           0 ⍝ otherwise nothing done
       }w
     ∇
 
     ∇ {r}←a OverrideDyadic w
-      r←a{__fn__←2⊃⎕SI
-          0::{Log ⎕JSON ⎕DMX ⋄ 1} ⍝ log any error
+      r←a{__fn__←3⊃⎕SI
+          0::{{0::0⋄1 Log ⎕JSON ⎕DMX ⋄ 1}⍵}0 ⍝ log any error
           85::1
-          0≠⎕NC'Overrides.',__fn__:1⊣0(85⌶)'⍺ #.Overrides.',__fn__,' ⍵' ⍝ execute override function if found
+          0≠#.⎕NC'Overrides.',__fn__:1⊣0(85⌶)'⍺ #.Overrides.',__fn__,' ⍵' ⍝ execute override function if found
           0 ⍝ otherwise nothing done
       }w
     ∇
