@@ -137,8 +137,10 @@
      
           #.HttpRequest.Server←Server
      
-          #.Boot←⎕THIS ⍝ for compatibility with pre-existing MiSites
-          ms←Server    ⍝ so that #.Boot.ms will work with pre-existing MiSites
+       ⍝ The following are for backwards compatibility with older MiSites
+          #.Boot←⎕THIS
+          ms←Server ⍝ #.Boot.ms
+          #.HTTPRequest←#.HttpRequest
      
           Configure Server ⍝ add other configuration data
      
