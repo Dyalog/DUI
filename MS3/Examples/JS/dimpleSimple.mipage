@@ -5,21 +5,25 @@
     ∇ Compose
       :Access Public
       Add _.dimple ScriptFollows
-⍝    var svg = dimple.newSvg("#contentblock", 590, 400);
-⍝    var data = [
-⍝    { "Brand":"Coolio", "Region":"Hipsville", "Sales Volume":1000 },
-⍝    { "Brand":"Uncoolio", "Region":"Hipsville", "Sales Volume":500 },
-⍝    { "Brand":"Coolio", "Region":"Dullsville", "Sales Volume":100 },
-⍝    { "Brand":"Uncoolio", "Region":"Dullsville", "Sales Volume":2000 }
-⍝];
-⍝      var myChart = new dimple.chart(svg, data);
-⍝      myChart.setBounds(60, 30, 505, 305);
-⍝      var x = myChart.addCategoryAxis("x", "Month");
-⍝      x.addOrderRule("Date");
-⍝      myChart.addMeasureAxis("y", "Unit Sales");
-⍝      var s = myChart.addSeries(null, dimple.plot.line);
-⍝      s.interpolation = "step";
-⍝      myChart.draw();
+⍝ var svg = dimple.newSvg("#contentblock", 600, 400);
+⍝ var data = [
+⍝     { "Brand":"Coolio", "Day":"Mon", "Sales Volume":1000 },
+⍝     { "Brand":"Coolio", "Day":"Tue", "Sales Volume":1100 },
+⍝     { "Brand":"Coolio", "Day":"Wed", "Sales Volume":900 },
+⍝     { "Brand":"Coolio", "Day":"Thu", "Sales Volume":800 },
+⍝     { "Brand":"Coolio", "Day":"Fri", "Sales Volume":850 },
+⍝     { "Brand":"Uncoolio", "Day":"Mon", "Sales Volume":200 },
+⍝     { "Brand":"Uncoolio", "Day":"Tue", "Sales Volume":100 },
+⍝     { "Brand":"Uncoolio", "Day":"Wed", "Sales Volume":300 },
+⍝     { "Brand":"Uncoolio", "Day":"Thu", "Sales Volume":250 },
+⍝     { "Brand":"Uncoolio", "Day":"Fri", "Sales Volume":350 }
+⍝ ];
+⍝ var myChart = new dimple.chart(svg, data);
+⍝ var x = myChart.addCategoryAxis("x", "Day");
+⍝ x.addOrderRule(["Mon","Tue","Wed","Thu","Fri"]);
+⍝ myChart.addMeasureAxis("y", "Sales Volume");
+⍝ myChart.addSeries("Brand", dimple.plot.line);
+⍝ myChart.draw();
     ∇
 
 :EndClass

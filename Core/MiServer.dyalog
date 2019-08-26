@@ -1,5 +1,6 @@
 ﻿:Class MiServer
 ⍝ This is the core web server class - do not modify it!
+⍝ Customized web servers should be based on this class - e.g.  :Class MyServer : MiServer
 
     :Field Public Config
 
@@ -27,37 +28,36 @@
     setting←{0=⎕NC ⍵:⍺ ⋄ ⍎⍵}
     endswith←{(,⍺){⍵≡⍺↑⍨-⍴⍵},⍵}
 
-      bit←{⎕IO←0  ⍝ used by Log
-          0=⍺:0 ⍝ all bits turned off
-          ¯1=⍺:1 ⍝ all bits turned on
-          (⌈2⍟⍵)⊃⌽((1+⍵)⍴2)⊤⍺}
+      bit←{ ⍝ used by Log
+          {⍵[;1]∧.≥1↓[2]⍵}2⊥⍣¯1⊢⍺,⍵
+      }
 
     :section Override
 ⍝ ↓↓↓--- Methods which are usually overridden ---
 
     ∇ {r}←OverrideNiladic
-      r←{__fn__←2⊃⎕SI
-          0::{Log ⎕JSON ⎕DMX ⋄ 1} ⍝ log any error
+      r←{__fn__←3⊃⎕SI
+          0::{1 Log ⎕JSON ⎕DMX ⋄ 1} ⍝ log any error
           85::1
-          0≠⎕NC'Overrides.',__fn__:1⊣0(85⌶)'#.Overrides.',__fn__ ⍝ execute override function if found
+          0≠#.⎕NC'Overrides.',__fn__:1⊣0(85⌶)'#.Overrides.',__fn__ ⍝ execute override function if found
           0 ⍝ otherwise nothing done
       }⍬
     ∇
 
     ∇ {r}←OverrideMonadic w
-      r←{__fn__←2⊃⎕SI
-          0::{Log ⎕JSON ⎕DMX ⋄ 1} ⍝ log any error
+      r←{__fn__←3⊃⎕SI
+          0::{1 Log ⎕JSON ⎕DMX ⋄ 1} ⍝ log any error
           85::1
-          0≠⎕NC'Overrides.',__fn__:1⊣0(85⌶)'#.Overrides.',__fn__,' ⍵' ⍝ execute override function if found
+          0≠#.⎕NC'Overrides.',__fn__:1⊣0(85⌶)'#.Overrides.',__fn__,' ⍵' ⍝ execute override function if found
           0 ⍝ otherwise nothing done
       }w
     ∇
 
     ∇ {r}←a OverrideDyadic w
-      r←a{__fn__←2⊃⎕SI
-          0::{Log ⎕JSON ⎕DMX ⋄ 1} ⍝ log any error
+      r←a{__fn__←3⊃⎕SI
+          0::{1 Log ⎕JSON ⎕DMX ⋄ 1} ⍝ log any error
           85::1
-          0≠⎕NC'Overrides.',__fn__:1⊣0(85⌶)'⍺ #.Overrides.',__fn__,' ⍵' ⍝ execute override function if found
+          0≠#.⎕NC'Overrides.',__fn__:1⊣0(85⌶)'⍺ #.Overrides.',__fn__,' ⍵' ⍝ execute override function if found
           0 ⍝ otherwise nothing done
       }w
     ∇
@@ -177,9 +177,9 @@
      
       →allocated↓EXIT⊣(r msg)←4('Unable to allocate any TCP/IP port in ',1↓∊⍕¨',',¨ports)
       {}#.DRC.SetProp'.' 'EventMode' 1 ⍝ report Close/Timeout as events
-      {}#.DRC.SetProp ServerName'FIFOMode'Config.FIFOMode
-      {}#.DRC.SetProp ServerName'DecodeBuffers'(15×Config.DecodeBuffers)
-      #.HttpRequest.DecodeBuffers←Config.DecodeBuffers
+      {}#.DRC.SetProp ServerName'FIFOMode' 0 ⍝ never use FIFOMode
+      {}#.DRC.SetProp ServerName'DecodeBuffers' 15 ⍝ always decode HTTP messages
+      #.HttpRequest.DecodeBuffers←1 ⍝ set HttpRequest to decode buffers
      
       TID←RunServer&⍬
      
@@ -223,6 +223,10 @@
      
       onServerStart ⍝ meant to be overridden
      
+      :If 0≠#.DRC.⎕NC⊂'Error' ⋄ congaError←#.DRC.Error ⍝ Conga 3.2 moved Error into the library instance
+      :Else ⋄ congaError←#.Conga.Error                 ⍝ Prior to 3.2 Error was in the namespace
+      :EndIf
+     
       idletime←#.Dates.DateToIDN ⎕TS
      
       :While ~Stop
@@ -240,7 +244,7 @@
                       ConnectionDelete obj
                   :EndIf
                   :If 0≠4⊃wres
-                      (1+(4⊃wres)∊1008 1105 1119)Log'RunServer: DRC.Wait reported error ',(⍕#.Conga.Error 4⊃wres),' on ',2⊃wres
+                      (1+(4⊃wres)∊1008 1105 1119)Log'RunServer: DRC.Wait reported error ',(⍕congaError 4⊃wres),' on ',2⊃wres
                   :EndIf
      
               :Case 'Connect'
@@ -299,7 +303,7 @@
           conx.(CongaObjectName PeerCert)←objname''
           conx.(Active LastActive)←1(3⊃⎕AI)
           :If 0=1⊃z←#.DRC.GetProp conx.CongaObjectName'PeerAddr'
-              conx.PeerAddr←2⊃z
+              conx.PeerAddr←2⊃2⊃z
           :Else
               conx.PeerAddr←'Unknown'
           :EndIf
@@ -498,6 +502,7 @@
       →0↓⍨conns.Req.Complete ⍝ exit if request is not complete
      
       REQ←conns.Req
+      REQ.Server←⎕THIS ⍝ Request will also contain reference to the Server
       res←REQ.Response
       startsize←length←0
      
@@ -512,24 +517,28 @@
           REQ.Page,←(~'.'∊{⍵/⍨⌽~∨\'/'=⌽⍵}REQ.Page)/Config.DefaultExtension ⍝ no extension specified? use the default
           ext←⊃¯1↑#.Files.SplitFilename filename←Config Virtual REQ.Page
      
-          SessionHandler.GetSession REQ
-          Authentication.Authenticate REQ
-          :If REQ.Response.Status≠401 ⍝ Authentication did not fail
-              :If Config.AllowedHTTPMethods∊⍨⊂REQ.Method
-                  onHandleRequest REQ ⍝ overridable
-                  :If REQ.Page endswith Config.DefaultExtension ⍝ MiPage?
-                      filename HandleMSP REQ
-                  :Else
-                      :If REQ.Method≡'get'
-                          REQ.ReturnFile filename
+          :Trap 1 ⍝ WS FULL
+              SessionHandler.GetSession REQ
+              Authentication.Authenticate REQ
+              :If REQ.Response.Status≠401 ⍝ Authentication did not fail
+                  :If Config.AllowedHTTPMethods∊⍨⊂REQ.Method
+                      onHandleRequest REQ ⍝ overridable
+                      :If REQ.Page endswith Config.DefaultExtension ⍝ MiPage?
+                          filename HandleMSP REQ
                       :Else
-                          REQ.Fail 501 ⍝ Service Not Implemented
+                          :If REQ.Method≡'get'
+                              REQ.ReturnFile filename
+                          :Else
+                              REQ.Fail 501 ⍝ Service Not Implemented
+                          :EndIf
                       :EndIf
+                  :Else
+                      REQ.Fail 405 ⍝ Method Not Allowed
                   :EndIf
-              :Else
-                  REQ.Fail 405 ⍝ Method Not Allowed
               :EndIf
-          :EndIf
+          :Else
+              REQ.Fail 503 'Service overloaded'
+          :EndTrap
      
           cacheMe←encodeMe←0
           :If 200=res.Status
@@ -676,7 +685,7 @@
               :If MS3←∨/(∊⎕CLASS inst)∊#.HtmlPage
               :OrIf RESTful←∨/(∊⎕CLASS inst)∊#.RESTfulPage
                   inst.(_Request _PageRef)←REQ inst
-                  :If 0≡REQ.RESTfulReq
+                  :If RESTful∧0≡REQ.RESTfulReq
                       REQ.RESTfulReq←''
                   :EndIf
               :EndIf
@@ -691,7 +700,10 @@
               inst._TimedOut←1
           :EndIf
      
-          :If sessioned ⋄ REQ.Session.Pages,←inst ⋄ inst.Session←REQ.Session.ID ⋄ :EndIf
+          :If sessioned
+          :AndIf {0=⍵.⎕NC⊂'_Sessioned':1 ⋄ ⍵._Sessioned}inst
+              REQ.Session.Pages,←inst ⋄ inst.Session←REQ.Session.ID
+          :EndIf
       :EndIf
      
       :If sessioned ⋄ token←REQ.(Page,⍕Session.ID)

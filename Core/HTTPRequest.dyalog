@@ -12,7 +12,7 @@
 
 ⍝ Shared Fields
 
-    :Field Public Shared DecodeBuffers←1     ⍝ have Conga decode HTTP message buffers by default (MiServer sets this on initialization)
+    :Field Public Shared DecodeBuffers←1     ⍝ have Conga decode HTTP message buffers by default (MiServer also sets this on initialization) set to 0 for debugging purposes
     :Field Public Shared Server              ⍝ reference back to the server
 
 ⍝ Fields related to the Request
@@ -285,6 +285,7 @@
       r[;1]←{⍵↓⍨¯6×'%5B%5D'≡¯6↑⍵}¨r[;1] ⍝ remove [] from array args
       r[;2]←PercentDecode¨r[;2]
       :If ~cs ⋄ r[;1]←#.Strings.lc¨r[;1] ⋄ :EndIf
+            r⌿⍨←0<≢¨r[;1]
     ∇
 
     ∇ r←URLEncode data;⎕IO;z;ok;nul;m

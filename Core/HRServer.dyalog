@@ -35,7 +35,7 @@
 
     ∇ {r}←OverrideNiladic
       r←{__fn__←3⊃⎕SI
-          0::{{0::0⋄1 Log ⎕JSON ⎕DMX ⋄ 1}⍵}0 ⍝ log any error
+          0::{{0::0 ⋄ 1 Log ⎕JSON ⎕DMX ⋄ 1}⍵}0 ⍝ log any error
           85::1
           0≠#.⎕NC'Overrides.',__fn__:1⊣0(85⌶)'#.Overrides.',__fn__ ⍝ execute override function if found
           0 ⍝ otherwise nothing done
@@ -44,7 +44,7 @@
 
     ∇ {r}←OverrideMonadic w
       r←{__fn__←3⊃⎕SI
-          0::{{0::0⋄1 Log ⎕JSON ⎕DMX ⋄ 1}⍵}0 ⍝ log any error
+          0::{{0::0 ⋄ 1 Log ⎕JSON ⎕DMX ⋄ 1}⍵}0 ⍝ log any error
           85::1
           0≠#.⎕NC'Overrides.',__fn__:1⊣0(85⌶)'#.Overrides.',__fn__,' ⍵' ⍝ execute override function if found
           0 ⍝ otherwise nothing done
@@ -53,7 +53,7 @@
 
     ∇ {r}←a OverrideDyadic w
       r←a{__fn__←3⊃⎕SI
-          0::{{0::0⋄1 Log ⎕JSON ⎕DMX ⋄ 1}⍵}0 ⍝ log any error
+          0::{{0::0 ⋄ 1 Log ⎕JSON ⎕DMX ⋄ 1}⍵}0 ⍝ log any error
           85::1
           0≠#.⎕NC'Overrides.',__fn__:1⊣0(85⌶)'⍺ #.Overrides.',__fn__,' ⍵' ⍝ execute override function if found
           0 ⍝ otherwise nothing done
@@ -180,12 +180,10 @@
           0∊⍴n←(⍵.⎕NL ¯2)~⊂'Debug':''
           ⍵{⍵({∧/⊃(m n)←⎕VFI⍕⍵:n ⋄ ⍵}⍺⍎⍵)}¨n
       }Config.HRServer
-      props,←('Event'('onHTTPRequest' 'HandleRequest'))('InterceptedURLs'(1 2⍴'*dyalog_root*' 1))('URL' 'dyalog_root')
+      props,←⊂'Event'('onHTTPRequest' 'HandleRequest')
       _Renderer←⎕NEW'HTMLRenderer'props
       :If {0::0 ⋄ 1=⊃2⊃⎕VFI⍕Config.HRServer.Debug}⍬
-      :AndIf ~0∊⍴rdp←2 ⎕NQ'.' 'GetEnvironment' '-remote-debugging-port'
-          ⎕SH&'open http://localhost:',rdp
-          {}⍞⊣⍞←'Wait for browser to open, then press enter'
+          _Renderer.ShowDevTools 1
       :EndIf
       _Renderer.Wait
      RESUME: ⍝ Error Trapped and logged

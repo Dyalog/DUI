@@ -14,7 +14,6 @@
 <!-- Communications Settings -->
     <MSPort>8080</MSPort>                                 <!-- Preferred port that MiServer listens on --> 
     <MSPorts>8080-8090</MSPorts>                          <!-- List of ports that we can listen on (when running multiple MiServers) -->
-    <FIFOMode>1</FIFOMode>                                <!-- Use Conga FIFO mode? -->
     <WaitTimeout>5000ms</WaitTimeout>                     <!-- Time to wait for request from client before Conga times out -->
     <UseContentEncoding>1</UseContentEncoding>            <!-- for HTTP compression -->
     <SupportedEncodings>gzip,deflate</SupportedEncodings> <!-- name(s) of class(es) that use ContentEncoder interface -->
@@ -35,6 +34,7 @@
 <!-- Extensions -->
     <SessionHandler>SimpleSessions</SessionHandler>     <!-- name of class to perform session management -->
     <SessionTimeout>30m</SessionTimeout>                <!-- session timeout -->
+    <CreateSession>1</CreateSession>                    <!-- create a new session on receipt of a GET request -->
     <Authentication>SimpleAuth</Authentication>         <!-- name of class to perform Basic HTTP authentication -->
     <Logger></Logger>                                   <!-- name of class to perform HTTP request loggin -->
 
