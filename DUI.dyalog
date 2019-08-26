@@ -89,10 +89,6 @@
      
           →EXIT⍴⍨1=⊃r←(17>APLVersion)/1 'Dyalog v17.0 or later is required to use DUI'
      
-     ⍝          :If Initialized
-     ⍝              →EXIT⊣r←¯1 'Already initialized'
-     ⍝          :EndIf
-     
          ⍝ Validate path to WC2 framework
      
           :If 0∊⍴WC2Root
@@ -141,6 +137,9 @@
      
           #.HttpRequest.Server←Server
      
+          #.Boot←⎕THIS ⍝ for compatibility with pre-existing MiSites
+          ms←Server    ⍝ so that #.Boot.ms will work with pre-existing MiSites
+     
           Configure Server ⍝ add other configuration data
      
           path←WC2Root,'Extensions/'
@@ -174,9 +173,7 @@
           :If 0≠⍴config.Logger
               class←⎕SE.SALT.Load path,config.Logger,nolink
               Server.Logger←⎕NEW class Server
-          :EndIf 
-          
-          #.Boot←⎕THIS ⍝ for compatibility with pre-existing MiSites
+          :EndIf
      
           Initialized←1
           r←0 'DUI initialized'
