@@ -35,10 +35,10 @@
     ∇
 
     ∇ r←makeCommon
-      →0↓⍨0∊⍴r←(17>APLVersion)/⊂('EN' 11)('Message' 'Dyalog v17.0 or later is required to use HTMLRenderer-based features')
+      →0↓⍨0∊⍴r←(17.1>APLVersion)/⊂('EN' 11)('Message' 'Dyalog v17.1 or later is required to use this class')
       Props←⎕NS''
       _Config←#.DUI.Server.Config
-      _PageName←3⊃⎕SI,⊂'WC2Page'
+      _PageName←3⊃⎕SI,⊂''
       _PageRef←⎕THIS
     ∇
 
@@ -52,13 +52,6 @@
     ∇ Run;port
       :Access public
       :If 0∊⍴_Renderer
-          :If Debug
-              :If ~0∊⍴port←2 ⎕NQ'.' 'GetEnvironment' '-remote-debugging-port'
-                  ⎕SH'open http://localhost:',port
-              :Else
-                  ⎕←'-remote-debugging-port not defined'
-              :End
-          :End
           run&0
       :Else
           Reset
@@ -75,10 +68,14 @@
 
     ∇ run arg
       :Access public
-      _Renderer←⎕NEW'HTMLRenderer'(('Coord'Coord)('Size'Size)('Event'('onHTTPRequest' '__CallbackFn'))('URL'_PageName)('InterceptedURLs'(1 2⍴'*' 1)))
+      _Renderer←⎕NEW'HTMLRenderer'(('Visible' 0)('Coord'Coord)('Size'Size)('Event'('onHTTPRequest' '__CallbackFn'))('Caption' _PageName))
       :If ~0∊⍴props←_Renderer.PropList∩Props.⎕NL ¯2
           {_Renderer⍎⍺,'←⍵'}/¨{⍵(Props⍎⍵)}¨props
       :EndIf
+      :If Debug
+          _Renderer.ShowDevTools 1
+      :End
+      _Renderer.Visible←1
       _Renderer.Wait
     ∇
 
@@ -109,8 +106,8 @@
       :Access public
       r←args
       →0⍴⍨0∊⍴8⊃args
-      request←⎕NEW #.HtmlRenderRequest(args(819⌶_PageName))
-      :If 0∊⍴request.Page ⍝ initialization
+      request←⎕NEW #.HttpRequest args
+      :If '/'∧.=request.Page ⍝ initialization
           r[4 5 6 7]←1 200 'OK' 'text/html'
           r[10]←⊂UnicodeToHtml Render
           r[9]←⊂NL,⍨∊NL,⍨¨('Content-Type: ',7⊃r)('Content-Length: ',⍕≢10⊃r)
