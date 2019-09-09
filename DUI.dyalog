@@ -133,6 +133,7 @@
               miserv←1
               Framework←'MiServer'
               Server←⎕NEW #.MiServer config
+              Server._Renderer←⎕NS '' ⍝ for compatibility
           :EndIf
      
           #.HttpRequest.Server←Server
