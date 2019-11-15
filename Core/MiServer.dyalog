@@ -505,6 +505,7 @@
       REQ.Server←⎕THIS ⍝ Request will also contain reference to the Server
       res←REQ.Response
       startsize←length←0
+      cacheMe←encodeMe←0
      
       :If 200=res.Status
           :If 2=conns.⎕NC'PeerAddr' ⋄ REQ.PeerAddr←conns.PeerAddr ⋄ :EndIf       ⍝ Add Client Address Information
@@ -540,7 +541,6 @@
               REQ.Fail 503 'Service overloaded'
           :EndTrap
      
-          cacheMe←encodeMe←0
           :If 200=res.Status
               :If Config.UseContentEncoding
               :AndIf ~0∊⍴enc←','#.Utils.penclose' '~⍨REQ.GetHeader'accept-encoding' ⍝ check if client supports encoding
