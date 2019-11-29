@@ -1,0 +1,22 @@
+﻿:Class GridSimple : MiPageSample
+⍝ Control:: _DC.Grid
+⍝ Description:: Display a nice grid
+
+    ∇ Compose;content;href;url
+      :Access Public
+      Add _.p'This page demonstrates using the grid. It also is a showcase for using CSS-Attributes to do unexpected things ;)'
+      Data←↑('Name' 'Country')('Vince' 'UK')('Nic' 'France')('Michael' 'Germany')('Brian' 'USA')('Roger' 'Canada')('Morten' 'Denmark')
+      CellAttr←(⍴Data)⍴⊂'style="padding:0.4em;'
+      CellAttr[;2]←CellAttr[;2],¨⊂'font-weight=bold;'
+      CellAttr[2;2],←⊂'background: linear-gradient(to left,#0055a4 0,#0055a4 33.33333333333333%,#fff 33.33333333333333%,#fff 66.66666666666666%,#ef4135 66.66666666666666%,#ef4135 99.99999999999999%);'
+      CellAttr[6;2],←⊂'height: 151.35px;background-repeat: no-repeat;background-image: -webkit-linear-gradient(0deg,#fff,#fff),-webkit-linear-gradient(90deg,#fff,#fff);background-image: linear-gradient(90deg,#fff,#fff),linear-gradient(0deg,#fff,#fff);background-color: #e31836;background-size: 100% 21.62px,21.62px 100%;background-position: 0 64.86px,64.86px 0;'
+      CellAttr←CellAttr,¨'"'
+      
+      
+      HeaderRows←1
+      HeaderAttr←'style="background-color: grey;width: 200px;"'
+      MakeCellIds←MakeRowIds←1
+      Add _.Grid (Data CellAttr HeaderRows HeaderAttr MakeCellIds MakeRowIds)
+    ∇
+
+:EndClass

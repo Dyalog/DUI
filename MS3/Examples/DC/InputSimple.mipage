@@ -1,5 +1,5 @@
 ﻿:Class InputSimple : MiPageSample
-⍝ Control:: _DC.Input _DC.Table
+⍝ Control:: _DC.Input _DC.Table 
 ⍝ Description:: Text, number, password, and range Input elements
 
     ∇ Compose;tab

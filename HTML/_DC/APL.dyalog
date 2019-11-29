@@ -1,5 +1,8 @@
 ﻿:Class APL : #._html.pre
-
+⍝ Description:: embed APL-Code into pages
+⍝ Constructor:: [content [attributes]]
+⍝ content  - APL to show
+⍝ attr     - Attributes of control
     ∇ make
       :Access Public
       :Implements Constructor

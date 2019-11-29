@@ -18,7 +18,7 @@
 ⍝   -----------------------  -------------------
 ⍝   Syncfusion               e-  or ej-
 ⍝   Google Material Design   md-
-⍝   FontAwesome 5            fas- far- fal- fab- (solid, regular, light, brands)
+⍝   FontAwesome 5            fas- far- fal- fab- fad- (solid, regular, light, brands, duotone)
 ⍝                            or alternatively "fas fa-{name}" (longer, same result)
 ⍝ While you may, in theory, mix and match icons from different libraries, it is recommended that you use a single library if possible.
 ⍝
@@ -37,6 +37,7 @@
     :field public shared readonly ApiLevel←3
     :Field public Spec←⍬
     :field public shared readonly DocBase←'http://fontawesome.io/examples/'
+:field public Dummy
 
     ∇ Make
       :Access public
@@ -69,7 +70,7 @@
               ⍝ :if Debugging ^ DevelopmentSys
               ⍝    echo warning about use of fa-
               ⍝ :endif
-          :CaseList 'far' 'fas' 'fal' 'fab'
+          :CaseList 'far' 'fas' 'fal' 'fab' 'fad'
               Use'faIcons5svg'
               Tag←'i'
               AddClass(¯1↓prefix),' fa-',spec  ⍝ change fab-name into "fab fa-name"
