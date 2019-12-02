@@ -13,7 +13,7 @@
  NL←⎕UCS 13
  folderize←{∊1 ⎕NPARTS⊃{⍺,(⍵=1)/'/'}/0 1 ⎕NINFO ⍵}
  arg←,⊆arg
- (AppRoot MSPort WC2Root NoLink)←4↑arg,(≢arg)↓''⍬''1
+ (AppRoot MSPort WC2Root NoLink)←4↑arg,(≢arg)↓''⍬'' 1
 
  :If 0=⎕NC'⎕SE.SALT' ⍝ Do we have SALT?
      #.SALT.Boot

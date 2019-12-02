@@ -1,0 +1,9 @@
+﻿DyalogBuild: 0.1
+ID         : DUI, Version=0.9
+Description: Dyalog User Interface
+Defaults   : ⎕IO←⎕ML←1
+TARGET     : DUI.dws
+
+APL   : *.dyalog, Target=#
+APL   : ../DUI.dyalog
+LX    : lx

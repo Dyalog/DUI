@@ -141,7 +141,8 @@
       :If ~0∊⍴TID∩⎕TNUMS
           →EXIT⊣(r msg)←1('Server is already running on thread',⍕TID)
       :EndIf
-     
+      →EXIT⍴⍨1=⊃(r msg)←(17>APLVersion)/1 'Dyalog v17.1 or later is required to use HRServer' 
+   
       onServerLoad
      
       TID←RunServer&⍬
@@ -594,7 +595,7 @@
     :endsection
 
     :section Misc
-
+    APLVersion←{⊃(//)⎕VFI ⍵/⍨2>+\'.'=⍵}2⊃#.⎕WG 'APLVersion'
     GetFromTableDefault←{⍺←'' ⋄ ⍺{0∊⍴⍵:⍺ ⋄ ⍵}⍵ {((819⌶⍵[;1])⍳⊆819⌶⍺)⊃⍵[;2],⊂''} ⍺⍺} ⍝ default_value (table ∇) value
 
     ∇ r←flag Debugger w

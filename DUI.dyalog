@@ -87,7 +87,7 @@
       :Access public
       :Trap Debug↓0
      
-          →EXIT⍴⍨1=⊃r←(17>APLVersion)/1 'Dyalog v17.0 or later is required to use DUI'
+          →EXIT⍴⍨1=⊃r←(16>APLVersion)/1 'Dyalog v16.0 or later is required to use DUI'
      
          ⍝ Validate path to WC2 framework
      
