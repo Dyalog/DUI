@@ -1,0 +1,12 @@
+﻿:Class APLSimple : MiPageSample
+⍝ Control:: _DC.APL
+⍝ Description:: Show some APL-Glyphs
+
+    ∇ Compose;content;href;url
+      :Access Public
+      Add _.p'Here''s some APL-Code:'
+      Add'Primes (according to Iverson):'
+      Add _.APL'(2=0+.=T∘.|T)/T←⍳100'
+    ∇
+
+:EndClass

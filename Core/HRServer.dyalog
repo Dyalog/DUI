@@ -141,7 +141,7 @@
       :If ~0∊⍴TID∩⎕TNUMS
           →EXIT⊣(r msg)←1('Server is already running on thread',⍕TID)
       :EndIf
-      →EXIT⍴⍨1=⊃(r msg)←(17>APLVersion)/1 'Dyalog v17.1 or later is required to use HRServer' 
+      →EXIT⍴⍨1=r←0<≢msg←(17.1>⎕←APLVersion)/1 'Dyalog v17.1 or later is required to use HRServer' 
    
       onServerLoad
      
