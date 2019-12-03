@@ -1,0 +1,21 @@
+﻿:Class TextareaSimple : MiPageSample
+⍝ Control:: _DC.Textarea _DC.InputSubmit
+⍝ Description:: A textarea and InputSubmit to send the form
+
+    ∇ Compose;frm;ta
+      :Access Public
+     
+      :If _Request.isPost
+          Add _.h3'Previous input'
+          Add _.pre(Get'ta')
+          Add _.hr
+          ∘∘∘
+      :EndIf
+
+      frm←Add _.Form
+      ta←'id=ta name=ta rows=5 cols=50'frm.Add _.Textarea'' 'Short bio:'
+      frm.Add _.br
+      frm.Add _.InputSubmit'Submit'
+    ∇
+
+:EndClass

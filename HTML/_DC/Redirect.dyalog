@@ -1,4 +1,12 @@
 ﻿:Class Redirect : #._html.meta
+⍝ Description:: redirect browser to another page 
+⍝ Constructor:: [Location [Delay]]
+⍝ Location - the new URL 
+⍝ Delay - seconds to wait before navigating to Location
+⍝ Public Fields:: 
+⍝ Location - the new URL 
+⍝ Delay - seconds to wait before navigating to Location
+
     :field public Location←''
     :field public Delay←0
 

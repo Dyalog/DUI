@@ -1,0 +1,13 @@
+﻿:Class RedirectSimple : MiPageSample
+⍝ Control:: _DC.Redirect
+⍝ Description:: Display some info and redirect user to Dyalog's homepage after waiting 10 seconds
+
+    ∇ Compose
+      :Access Public
+
+        Add _.p 'You will be redirected to the Dyalog homepage in 10 seconds!'
+        Add _.Redirect 'www.dyalog.com' 10
+
+    ∇
+
+:EndClass
