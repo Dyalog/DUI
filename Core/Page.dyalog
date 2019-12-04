@@ -38,7 +38,7 @@
       →0↓⍨0∊⍴r←(17.1>APLVersion)/⊂('EN' 11)('Message' 'Dyalog v17.1 or later is required to use this class')
       Props←⎕NS''
       _Config←#.DUI.Server.Config
-      _PageName←3⊃⎕SI,⊂''
+      _PageName←3⊃⎕SI,⊂'defaultPage'
       _PageRef←⎕THIS
     ∇
 
@@ -158,7 +158,7 @@
           _context←''
           :While ~_found←3=⎕NC _context,_callback
               :If ~0∊⍴_context
-                  :If (,'#')≡⍕⍎_context ⍝ popped up to root and still not found?
+                  :If (,'#')≡⍕⍎¯1↓_context ⍝ popped up to root and still not found?
                       :Leave
                   :EndIf
               :EndIf
