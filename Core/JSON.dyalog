@@ -194,7 +194,7 @@
       :Trap 0
           ⎕SIGNAL(⊂('EN' 11)('Message' 'Invalid JSON - argument is not a simple character vector'))if~isChar str
           :If 0=⎕NC'options' ⋄ options←0 ⋄ :EndIf       ⍝ do we preserve APL shape?
-          :If '{'=c1←1↑str←trim str~⎕UCS 8 9 10 13 ⍝ is this a ns?
+          :If '{'=c1←1↑str←trim str ⍝ BPB ~⎕UCS 8 9 10 13 ⍝ is this a ns?
               ⎕SIGNAL(⊂('EN' 2)('Message' 'Invalid JSON - expected closing }'))if'}'≠¯1↑str
               obj←options parseNS trim strip str
           :ElseIf '['=c1                           ⍝ an array maybe?
