@@ -1,0 +1,21 @@
+﻿:Class DirectoryBrowserSimple : MiPageSample
+⍝ Control:: _DC.DirectoryBrowser
+⍝ Description:: DirectoryBrowser enables user to browse folders below your application-directory.
+
+    ∇ Compose;frm;ta;db;Root
+      :Access Public
+      :Trap 6
+          Root←#.DUI.AppRoot
+      :Else
+          Root←#.Utils.WSRoot
+      :EndTrap
+      Add _.h3'DirectoryBrowser Example'
+      Add _.p'This enables you to browse any folder below your <tt>AppRoot</tt>-Directory (',Root,') - in this case you''re seeing "/Examples/"'
+      db←Add _.DirectoryBrowser
+      db.Folder←'/Examples/'   ⍝ Folder below AppRoot/WSRoot 
+      db.Filter←'*.mipage'
+      db.(Down←~Up←0)
+     
+    ∇
+
+:EndClass
