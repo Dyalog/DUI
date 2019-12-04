@@ -1,0 +1,18 @@
+﻿:Class jqAutocompleteSimple: MiPageSample
+⍝ Control:: _JQ.jqAutocompleteSimple 
+⍝ Description:: A sample of using the jqAutocomplete-Library w/o requiring any JS at all!
+
+    ∇ Compose;box
+      :Access public
+      'for=val'Add _.label'Enter the name of a programming language: '
+      '#val autofocus'Add _.Input'type=text'
+      ac←Add _.jqAutocomplete
+      ac.Selector←'#val'
+      ac.Options←⎕NS''
+      ac.Options.source←'Algol' 'APL' 'AppleScript' 'C' 'C#' 'C++' 'Clojure' 'Cobol' 'Fortran' 'F#' 'Haskell' 'Java' 'JavaScript' 'Julia' 'Lisp' 'PHP' 'Prolog' 'Python' 'R' 'Ruby' 'Scala' 'Scheme'
+     
+    ∇
+
+
+
+:EndClass
