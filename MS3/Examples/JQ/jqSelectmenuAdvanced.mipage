@@ -1,0 +1,58 @@
+﻿:Class jqSelectmenuAdvanced: MiPageSample
+⍝ Control:: _JQ.jqSelectmenu _JQ.jqAddClass
+⍝ Description:: Advanced sample of a select with icons (requires JS)
+
+
+    ∇ Compose;box
+      :Access public
+      ⍝ trying to rebuild sample on https://jqueryui.com/selectmenu/#custom_render 
+
+      form←Add _.Form
+     
+      'for=pickicon'form.Add _.label'Pick an icon: '
+      si←'pickicon'New _.select 
+      si.On'iconselectmenuselect' 'Picked'
+      'data-class=ui-icon-arrowthick-2-se-nw'si.Add _.option'Arrow SE/NW'
+      'data-class=ui-icon-script'si.Add _.option'Script'
+      'data-class=ui-icon-suitcase'si.Add _.option'Suitcase'
+
+      ic←form.Add _.jqSelectmenu si  ⍝ advanced syntax, passing an existing select-widget as argument
+      ic.JQueryFn←''  ⍝ avoid auto-creation of jQ-Call, since we do it ourselves below:
+
+       OnLoad←ScriptFollows
+    ⍝       $.widget( "custom.iconselectmenu", $.ui.selectmenu, {
+    ⍝   _renderItem: function( ul, item ) {
+    ⍝     var li = $( "<li>" ),
+    ⍝       wrapper = $( "<div>", { text: item.label } );
+    ⍝
+    ⍝     if ( item.disabled ) {
+    ⍝      li.addClass( "ui-state-disabled" );
+    ⍝ }
+    ⍝
+    ⍝ $( "<span>", {
+    ⍝   style: item.element.attr( "data-style" ),
+    ⍝   "class": "ui-icon " + item.element.attr( "data-class" )
+    ⍝     })
+    ⍝       .appendTo( wrapper );
+    ⍝
+    ⍝     return li.append( wrapper ).appendTo( ul );
+    ⍝   }
+    ⍝ });
+    ⍝  $("#pickicon").iconselectmenu().iconselectmenu("menuWidget").addClass("ui-menu-icons");
+
+   
+      'output'form.Add _.p
+
+
+     
+    ∇
+
+    ∇ r←Picked;choice
+      :Access public
+   ⎕←   ic←Get'pickicon'
+     r←'#pickicon'Replace 'You picked the icon "',ic,'": <span class="ui-icon ',ic,'"></span>'
+     
+    ∇
+
+
+:EndClass

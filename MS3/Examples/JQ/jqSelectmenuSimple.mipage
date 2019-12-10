@@ -1,0 +1,33 @@
+﻿:Class jqSelectmenuSimple: MiPageSample
+⍝ Control:: _JQ.jqSelectmenu
+⍝ Description:: A sample of using the jqAutocomplete-Library w/o requiring any JS at all!
+
+    :field private  TEXTS←'Shoes' 'Boots' 'Sandals' 'Flip-Flops'
+
+    ∇ Compose;box
+      :Access public
+      form←Add _.Form
+     
+      'for=footwear'form.Add _.label'Your favourite footwear?'
+      fw←'footwear'form.Add _.jqSelectmenu(TEXTS)2
+      fw.On'selectmenuselect' 'Go'
+     
+      'output'form.Add _.p
+     
+    ∇
+
+    ∇ r←Go;footwear
+      :Access public
+     
+     ⍝ ... so we can get it down here:
+      footwear←Get'footwear'
+      :If 0∊⍴footwear
+          r←'#output'Replace'You can''t go barefoot!'
+      :Else
+          r←'#output'Replace'You selected: ',footwear
+      :EndIf
+     
+    ∇
+
+
+:EndClass
