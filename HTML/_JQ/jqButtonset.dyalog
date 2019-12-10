@@ -35,7 +35,6 @@
     ∇ Make
       :Access public
       :Implements constructor
-     ⍝ 4 _PageRef._Request.Server.Log'jqButtonset is deprecated and should be replaced with jqControlgroup'
       JQueryFn←'buttonset'
       InternalEvents←IntEvt
     ∇
@@ -43,7 +42,6 @@
     ∇ Make1 arg
       :Access public
       :Implements constructor
-     ⍝ 4 _PageRef._Request.Server.Log'jqButtonset is deprecated and should be replaced with jqControlgroup'
       JQueryFn←'buttonset'
       InternalEvents←IntEvt
       :If ''≢arg
