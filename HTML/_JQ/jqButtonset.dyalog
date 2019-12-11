@@ -1,6 +1,6 @@
 ﻿:class jqButtonset : #._JQ._jqUIWidget
 
-⍝ Description:: jQueryUI Sortable widget/interaction
+⍝ Description:: jQueryUI Buttonset (deprecated!)
 ⍝ Constructor:: [items [type]|selector]
 ⍝ items    - vector of input elements to create
 ⍝ type     - the input types (default 'button') of the created elements
@@ -35,6 +35,7 @@
     ∇ Make
       :Access public
       :Implements constructor
+      ⍝4 _PageRef._Request.Server.Log'jqButtonset is deprecated and should be replaced with jqControlgroup'
       JQueryFn←'buttonset'
       InternalEvents←IntEvt
     ∇
@@ -42,6 +43,7 @@
     ∇ Make1 arg
       :Access public
       :Implements constructor
+      ⍝4 _PageRef._Request.Server.Log'jqButtonset is deprecated and should be replaced with jqControlgroup'
       JQueryFn←'buttonset'
       InternalEvents←IntEvt
       :If ''≢arg

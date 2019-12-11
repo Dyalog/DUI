@@ -1,0 +1,25 @@
+﻿:Class jqButtonSimple: MiPageSample
+⍝ Control:: _JQ.jqButton _.Button _.Handler
+⍝ Description:: Using the jqButton-Library
+
+    ∇ Compose;box
+      :Access public
+      b←Add _.jqButton'First button'
+      '#nr2 disabled'Add _.jqButton'A disabled button'
+      OnLoad←'$("#nr2").button("disable");'
+      nr3←'#nr3'Add _.jqButton'Third button with icon'
+      nr4←'#nr4'Add _.jqButton'Third button with icon'
+      nr4.Type←'checkbox'
+      nr3.Options.icon←'ui-icon-gear'
+      Add _.Button'A regular button'
+      Add _.Handler'button' 'click' 'clickedButton'
+      '#feedback'Add _.p
+    ∇
+
+    ∇ R←clickedButton
+      :Access public
+      R←Execute'txt = ''You clicked button "'' + $(',_what,').text()+ ''"'';$("#feedback").text(txt) '
+    ∇
+
+
+:EndClass

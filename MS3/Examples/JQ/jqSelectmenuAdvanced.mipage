@@ -11,7 +11,7 @@
      
       'for=pickicon'form.Add _.label'Pick an icon: '
       si←'pickicon'New _.select 
-      si.On'iconselectmenuselect' 'Picked'
+      si.On'select' 'Picked'
       'data-class=ui-icon-arrowthick-2-se-nw'si.Add _.option'Arrow SE/NW'
       'data-class=ui-icon-script'si.Add _.option'Script'
       'data-class=ui-icon-suitcase'si.Add _.option'Suitcase'

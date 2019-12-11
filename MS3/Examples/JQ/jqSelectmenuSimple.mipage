@@ -1,6 +1,6 @@
 ﻿:Class jqSelectmenuSimple: MiPageSample
 ⍝ Control:: _JQ.jqSelectmenu
-⍝ Description:: A sample of using the jqAutocomplete-Library w/o requiring any JS at all!
+⍝ Description:: A simple use case of jqSelectmenu
 
     :field private  TEXTS←'Shoes' 'Boots' 'Sandals' 'Flip-Flops'
 

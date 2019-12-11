@@ -1,5 +1,5 @@
 ﻿:Class jqButton : #._JQ._jqUIWidget
-⍝ Description:: jQueryUI Sortable widget/interaction
+⍝ Description:: jQueryUI Button widget (deprecated!)
 ⍝ Constructor:: [text [type]]
 ⍝ text - the text/content to appear on the button
 ⍝ type - one of 'submit' (default), 'reset', or 'button'
@@ -39,6 +39,7 @@
           ContainerTag←'input'
           Container.NoEndTag←1
           Container.type←Type
+          ⍝4 Log ((#.Strings.lc Type)∊'checkbox' 'radio')/'jqButton.Type∊''checkbox'' ''radio'' is deprecated and should be replaced with jqCheckboxradio!'
       :Case 'anchor'
           ContainerTag←,'a'
           Container.Add(⊂Text)

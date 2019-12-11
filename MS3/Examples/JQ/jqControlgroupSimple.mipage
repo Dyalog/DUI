@@ -1,6 +1,6 @@
 ﻿:Class jqControlgroupSimple: MiPageSample
 ⍝ Control:: _JQ.jqControlgroup _.Handler
-⍝ Description:: A sample of using the jqAutocomplete-Library w/o requiring any JS at all!
+⍝ Description:: Grouping controls with jqControlgroup
 
 :field private  TEXTS←'Shoes' 'Boots' 'Sandals' 'Flip-Flops'
 
