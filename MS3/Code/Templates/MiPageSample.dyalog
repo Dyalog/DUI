@@ -3,6 +3,8 @@
    ⍝ - adding a header and footer
    ⍝ - adding a handler that will toggle the display of the web page and its APL source code
 
+    :Field Public _Sessioned←0
+
     ∇ {r}←Wrap;lang;server;src;c
       :Access Public
      
