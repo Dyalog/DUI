@@ -1,5 +1,5 @@
 ﻿:Class jqButton : #._JQ._jqUIWidget
-⍝ Description:: jQueryUI Button widget (deprecated!)
+⍝ Description:: jQueryUI Button widget (partially deprecated!)
 ⍝ Constructor:: [text [type]]
 ⍝ text - the text/content to appear on the button
 ⍝ type - one of 'submit' (default), 'reset', or 'button'
