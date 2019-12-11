@@ -1,6 +1,6 @@
 ﻿:Class jqAutocompleteSimple: MiPageSample
-⍝ Control:: _JQ.jqAutocompleteSimple 
-⍝ Description:: A sample of using the jqAutocomplete-Library w/o requiring any JS at all!
+⍝ Control:: _JQ.jqAutocomplete _.Input
+⍝ Description:: A sample of using the jqAutocomplete-Library w/o requiring any JS at all
 
     ∇ Compose;box
       :Access public
@@ -8,8 +8,7 @@
       '#val autofocus'Add _.Input'type=text'
       ac←Add _.jqAutocomplete
       ac.Selector←'#val'
-      ac.Options←⎕NS''
-      ac.Options.source←'Algol' 'APL' 'AppleScript' 'C' 'C#' 'C++' 'Clojure' 'Cobol' 'Fortran' 'F#' 'Haskell' 'Java' 'JavaScript' 'Julia' 'Lisp' 'PHP' 'Prolog' 'Python' 'R' 'Ruby' 'Scala' 'Scheme'
+      ac.Terms←'Algol' 'APL' 'AppleScript' 'C' 'C#' 'C++' 'Clojure' 'Cobol' 'Fortran' 'F#' 'Haskell' 'Java' 'JavaScript' 'Julia' 'Lisp' 'PHP' 'Prolog' 'Python' 'R' 'Ruby' 'Scala' 'Scheme'
      
     ∇
 
