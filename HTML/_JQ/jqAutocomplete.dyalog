@@ -1,5 +1,5 @@
 ﻿  :class jqAutocomplete : #._JQ._jqUIWidget
-⍝ Description:: jQueryUI SelectAutocomplete widget
+⍝ Description:: jQueryUI Autocomplete widget
 ⍝ Constructor:: [pars]
 ⍝ pars - parameters
 ⍝

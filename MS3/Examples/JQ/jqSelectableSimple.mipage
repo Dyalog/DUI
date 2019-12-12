@@ -1,0 +1,39 @@
+﻿:Class jqSelectableSimple: MiPageSample
+⍝ Control:: _JQ.jqSelectable _.Style
+⍝ Description:: Simple example of using jqDatepicker (using CSS-Styling for the items)
+
+    ∇ Compose
+      :Access public
+      Add _.Style ScriptFollows
+  ⍝ .selectable .ui-selecting { background: #FECA40;}
+  ⍝ .selectable .ui-selected { background: #F39814; color: white; }
+  ⍝ .selectable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+  ⍝ .selectable li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px;  border: solid 1px gray;}
+      makeList←{
+          l←(⍵,'.selectable')#.HtmlElement.New _.ul
+               sink←l.Add _.li'First item'
+               sink←l.Add _.li'Second item'
+               sink←l.Add _.li'Third item'
+               sink←l.Add _.li'Fourth item'
+               sink←l.Add _.li'Fifth item'
+               sink←l.Add _.li'Sixth item'
+               sink←l.Add _.li'Seventh item'
+          l
+      }
+     
+      Add _.h3
+      Add _.p ScriptFollows
+      ⍝ The two lists in the example illustrate the difference when applying jqSelectable: items become selectable (by dragging the mouse over a range of elements or by ctrl-clicking individual items).
+
+      Add _.h3'Regular behaviour'
+      Add makeList''
+
+      Add _.h3'A list with selectable items'
+      Add makeList'#l2 '
+     
+      Add _.jqSelectable'#l2'
+    ∇
+
+
+
+:EndClass
