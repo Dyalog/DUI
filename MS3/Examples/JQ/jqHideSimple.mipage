@@ -1,0 +1,33 @@
+﻿:Class jqHideSimple : MiPageSample
+⍝ Control:: _JQ.jqHide
+⍝ Description:: using jqHide to make a div appear on loading the page.
+
+    ∇ Compose;dp
+      :Access public
+      'demo style="border:2px solid green;padding-bottom:2em;"'Add _.div ScriptFollows
+      ⍝ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
+      ⍝ At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
+      ⍝ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
+      ⍝ At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
+      ⍝ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
+      ⍝ At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
+      ⍝ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
+      ⍝ At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
+
+
+      dp←Add _.jqHide('#demo' 'drop' ''  999)
+
+      Add _.p 'Did you see the paragraph slide away?' 
+      Add _.h2'show paragraph using effects'
+      'onclick=$("#demo").show("drop");'Add _.Button'drop'
+      'onclick=$("#demo").show("explode");'Add _.Button'explode'
+      Add _.h2'hide paragraph using effects'
+      'onclick=$("#demo").hide("drop");'Add _.Button'drop'
+      'onclick=$("#demo").hide("explode");'Add _.Button'Explode'
+      
+     
+    ∇
+
+
+
+:EndClass
