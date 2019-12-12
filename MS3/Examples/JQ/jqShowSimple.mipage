@@ -1,10 +1,11 @@
-﻿:Class jqHideSimple : MiPageSample
-⍝ Control:: _JQ.jqHide
-⍝ Description:: using jqHide to make a div disappear on loading the page.
+﻿:Class jqHideShow : MiPageSample
+⍝ Control:: _JQ.jqShow
+⍝ Description:: using jqShow to make a div appear on loading the page.
 
     ∇ Compose
       :Access public
-      'demo style="border:2px solid green;padding-bottom:2em;"'Add _.div ScriptFollows
+      ⍝ display:none is important, since it won't be shown if is visible already!
+      'demo style="border:2px solid green;padding-bottom:2em;display:none;"'Add _.div ScriptFollows
       ⍝ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
       ⍝ At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
       ⍝ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
@@ -15,9 +16,9 @@
       ⍝ At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
      
      
-      Add _.jqHide('#demo' 'drop' '' 999)
+      Add _.jqShow('#demo' 'drop' '' 999)
      
-      Add _.p'Did you see the paragraph sliding away?'
+      Add _.p'Did you see the paragraph sliding in?'
       Add _.h2'show paragraph using effects'
       'onclick=$("#demo").show("drop");'Add _.Button'drop'
       'onclick=$("#demo").show("explode");'Add _.Button'explode'
@@ -31,3 +32,4 @@
 
 
 :EndClass
+
