@@ -2,7 +2,7 @@
 ⍝ Control:: _JQ.jqButton _.Button _.Handler
 ⍝ Description:: Using the jqButton-Library
 
-    ∇ Compose;box
+    ∇ Compose;b;nr3;nr4
       :Access public
       b←Add _.jqButton'First button'
       '#nr2 disabled'Add _.jqButton'A disabled button'

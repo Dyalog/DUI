@@ -2,7 +2,7 @@
 ⍝ Control:: _JQ.jqAutocomplete _.Input
 ⍝ Description:: A sample of using the jqAutocomplete-Library w/o requiring any JS at all
 
-    ∇ Compose;box
+    ∇ Compose;ac
       :Access public
       'for=val'Add _.label'Enter the name of a programming language: '
       '#val autofocus'Add _.Input'type=text'

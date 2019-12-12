@@ -2,13 +2,14 @@
 ⍝ Control:: _JQ.jqSelectmenu
 ⍝ Description:: A simple use case of jqSelectmenu
 
-    :field private  TEXTS←'Shoes' 'Boots' 'Sandals' 'Flip-Flops'
+    
 
-    ∇ Compose;box
+    ∇ Compose;form;fw;TEXTS
       :Access public
       form←Add _.Form
      
       'for=footwear'form.Add _.label'Your favourite footwear?'
+      TEXTS←'Shoes' 'Boots' 'Sandals' 'Flip-Flops'
       fw←'footwear'form.Add _.jqSelectmenu(TEXTS)2
       fw.On'selectmenuselect' 'Go'
      
