@@ -1,6 +1,6 @@
-﻿:Class d3Simple : MiPageSample
-⍝ Control:: _JS.dimple
-⍝ Description:: Dimple data chart
+﻿:Class d3Advanced : MiPageSample
+⍝ Control:: _JS.d3
+⍝ Description:: "responsive" chart (click on bar to see "responmse")
 
     ∇ Compose
       :Access Public

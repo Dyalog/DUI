@@ -1,0 +1,27 @@
+﻿:Class d3Simple : MiPageSample
+⍝ Control:: _JS.d3
+⍝ Description:: d3 pseudo-responsive data chart
+
+    ∇ Compose
+      :Access Public
+      Add _.Style ScriptFollows
+        ⍝ .bar {
+        ⍝     fill: green;
+        ⍝  }
+     
+        ⍝  .highlight {
+        ⍝     fill: red;
+        ⍝  }
+     
+        ⍝  .title {
+        ⍝     fill: blue;
+        ⍝     font-weight: bold;
+        ⍝  }
+     
+      Use'd3'
+      Add _.p'Bar color changes as you hover over it...'
+      'height=500 width=500'Add _.svg
+      'src=./d3Advanced.js'Add _.Script
+    ∇
+
+:EndClass
