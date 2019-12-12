@@ -1,0 +1,22 @@
+﻿:Class jqDatepickerAdvanced : MiPageSample
+⍝ Control:: _JQ.jqDatePicker
+⍝ Description:: Advanced example of using jqDatePicker to show week numbers and enable menu-selection of years and mnonths
+
+    ∇ Compose;dp
+      :Access public
+      Add _.span 'This example shows using advanced options of jqDatepicker:'
+      list←Add _.ul 
+      list.Add _.li 'display weeknumbers (week starts on Monday)'
+      list.Add _.li 'menu to select year & month instead of navigation with arrows <i>(note that years are not an infinite list, but the selection shows a moving window of 20 yrs)'
+      'for=val'Add _.label'Your birthday: '
+      '#val autofocus'Add _.Input('type=text value="',(,'ZI2,<.>,ZI2,<.>,ZI4'⎕fmt 1 3⍴⎕ts),'"')
+      dp←Add _.jqDatePicker
+      dp.Selector←'#val'
+      dp.Options.(showWeek    changeMonth      changeYear)←_true ⍝ this wors because _true is nested...
+      dp.Options.firstDay←1
+     
+    ∇
+
+
+
+:EndClass

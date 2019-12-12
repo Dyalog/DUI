@@ -1,0 +1,16 @@
+﻿:Class jqDatepickerSimple: MiPageSample
+⍝ Control:: _JQ.jqDatePicker
+⍝ Description:: Simple example of using jqDatepicker
+
+    ∇ Compose;dp
+      :Access public
+      'for=val'Add _.label'Your birthday: '
+      '#val autofocus'Add _.Input('type=text value="',(,'ZI2,<.>,ZI2,<.>,ZI4'⎕fmt ⌽1 3⍴⎕ts),'"')
+      dp←Add _.jqDatePicker
+      dp.Selector←'#val'
+     
+    ∇
+
+
+
+:EndClass
