@@ -1,0 +1,19 @@
+﻿:Class jqDialogSimple : MiPageSample
+⍝ Control:: _JQ.jqDialog
+⍝ Description:: simple example of a dialog displaying a message 
+
+    ∇ Compose;dp
+      :Access public
+      'myInfo title="Important Announcement"'Add _.div'Notice how you can move this "window" around...'
+      dp←Add _.jqDialog'#myInfo'
+      dp.On'dialogclose' 'OnClose'
+      '#output'Add _.p
+    ∇
+
+∇ R←OnClose 
+:access public
+R←'#output'Replace'You closed the dialog!'
+∇
+
+
+:EndClass

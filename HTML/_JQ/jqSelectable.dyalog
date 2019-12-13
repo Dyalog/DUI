@@ -19,8 +19,9 @@
       :Access public
       :If 0<≢sel
           sel←⊆sel
-          Selector←sel
+          Selector←⊃sel
           :If 0<≢options←1↓sel
+              options←⊃options
               :If isRef⊃options ⋄ Options←⊃options ⍝ it's a namespace!
               :Else
                   :If 1=⍴⍴options         ⍝ vector
@@ -29,7 +30,7 @@
                       options←↓((0.5×≢options),2)⍴options
                   :ElseIf 2=⍴⍴options ⋄ options←↓options ⍝ convert a name/value matrix to N/V-pairs
                   :EndIf
-                  Options.{v←2⊃⍵ ⋄ ⍎(1⊃⍵),'←v'}¨options
+                  Set/¨options
               :EndIf
           :EndIf
       :EndIf
