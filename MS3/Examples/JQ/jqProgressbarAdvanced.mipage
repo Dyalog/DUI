@@ -1,0 +1,32 @@
+﻿:Class jqProgressbarAdvanced : MiPageSample
+⍝ Control:: _JQ.jqProgressbar
+⍝ Description:: a progressing progressbar
+
+    :field public _Sessioned←1  ⍝ this will keep globals in the class!
+    :field public pb
+    :field public ti
+    :field public c←0
+
+    ∇ Compose
+      :Access public
+      isSessioned←1
+      c←0
+      'for=#prog3'Add _.label'A progressing progressbar'
+      pb←'#prog3'Add _.jqProgressbar 100(0 '')
+     
+      ti←Add _.Timer 75
+      On'tick' 'cb'
+    ∇
+
+    ∇ R←cb
+      :Access public
+      ⎕←c,':',c
+      :If c≤100
+          R←Execute pb.Update(c(,'I3,<%>'⎕FMT c))
+          c+←1
+      :Else
+          R←Execute ti.Stop
+      :EndIf
+    ∇
+
+:EndClass

@@ -1,0 +1,20 @@
+﻿:Class jqProgressbarSimple : MiPageSample
+⍝ Control:: _JQ.jqProgressbar
+⍝ Description:: simple example of a progressbar
+
+    ∇ Compose;pb
+      :Access public
+      'for=#prog'Add _.label'A progressbar, indicating progress 25%'
+      pb←'#prog'Add _.jqProgressbar(100 25)
+     
+      'for=#prog2'Add _.label'An indeterminate progressbar'
+      pb←'#prog2'Add _.jqProgressbar(100 _false)
+     
+      'for=#prog3'Add _.label'A progressbar at 50%, displaying text-info as well'
+      pb←'#prog3'Add _.jqProgressbar(100(50 'Half full or half empty?'))
+     
+    ∇
+
+
+
+:EndClass
