@@ -20,7 +20,6 @@
 
     ∇ R←cb
       :Access public
-      ⎕←c,':',c
       :If c≤100
           R←Execute pb.Update(c(,'I3,<%>'⎕FMT c))
           c+←1
