@@ -1,7 +1,7 @@
 ﻿:Class jqTooltip  : #._JQ._jqUIWidget
 ⍝ Description:: jQueryUI Progressbar  Widget
 ⍝ Constructor:: [tip [items [options]]]
-⍝ tip - Content of the tooltip. Can be a (a) an HTML-String, (b) a HTML-Object ... 
+⍝ tip - Content of the tooltip. Can be a (a) an HTML-String, (b) a MiServer/DUI-Object or (c) a nested string that returns a reference to a jQuery-Element.
 ⍝ items - a selector indicating the items that should show tooltip (and optionally an attribute with the tooltip-content)
 ⍝         This is one of the rare case where a selector is not needed - by default ALL elements with a title-attibute will get a tooltip. items is typically used for finer selection of elements.
 ⍝ options - a namespace or a vector of names and values, optionally nested as pairs(or a matrix of name/value-pairs.
@@ -21,15 +21,17 @@
       JQueryFn←'tooltip'
     ∇
 
-    ∇ Make1 args;options
+    ∇ Make1 args;options;tip;items
       :Access public
       :Implements constructor :base
       JQueryFn←'tooltip'
       :If 0<≢args
           args←,args
           (tip items options)←args,(≢args)↓3/UNDEF
-          :If tip≢UNDEF ⋄ Tip←sel ⋄ :EndIf
-          :If items≢UNDEF ⋄ Items←sel ⋄ :EndIf
+          :If tip≢UNDEF ⋄ Tip←tip ⋄ :EndIf
+          :If items≢UNDEF ⋄ Items←items 
+          :if Selector≡'' ⋄ Selector←items⋄:endif
+          :EndIf
           :If isRef⊃options ⋄ Options←⊃options ⍝ it's a namespace!
           :Else
               :If options≢UNDEF
@@ -48,9 +50,12 @@
 
     ∇ R←Render;text;cnt
       :Access public
-:if ''≡s←Selector ⋄ Selector←'document'⋄:endif
-:if Items≢''⋄'items'Set Items⋄:endif
-:if Items≢''⋄'content'Set Tip⋄:endif
+      :If ''≡s←Selector ⋄ Selector←'document' ⋄ :EndIf
+      :If Items≢'' ⋄ 'items'Set Items ⋄ :EndIf
+      :If Tip≢'' 
+      :if isRef Tip ⋄ Tip←renderIt Tip ⋄ :endif
+       'content'Set Tip 
+        :EndIf
       R←⎕BASE.Render
       Selector←s
     ∇

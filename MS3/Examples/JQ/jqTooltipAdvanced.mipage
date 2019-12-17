@@ -1,0 +1,67 @@
+﻿:Class jqTooltipAdvanced: MiPageSample
+⍝ Control:: _JQ.jqTooltip _.Style
+⍝ Description:: a crowded page with useful/advanced information and samples of jqTooltip
+
+    ∇ Compose;box;t;q5;p;lg
+      :Access public
+     
+      Add _.Style ScriptFollows
+    ⍝ .hasTooltip {
+    ⍝  background-color: yellow;
+    ⍝ border: thick dashed red;
+    ⍝ }
+      Add _.h1'Advanced uses of jqTooltip'
+      Add _.h2'Tooltips using other elements'
+      Add _.h3'First example: referring to the element'  ⍝------------------------------------------------------------------------------------------------------------------------------------
+      Add _.p ScriptFollows
+    ⍝ Following this paragraph is a thumbnail of a famous photo. If you hover over the photo, the tooltip will show a larger version of that foto.
+    ⍝ Be aware that when referring to other elements of the site, jqTooltip will remove them from the site when displaying the tooltip,
+    ⍝ so it's recommended to position them in separate <tt>div</tt>s with a <tt>style</tt>-attribute that hides these elements.
+     
+      p←'style=display:none'Add _.div               ⍝ add an invisible div t
+      lg←'#img1L'New _.img'src=../Data/pic1.png'  ⍝ and put the large image into it
+     
+      p←'#img1T .hasTooltip'Add _.img'src=../Data/pic1_thumb.png'
+      t←Add _.jqTooltip(⊂'$("#img1L")')'#img1T'
+      t.Selector←'#img1T'
+     
+      Add _.h3'Why you should use hidden elements'       ⍝------------------------------------------------------------------------------------------------------------------------------------
+      p←Add _.p
+      '#q1 .hasTooltip'p.Add _.span'These words'
+      p.Add _.span'use the content of the following paragraph as their tooltip.'
+      Add _.jqTooltip(⊂'$("#q2")')'#q1'
+      '#q2'p.Add _.p'Not a good idea - because this paragraph will be removed as soon as you trigger display of the tooltip.'
+      '#q3'Add _.p'And this is a confusing effect.'
+      p←Add _.p'So, '
+      '#q4 .hasTooltip'p.Add _.span' be sure to use hidden page-elements for your tooltips!'
+      Add _.jqTooltip(⊂'$("#q5")')'#q4'
+      q5←'#q5'('style=display:none;'Add _.div).Add _.p'And this will work <b>beautifully</b> without any noticeable changes of your page! And notice how you can also use'
+      q5.Add'HTML-Markup in such elements! (Not possible when using <tt>title</tt> or the <tt>content</tt>-attribute.)'
+     
+      Add _.h3'Using objects as tips'                    ⍝-----------------------------------------------------------------------------------------------------------------------------------
+      Add _.p ScriptFollows
+     ⍝ This example shows how you can "inject" a MiServer/DUI-Object into a tooltip by passing it to the constructor. In contrast
+     ⍝ to the previous example, the content of the tip does not appear anywhere else in the document.
+      p←'#img2T .hasTooltip'Add _.img'src=../Data/pic1_thumb.png'
+      Add _.jqTooltip lg'#img2T'  ⍝ "items" will be the default-selector, too, so we do not need to specify it explicitely as in 1st example.
+     
+     
+      Add _.h2'Not using the title-attribute to specify content of the tooltip' ⍝------------------------------------------------------------------------------------------------------------
+      Add _.p ScriptFollows
+     ⍝ Some <span id="t1" class="hasTooltip">words</span> in this paragraph have <span id="t2" class="hasTooltip">tips</span> assigned to them through separate objects that define the text of the tooltip.
+     ⍝ Previously we only saw the <span id="t3" class="hasTooltip">default method</span> of doing that.
+      Add _.jqTooltip'yes, there are not many words...' '#t1'
+      Add _.jqTooltip'we should have mentioned that these are actually very useful tips!' '#t2'
+      Add _.jqTooltip'by using the title-attribute. ' '#t3'
+     
+      Add _.h2'Tracking the mouse' ⍝---------------------------------------------------------------------------------------------------------------------------------------------------------
+      '#tracker .hasTooltip title="Indeed, tip follows mouse!"'Add _.p ScriptFollows
+    ⍝ This paragraph has a tooltip attached using the "track"-attribute - watch how the tip follows your mouse
+    ⍝ as you move it across this paragraph.
+      t←Add _.jqTooltip
+      t.Selector←'#tracker'
+      'track't.Set _true
+    ∇
+
+
+:EndClass
