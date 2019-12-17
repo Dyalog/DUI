@@ -1,0 +1,24 @@
+﻿:Class jqTooltipSimple: MiPageSample
+⍝ Control:: _JQ.jqSwitchClass _html.head
+⍝ Description:: Interchange classes during callback
+
+    ∇ Compose;box
+      :Access public
+     
+      Add _.Style ScriptFollows
+    ⍝ .hasTooltip {
+    ⍝  background-color: yellow;
+    ⍝ border: thick dashed red;
+    ⍝ }
+      Add _.h2'Tooltips'
+      p←Add _.p'In this example, the relevant elements will be styled in <span class="hasTooltip" title="See, I told you so!">a distinct way</span> for your convenience.'
+      p←Add _.p
+      'for=age'p.Add _.label'Your age: '
+      'age .hasTooltip title="Do not worry - we won''t tell anyone!"'p.Add _.Input'type=number'
+     
+      Add _.jqTooltip  ⍝ by default, will use title-ttibute, so we need no arguments here at all!
+     
+    ∇
+
+
+:EndClass
