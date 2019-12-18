@@ -1,0 +1,21 @@
+﻿:Class InputSubmitSimple : MiPageSample
+⍝ Control:: _DC.InputSubmit _DC.Select
+⍝ Description:: InputSubmit to enable form-submission
+
+    ∇ Compose;frm
+      :Access Public
+     
+     
+      frm←Add _.Form
+      :If _Request.isGet
+      :OrIf 0=≢_Request.Data ⍝ this can only happen if wewre showing data and user clicked "Show empty form"
+      'for=pl'frm.Add _.label'Your favourite programming language?'
+      'pl'frm.Add _.Select((,⊂'APL')(,1))  ⍝ ;-)
+          frm.Add _.InputSubmit'Done'
+      :Else
+          frm.Add _.p'Congratulations! According to the <span title="There can be only one!">Highlander-Theorem</span>, you made a wise choice!'
+          frm.Add _.InputSubmit'Pick again'
+      :EndIf
+    ∇
+
+:EndClass
