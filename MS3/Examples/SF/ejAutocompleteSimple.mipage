@@ -1,0 +1,24 @@
+﻿:Class ejAutocompleteSimple: MiPageSample
+⍝ Control:: _SF.ejAutocomplete _DC.InputSubmit _DC.Input
+⍝ Description:: Syncfusion Autocomplete control
+
+    ∇ Compose
+      :Access public
+      f←Add _.Form
+      ⎕se.Dyalog.Utils.display 'Data'_Request.Data
+      :If isPost
+      :AndIf 0<≢_Request.Data
+          f.Add _.p'You picked "',(Get'lng'),'". Thanks, we keep your data confidential - your vote will not be counted!'
+          f.Add _.InputSubmit'Do it again!'
+      :Else
+          'for=lng'f.Add _.label'Name of a programming language:'
+          'lng'f.Add _.Input'type=text'
+          ds←⎕NS''
+          ac←f.Add _.ejAutocomplete
+          ac.Selector←'#lng'
+          'dataSource'ac.Set'APL' 'Basic' 'C' 'C#' 'C++' 'F#' 'J' 'Julia' 'Haskell' 'K' 'Lisp' 'Pascal' 'Prolog' 'Python' 'Q' 'Rust' 'Visual Basic'
+          f.Add _.InputSubmit'Done'
+      :EndIf
+    ∇
+
+:EndClass
