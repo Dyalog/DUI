@@ -1,5 +1,5 @@
 ﻿:Class ejCaptchaSimple: MiPageSample
-⍝ Control:: _SF.ejCaptch _DC.InputSubmit _DC.Input
+⍝ Control:: _SF.ejCaptcha _DC.InputSubmit _DC.Input
 ⍝ Description:: Syncfusion Autocomplete control with categorized selections and validation
 
     ∇ Compose
