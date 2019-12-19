@@ -1,0 +1,21 @@
+﻿:Class ejCaptchaSimple: MiPageSample
+⍝ Control:: _SF.ejCaptch _DC.InputSubmit _DC.Input
+⍝ Description:: Syncfusion Autocomplete control with categorized selections and validation
+
+    ∇ Compose
+      :Access public
+      f←Add _.Form
+      :If isPost
+      :AndIf 0<≢_Request.Data
+          f.Add _.p'Your input "',(Get'foo'),'". This is important for us - thanks! :-)'
+          f.Add _.InputSubmit'Once again!'
+      :Else
+          'for=foo'f.Add _.label'Spontaneous input:'
+          'foo'f.Add _.Input'type=text'
+ca←f.Add _.ejCaptcha
+'targetButton'ca.Set'done'
+          '#done'f.Add _.InputSubmit'Done'
+      :EndIf
+    ∇
+
+:EndClass

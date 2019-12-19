@@ -214,6 +214,10 @@
 		<uses>Syncfusion</uses	>
 	</resource>
 	<resource>
+		<name>ejCaptcha</name>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
 		<name>ejChart</name>
 		<uses>Syncfusion</uses>
 	</resource>
