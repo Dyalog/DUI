@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Resources>
-<!-- 
+	<!-- 
 *******************************
 *    Dyalog Widget resources  *
 *******************************
@@ -19,7 +19,7 @@
 		<style>/Dyalog/dcPanel/dcPanel.css</style>
 	</resource>
 
-<!-- 
+	<!-- 
 *******************************
 *      Bootstrap resources    *
 *******************************
@@ -32,13 +32,13 @@
 	</resource>
 
 	<resource>
-	  	<name>Bootstrap4</name>
-	  	<uses>JQuery</uses>
-	    <script>/Bootstrap4/popper.min.js</script>
-	    <script>/Bootstrap4/bootstrap.min.js</script>
-	    <style>/Bootstrap4/bootstrap.min.css</style>
+		<name>Bootstrap4</name>
+		<uses>JQuery</uses>
+		<script>/Bootstrap4/popper.min.js</script>
+		<script>/Bootstrap4/bootstrap.min.js</script>
+		<style>/Bootstrap4/bootstrap.min.css</style>
 	</resource>
-<!--
+	<!--
 *******************************
 *      FontAwesome5 Resources *
 *******************************
@@ -47,13 +47,13 @@
 		<name>faIcons5svg</name>
 		<script>/FontAwesome5/js/all.js</script>
 	</resource>
-	
+
 	<resource>
 		<name>faIcons5css</name>
 		<style>/FontAwesome5/css/all.css</style>
 	</resource>
 
-<!-- 
+	<!-- 
 ******************************************
 *      Google Material Design Icons      *
 ******************************************
@@ -63,29 +63,29 @@
 		<style>/material-icons/material-icons.css</style>
 	</resource>
 
-<!-- 
+	<!-- 
 *********************************
 *      Syncfusion ej-Icons      *
 *********************************
 -->
 	<resource>
 		<name>ejIcons</name>
-		<uses>sfTheme</uses>   <!-- Syncfusion ejIcons are built into theme -->
+		<uses>sfTheme</uses>		<!-- Syncfusion ejIcons are built into theme -->
 	</resource>
 
-<!-- 
+	<!-- 
 ********************************************
 *      Datatable - just the bare core,     *
 * more stuff loaded via DataTable.dyalog   *
 ********************************************
 -->
-<resource>
-	<name>DataTables</name>
-	<uses>JQuery</uses>
-	<script>/DataTables/js/jquery.dataTables.min.js</script>
-</resource>
+	<resource>
+		<name>DataTables</name>
+		<uses>JQuery</uses>
+		<script>/DataTables/js/jquery.dataTables.min.js</script>
+	</resource>
 
-<!-- 
+	<!-- 
 *********************************************
 *      jBox resources (including plugins)   *
 *********************************************
@@ -102,7 +102,7 @@
 		<style>/jBox/plugins/Image/jBox.Image.css</style>
 		<script>/jBox/plugins/Image/jBox.Image.min.js</script>
 	</resource>
-<!-- 
+	<!-- 
 *********************************
 *      d3/dimple resources      *
 *********************************
@@ -116,7 +116,7 @@
 		<uses>d3</uses>
 		<script>/PlugIns/Other/dimple/dimple.v2.3.0.min.js</script>
 	</resource>
-<!-- 
+	<!-- 
 **************************
 *    jQuery resources    *
 **************************
@@ -131,7 +131,7 @@
 		<script>/JQuery/APL_JavaScript_Utils.js</script>
 	</resource>
 	<resource>
-		<name>jQuery</name> <!-- define an alias for jQuery using its proper name -->
+		<name>jQuery</name>		<!-- define an alias for jQuery using its proper name -->
 		<uses>JQuery</uses>
 	</resource>
 	<resource>
@@ -165,7 +165,12 @@
 		<uses>JQuery</uses>
 		<script>/Syncfusion/assets/external/jquery.validate.min.js</script>
 	</resource>
-        <resource>
+	<resource>
+		<name>_SF.validate</name>
+		<uses>jquery.validate</uses>
+		<script>/Syncfusion/Dyalog/init_validation.js</script>
+	</resource>
+	<resource>
 		<name>jsrender</name>
 		<script>/Syncfusion/assets/external/jsrender.min.js</script>
 	</resource>
@@ -188,7 +193,7 @@
 		<uses>sfTheme</uses>
 		<uses>SyncfusionJS</uses>
 	</resource>
-<!-- 
+	<!-- 
 *********************************
 *  Widget Syncfusion resources  *
 *********************************
@@ -200,6 +205,7 @@
 	<resource>
 		<name>ejAutocomplete</name>
 		<uses>Syncfusion</uses>
+		<uses>jsrender</uses>
 	</resource>
 	<resource>
 		<name>ejBarcode</name>
@@ -237,6 +243,7 @@
 	<resource>
 		<name>ejCurrencyTextbox</name>
 		<uses>Syncfusion</uses>
+		<uses>jsrender</uses>
 	</resource>
 	<resource>
 		<name>ejDatePicker</name>
@@ -448,20 +455,20 @@
 		<uses>Syncfusion</uses>
 	</resource>
 
-<!--
+	<!--
 *********************************
 *      chosen resources         *
 *********************************
 -->
-<resource>
-	<name>chosen</name>
-	<uses>JQuery</uses>
-	<script>/chosen/chosen.jquery.min.js</script>
-	<script>/chosen/chosen-tools.js</script>
-	<style>/chosen/chosen.min.css</style>
-</resource>
+	<resource>
+		<name>chosen</name>
+		<uses>JQuery</uses>
+		<script>/chosen/chosen.jquery.min.js</script>
+		<script>/chosen/chosen-tools.js</script>
+		<style>/chosen/chosen.min.css</style>
+	</resource>
 
-<!-- 
+	<!-- 
 ****************************
 *     jsSHA resources      *
 ****************************

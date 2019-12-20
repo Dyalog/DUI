@@ -1,0 +1,45 @@
+﻿:Class ejAutocompleteAdvanced: MiPageSample
+⍝ Control:: _SF.ejAutocomplete _DC.InputSubmit _DC.Input
+⍝ Description:: Syncfusion Autocomplete control with categorized selections, validation and a popup-button to show list of suggestions.
+
+    ∇ Compose;choices;ac;f
+      :Access public
+      f←Add _.Form
+      :If isPost
+      :AndIf 0<≢_Request.Data
+          f.Add _.p'You picked "',(Get'lng'),'". Thanks, we keep your data confidential - your vote will not be counted!'
+          f.Add _.InputSubmit'Do it again!'
+      :Else
+          Use'_SF.validate'   ⍝ need to separately include this to validate the form
+
+
+          f.Add _.p'This sample features a categorized autocomplete list and validation to prevent submission of an empty form.'
+          f.Add _.p 'Additionally, the input features a "popup-button" that shows the list of suggestions Autocomplete uses.'
+          f.Add _.p'Autocomplete suggests all words that <strong>contain</strong> the text you entered, so typing <tt>a</tt> will also suggest "Julia".'
+          'for=lng'f.Add _.label'Name of a programming language:'
+          'lng'f.Add _.Input'text'
+          choices←⍬
+          choices,←{n←⎕NS'' ⋄ n.(text category)←⍵ ⋄ n}'APL' 'Cool languages'
+          choices,←{n←⎕NS'' ⋄ n.(text category)←⍵ ⋄ n}'Algol' 'Old'
+          choices,←{n←⎕NS'' ⋄ n.(text category)←⍵ ⋄ n}'Assembler' 'Old'
+          choices,←{n←⎕NS'' ⋄ n.(text category)←⍵ ⋄ n}'Cobol' 'Old'
+          choices,←{n←⎕NS'' ⋄ n.(text category)←⍵ ⋄ n}'C' 'Others'
+          choices,←{n←⎕NS'' ⋄ n.(text category)←⍵ ⋄ n}'C#' 'Others'
+          choices,←{n←⎕NS'' ⋄ n.(text category)←⍵ ⋄ n}'C++' 'Others'
+          choices,←{n←⎕NS'' ⋄ n.(text category)←⍵ ⋄ n}'Ada' 'Others'
+          choices,←{n←⎕NS'' ⋄ n.(text category)←⍵ ⋄ n}'Julia' 'New'
+          ac←f.Add _.ejAutocomplete
+          ac.Selector←'#lng'
+          'dataSource'ac.Set choices
+          'fields.text'ac.Set'text'
+          'fields.groupBy'ac.Set'category'
+          'filterType'ac.Set⊂'ej.filterType.Contains'
+          'showPopupButton'ac.Set _true 
+          'validationRules.required'ac.Set _true
+          'validationMessage.required'ac.Set'Please enter at least some info before submitting the form!'
+          OnLoad←'$("form").validate();'
+          (f.Add _.div).Add _.InputSubmit
+      :EndIf
+    ∇
+
+:EndClass
