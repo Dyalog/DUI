@@ -1,0 +1,44 @@
+﻿:Class ejDiagramAdvanced: MiPageSample
+⍝ Control:: _SF.ejDiagram 
+⍝ Description:: Syncfusion Diagram control producing a flowchart
+
+    ∇ Compose;d
+      :Access public
+      '#diagram'Add _.div
+      d←Add _.ejDiagram
+      d.Selector←'#diagram'
+      'width'd.Set'100%'
+      'height'd.Set'600px'
+      'nodes'd.Set ⎕JSON ScriptFollows
+    ⍝ [
+    ⍝     { "name": "Start", "offsetY": 50, "labels": [{ "text": "Start" }], "shape": "terminator" },
+    ⍝     { "name": "Init", "offsetY": 140, "labels": [{ "text": "var i = 0;" }], "shape": "process" },
+    ⍝     { "name": "Condition", "offsetY": 230, "labels": [{ "text": "i < 10?" }], "shape": "decision" },
+    ⍝     { "name": "Print", "offsetY": 320, "labels": [{ "text": "print(\"Hello!!\");" }], "shape": "predefinedprocess" },
+    ⍝     { "name": "Increment", "offsetY": 410, "labels": [{ "text": "i++;" }], "shape": "process" },
+    ⍝     { "name": "End", "offsetY": 500, "labels": [{ "text": "End" }], "shape": "terminator" }
+    ⍝ ]
+      'connectors'd.Set ⎕JSON ScriptFollows
+    ⍝ [
+    ⍝     { "name": "connector1", "sourceNode": "Start", "targetNode": "Init" },
+    ⍝     { "name": "connector2", "sourceNode": "Init", "targetNode": "Condition" },
+    ⍝     { "name": "connector3", "sourceNode": "Condition", "targetNode": "Print", "labels": [{ "text": "Yes" }] },
+    ⍝     { "name": "connector4", "sourceNode": "Condition", "targetNode": "End", "labels": [{ "text": "No" }],
+    ⍝         "segments": [{ "length": 30, "direction": "right" }]
+    ⍝     },
+    ⍝     { "name": "connector5", "sourceNode": "Print", "targetNode": "Increment" },
+    ⍝     { "name": "connector6", "sourceNode": "Increment", "targetNode": "Condition",
+    ⍝         "segments": [{ "length": 30, "direction": "left" }]
+    ⍝     }
+    ⍝ ]
+      'defaultSettings'd.Set ⎕JSON ScriptFollows
+    ⍝{        "node": { "offsetX": 300, "width": 140, "height": 50, "type": "flow" },
+    ⍝     "connector": {
+    ⍝         "labels": [{ "fillColor": "white" }],
+    ⍝         "segments": [{ "type": "orthogonal" }]
+    ⍝     }
+    ⍝ }
+     
+    ∇
+
+:EndClass

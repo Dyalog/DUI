@@ -145,6 +145,11 @@
 		<uses>JQuery</uses>
 		<script>/JQuery/PlugIns/jqueryCookie/jquery.cookie.js</script>
 	</resource>
+	<resource>
+	<name>jquery.easing</name>
+	<uses>JQuery</uses>
+	<script>/JQuery/PlugIns/jqueryEasing/jquery.easing.min.js</script>
+	</resource>
 
 	<!-- 
 **************************
@@ -255,8 +260,9 @@
 	</resource>
 	<resource>
 		<name>ejDiagram</name>
-		<uses>Syncfusion</uses>
 		<uses>jsrender</uses>
+		<!--<uses>jquery.easing</uses>-->
+		<uses>Syncfusion</uses>
 	</resource>
 	<resource>
 		<name>ejDialog</name>

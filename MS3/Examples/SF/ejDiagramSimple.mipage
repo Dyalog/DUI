@@ -1,0 +1,20 @@
+﻿:Class ejDiagramSimple: MiPageSample
+⍝ Control:: _SF.ejDiagram _DC.InputSubmit _DC.Input
+⍝ Description:: Syncfusion Diagram control 
+
+    ∇ Compose;d
+      :Access public
+'#diagram'Add _.div  
+d←Add _.ejDiagram
+d.Selector←'#diagram'
+nodes←⎕ns''
+nodes.(name type shape offsetX offsetY width height)←'Start' 'flow' 'terminator' 140 50 140 50 
+nodes.labels←,{n←⎕ns'' ⋄ n.text←⍵ ⋄ n}'Start'
+
+'nodes'd.Set ,nodes  ⍝ , is imporant, since we need a vector of elements here!
+'width'd.Set'320px' 
+'height'd.Set'150px'
+    ∇
+
+:EndClass
+
