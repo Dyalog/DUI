@@ -1,0 +1,74 @@
+﻿:Class jqDialogAdvanced : MiPageSample
+⍝ Control:: _JQ.jqDialog _.Table
+⍝ Description:: advanced example of a dialog displaying...a dialog (including client-side validation and a callback into APL for some intense processing!)
+
+    ∇ Compose;dp;d;tab;f
+      :Access public
+    ⍝ some CSS-Styling
+      Add _.Style ScriptFollows
+    ⍝ input.text { margin-bottom:12px; width:95%; padding: .4em; }
+    ⍝ fieldset { padding:0; border:0; margin-top:25px; }
+    ⍝ h1 { font-size: 1.2em; margin: .6em 0; }
+    ⍝ div#users-contain { width: 500px; margin: 20px 0; }
+    ⍝ div#users-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
+    ⍝ div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
+    ⍝ .ui-dialog .ui-state-error { padding: .3em; }
+    ⍝ .dialog-div{margin-bottom: 1.5em}
+     
+     
+      Use'jquery.validate'  ⍝ load validation plugin (see attributes "data-rule"!)
+      d←'users-contain .ui-widget'Add _.div
+      tab←'#users'd.Add _.Table(2 3⍴'Name' 'Email' 'Password' 'John Doe' 'john.doe@example.com' 'johndoe1')
+      tab.HeaderRows←1
+     
+     
+      Use'jqDialog'
+      'onclick=$("#dialog-form").dialog("open");'Add _.Button'Click to add person'
+      d←'#dialog-form style=display:none; title="Create new user"'Add _.div
+      f←(fm←'addUserForm'd.Add _.form).Add _.fieldset
+      fm.On'addUser' 'addUser'
+      d←'.dialog-div'f.Add _.div
+      'for=name'd.Add _.label'Name'
+      'name .text .ui-widget-content .ui-corner-all value="Jane Doe" required data-rule-minlength=3 data-rule-maxlength=16'd.Add _.Input'type=text'
+      d←'.dialog-div'f.Add _.div
+      'for=email'd.Add _.label'Email'
+      'email .text .ui-widget-content. ui-corner-all value="Jane@doe.com" required data-rule-email=true data-rule-minlength=6  data-rule-maxlength=80'd.Add _.Input'type=email'
+      d←'.dialog-div'f.Add _.div
+      'for=pswd'd.Add _.label'Password'
+      'pswd .text .ui-widget-content .ui-corner-all value="xxxxxx" required data-rule-minlength=8  data-rule-maxlength=16'd.Add _.Input'type=password'
+     
+      'tabindex=-1 style=position:absolute;top:-1000px'f.Add _.InputSubmit ⍝ this adds invisible button (to allow submit using <Enter>)
+     
+      Add _.Script ScriptFollows
+    ⍝   var form,validator;
+    ⍝   function addUser() {
+    ⍝      if ( validator.form() ) {// validate the form
+    ⍝       form.trigger("addUser");// form data is valid, so trigger the callback-event (which fires the addUser-fn)
+    ⍝      }
+    ⍝   }
+     
+     
+      d←Add _.jqDialog('#dialog-form'('autoOpen'_false'height' 450 'width' 450 'modal'_true'create'(⊂'function(){validator = $( "#addUserForm" ).validate({errorClass:"ui-state-error"});}')'buttons'(⊂'{"Create an account": addUser, Cancel: function() {dialog.dialog( "close" );}}')'close'(⊂'function() {form[ 0 ].reset();$("#addUserForm input").removeClass( "ui-state-error" );}')))
+      d.Var←'dialog'
+      d.JavaScript←';form = dialog.find( "form" ).on( "submit", function( event ) {  event.preventDefault();  addUser();  });'
+      Use'JQueryUI'
+     
+      '#output'Add _.p
+     
+    ∇
+
+
+    ∇ R←addUser;name;email;pswd
+      :Access public
+      (name email pswd)←Get¨'name' 'email' 'pswd'
+⍝ Any serious processing should now validate the data as 1st step. Never rely on what's sent from the client, even if you validated there!
+⍝ add data to database, do heave processing etc.
+⍝...
+⍝ and ultimately add a row to the table that shows the new record
+      R←'$("#users tbody").append("<tr><td>',name,'</td><td>',email,'</td><td>',pswd,'</td>");'
+      R←Execute R
+    ∇
+
+
+:EndClass
+

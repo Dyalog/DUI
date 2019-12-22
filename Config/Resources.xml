@@ -261,7 +261,7 @@
 	<resource>
 		<name>ejDiagram</name>
 		<uses>jsrender</uses>
-		<!--<uses>jquery.easing</uses>-->
+		<uses>jquery.easing</uses>
 		<uses>Syncfusion</uses>
 	</resource>
 	<resource>
