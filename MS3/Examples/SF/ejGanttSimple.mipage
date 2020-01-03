@@ -1,0 +1,23 @@
+﻿:Class ejGantSimple: MiPageSample
+⍝ Control:: _SF.ejGantt
+⍝ Description:: Syncfusion Gantt control (sample not working...)
+
+    ∇ Compose;mg;data
+      :Access public
+      'mygantt'Add _.div
+      'mns'⎕CY'dfns'  ⍝ a tool to facilitate ns-creation (while waiting for NS-Notation)
+      data←⎕NS''
+      data.(taskID taskName startDate endDate duration)←1 'Design' '02/10/2020' '02/14/2020' 4
+      data.subtasks←mns('taskID' 2)('taskName' 'Specification')('startDate' '02/10/2020')('endDate' '02/14/2020')('duration' 6)('progress' '60')('resourceId'(,2))
+      data.subtasks,←mns('taskID' 3)('taskName' 'Prototype')('startDate' '02/10/2020')('endDate' '02/12/2020')('duration' 4)('progress' '70')('resourceId'(,3))
+      data.subtasks,←mns('taskID' 4)('taskName' 'Get approval')('startDate' '02/10/2020')('endDate' '02/12/2020')('duration' 2)('progress' '80')('predecessor' '3FS')('resourceId'(,1))
+      data.subtasks,←mns('taskID' 4)('taskName' 'Design complete')('startDate' '02/14/2020')('endDate' '02/14/2020')('duration' 0)('predecessor' '4FS')('resourceId'(,1))
+      data←,data  ⍝ must be a vector!
+
+      mg←Add _.ejGantt
+      mg.Selector←'#mygantt'
+      mg.Set('dataSource'data)('taskIdMapping' 'taskID')('taskNameMapping' 'taskName')('scheduleStartDate' '02/01/2020')('scheduleEndDate' '03/13/2020')('startDateMapping' 'startDate')('durationMapping' 'duration')('progressMapping' 'progress')('childMapping' 'subtasks')
+     
+    ∇
+
+:EndClass
