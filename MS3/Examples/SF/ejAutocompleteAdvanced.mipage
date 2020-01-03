@@ -1,6 +1,6 @@
 ﻿:Class ejAutocompleteAdvanced: MiPageSample
 ⍝ Control:: _SF.ejAutocomplete _DC.InputSubmit _DC.Input
-⍝ Description:: Syncfusion Autocomplete control with categorized selections, validation and a popup-button to show list of suggestions.
+⍝ Description:: Syncfusion Autocomplete control with categorized selections and a popup-button to show list of suggestions.
 
     ∇ Compose;choices;ac;f
       :Access public
@@ -10,8 +10,6 @@
           f.Add _.p'You picked "',(Get'lng'),'". Thanks, we keep your data confidential - your vote will not be counted!'
           f.Add _.InputSubmit'Do it again!'
       :Else
-          Use'_SF.validate'   ⍝ need to separately include this to validate the form
-
 
           f.Add _.p'This sample features a categorized autocomplete list and validation to prevent submission of an empty form.'
           f.Add _.p 'Additionally, the input features a "popup-button" that shows the list of suggestions Autocomplete uses.'
@@ -35,9 +33,6 @@
           'fields.groupBy'ac.Set'category'
           'filterType'ac.Set⊂'ej.filterType.Contains'
           'showPopupButton'ac.Set _true 
-          'validationRules.required'ac.Set _true
-          'validationMessage.required'ac.Set'Please enter at least some info before submitting the form!'
-          OnLoad←'$("form").validate();'
           (f.Add _.div).Add _.InputSubmit
       :EndIf
     ∇

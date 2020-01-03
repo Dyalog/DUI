@@ -171,11 +171,6 @@
 		<script>/Syncfusion/assets/external/jquery.validate.min.js</script>
 	</resource>
 	<resource>
-		<name>_SF.validate</name>
-		<uses>jquery.validate</uses>
-		<script>/Syncfusion/Dyalog/init_validation.js</script>
-	</resource>
-	<resource>
 		<name>jsrender</name>
 		<script>/Syncfusion/assets/external/jsrender.min.js</script>
 	</resource>
@@ -280,6 +275,7 @@
 	<resource>
 		<name>ejDropDownList</name>
 		<uses>Syncfusion</uses>
+		<uses>jquery.easing</uses>
 	</resource>
 	<resource>
 		<name>ejDroppable</name>
@@ -288,6 +284,7 @@
 	<resource>
 		<name>ejGantt</name>
 		<uses>Syncfusion</uses>
+		<uses>jquery.easing</uses>
 		<uses>jsrender</uses>
 	</resource>
 	<resource>
