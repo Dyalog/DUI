@@ -2,7 +2,8 @@
 ⍝ Control:: _SF.ejCheckBox
 
 ⍝ Description:: Callback interconnect two checkboxes
-
+ :field public _Sessioned←1  ⍝ this will keep globals in the class!
+ 
     ∇ Compose;n
       :Access Public
     ⍝ We create an unchecked Syncfusion check box with caption 'Check Me!'
