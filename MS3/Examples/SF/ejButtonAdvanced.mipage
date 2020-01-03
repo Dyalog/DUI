@@ -1,6 +1,7 @@
 ﻿:Class ejButtonAdvanced : MiPageSample
 ⍝ Control:: _SF.ejButton
 ⍝ Description:: Toggle availablility of one button with another
+ :field public _Sessioned←1
 
     ∇ Compose
       :Access Public
