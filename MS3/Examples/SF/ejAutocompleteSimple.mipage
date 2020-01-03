@@ -12,7 +12,7 @@
           f.Add _.InputSubmit'Do it again!'
       :Else
           'for=lng'f.Add _.label'Name of a programming language:'
-          'lng'f.Add _.Input'type=text'
+          'lng'f.Add _.Input'text'
           ds←⎕NS''
           ac←f.Add _.ejAutocomplete
           ac.Selector←'#lng'
