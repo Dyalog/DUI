@@ -321,6 +321,11 @@
 		<uses>Syncfusion</uses>
 	</resource>
 	<resource>
+		<name>ejNavigationDrawer</name>
+		<uses>jsrender</uses>
+		<uses>Syncfusion</uses>
+	</resource>
+	<resource>
 		<name>ejNumericTextbox</name>
 		<uses>Syncfusion</uses>
 	</resource>
