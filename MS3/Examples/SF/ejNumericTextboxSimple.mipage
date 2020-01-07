@@ -2,10 +2,9 @@
 ⍝ Control:: _SF.ejNumericTextbox _DC.InputSubmit _DC.Input
 ⍝ Description:: Syncfusion NumericTextbox control (validated using jQuery.validate)
 
-    ∇ Compose;f;amount;ct
+    ∇ Compose;f;ct
       :Access public
       Add _.Style '.dialog-div{margin-bottom: 1.5em}'
-      Use'jquery.validate'  ⍝ load validation plugin (see attributes "data-rule"!)      
       f←Add _.Form
       :If isPost
       :AndIf 0<≢_Request.Data
@@ -14,26 +13,11 @@
       :Else
      
           'for=age'f.Add _.label'Age:'
-          age←42
-          'age required data-rule-range="13,120"'('.dialog-div'f.Add _.div).Add _.Input'text'(⍕age)
+          'age data-rule-range="13,120"'('.dialog-div'f.Add _.div).Add _.Input'text' '42'
           ct←f.Add _.ejNumericTextbox
           ct.Selector←'#age'
-          'decimalPlaces'ct.Set 0
-          'watermarkText'ct.Set 'Your data is safe!'
-          'minValue'ct.Set 13  ⍝ minValue/maxValue define a limit for the spinners - jQuery.validate ensures that manually entered numbers will not violate those boundaries!
-          'maxValue'ct.Set 120
-          'enableStrictMode'ct.Set _true
           '#done'f.Add _.InputSubmit'Done'
           
-          Add _.script ScriptFollows  ⍝ // this script ensures proper positioning of error-msgs when using SF-Widgets
-        ⍝ $.validator.setDefaults({
-        ⍝     ignore: [],
-        ⍝     errorClass: 'e-validation-error',
-        ⍝     errorPlacement: function (error, element) {
-        ⍝         $(error).insertAfter(element.closest(".e-widget"));
-        ⍝     }
-        ⍝ });
-          OnLoad←'$("form").validate();'  ⍝ enable validation of the form-element
       :EndIf
     ∇
 
