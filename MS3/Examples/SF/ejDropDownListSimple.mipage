@@ -1,5 +1,5 @@
 ﻿:Class ejDropDownListSimple : MiPageSample
-⍝ Control::     _SF.ejDropDownList
+⍝ Control::     _SF.ejDropDownList _DC.Select
 ⍝ Description:: Select one or more fruits from a list.
 
     FRUITS←'Apples' 'Bananas' 'Grapes' 'Oranges' 'Pears' 'Pineapples' 'Plums'
@@ -10,7 +10,8 @@
       Add _.h2'Please pick a fruit'
      
       frm←'myform'Add _.Form
-      'fruit'frm.Add _.ejDropDownList FRUITS
+      'fruit'frm.Add _.Select FRUITS
+      (frm.Add _.ejDropDownList).Selector←'#fruit'
       btn←'btnPressMe'frm.Add _.Button'Pick'
       btn.On'click' 'onPick'
       'output'Add _.div
