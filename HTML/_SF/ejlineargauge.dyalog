@@ -12,8 +12,8 @@
 
     :field public shared readonly DocBase←'https://help.syncfusion.com/js/lineargauge/overview'
     :field public shared readonly ApiLevel←3
-    :field public shared readonly DocDyalog←'/Documentation/DyalogAPIs/Syncfusion/ejLinearGauge.html'
     :field public shared readonly IntEvt←'drawBarPointers' 'drawCustomLabel' 'drawIndicators' 'drawLabels' 'drawMarkerPointers' 'drawRange' 'drawTicks' 'init' 'load' 'mouseClick' 'mouseClickMove' 'mouseClickUp' 'renderComplete'
+
     :field public Value←⍬
     :field public Min←⍬
     :field public Max←⍬

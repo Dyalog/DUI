@@ -2,7 +2,6 @@
 
     :Field Public Shared Readonly DocBase←'https://help.syncfusion.com/js/textboxes/overview'
     :Field Public Shared Readonly ApiLevel←1
-    :Field Public Shared Readonly DocDyalog←'/Documentation/DyalogAPIs/Syncfusion/ejTextBoxes.html'
     :Field Public Shared Readonly IntEvt←'change' 'create' 'destroy' 'focusIn' 'focusOut'
 
     :Field Public Type←'Numeric' ⍝ Numeric|Currency|Percentage

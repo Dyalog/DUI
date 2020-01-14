@@ -17,8 +17,8 @@
 
     :field public shared readonly DocBase←'https://help.syncfusion.com/js/dialog/overview'
     :field public shared readonly ApiLevel←3
-    :field public shared readonly DocDyalog←'/Documentation/DyalogAPIs/Syncfusion/ejDialog.html'
     :field public shared readonly IntEvt←'beforeOpen' 'ajaxError' 'ajaxSuccess' 'beforeClose' 'Close' 'contentLoad' 'create' 'destroy' 'drag' 'dragStart' 'dragStop' 'open' 'resize' 'resizeStart' 'resizeStop'
+
     :field Public Modal←⍬
     :field Public Size←⍬
     :field Public Buttons←'close'

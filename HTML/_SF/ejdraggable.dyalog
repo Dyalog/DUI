@@ -8,7 +8,6 @@
 
     :field public shared readonly DocBase←'https://help.syncfusion.com/js/draggable/overview'
     :field public shared readonly ApiLevel←3
-    :field public shared readonly DocDyalog←'/Documentation/DyalogAPIs/Syncfusion/ejDraggable.html'
     :field public shared readonly IntEvt←'destroy' 'drag' 'dragStart' 'dragStop' 'helper'
 
 

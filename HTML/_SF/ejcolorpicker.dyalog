@@ -9,7 +9,6 @@
 
     :Field Public Shared Readonly DocBase←'https://help.syncfusion.com/js/colorpicker/overview'
     :Field Public Shared ReadOnly ApiLevel←3
-    :Field Public Shared Readonly DocDyalog←'/Documentation/DyalogAPIs/Syncfusion/ejColorPicker.html'
     :Field public Shared ReadOnly IntEvt←'change' 'close' 'create' 'destroy' 'open' 'select'
 
     :field public Color←''

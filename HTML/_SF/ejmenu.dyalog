@@ -12,7 +12,7 @@
 
     :field public shared readonly DocBase←'https://help.syncfusion.com/js/menu/overview'
     :field public shared readonly ApiLevel←3
-    :field public shared readonly DocDyalog←'/Documentation/DyalogAPIs/Syncfusion/ejMenu.html'
+
     :field public Levels←1
     :field public Items←⍬
     :field public Links←⍬

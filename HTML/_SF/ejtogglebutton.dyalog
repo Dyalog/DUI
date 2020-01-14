@@ -12,7 +12,6 @@
 
     :field public shared readonly DocBase←'https://help.syncfusion.com/js/togglebutton/overview'
     :field public shared readonly ApiLevel←3
-    :field public shared readonly DocDyalog←'/Documentation/DyalogAPIs/Syncfusion/ejToggleButton.html'
     :field public Text←''
 
     ∇ make

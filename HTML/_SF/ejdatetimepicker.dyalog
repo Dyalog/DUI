@@ -11,10 +11,10 @@
 ⍝ ejDateTimePicker '17:53:59 11/27/66 (GMT-5)'
 ⍝ ejDateTimePicker (1999 12 31 23 59 59)('dd-MMM-yyyy hh:mm:ss')
 
-    :Field Public Shared Readonly DocBase←'https://help.syncfusion.com/js/datetimepicker/overview'
-    :Field Public Shared Readonly ApiLevel←2
-    :Field Public Shared Readonly DocDyalog←'/Documentation/DyalogAPIs/Syncfusion/ejDateTimePicker.html'
+    :Field Public Shared ReadOnly DocBase←'https://help.syncfusion.com/js/datetimepicker/overview'
+    :Field Public Shared ReadOnly ApiLevel←2
     :Field Public Shared ReadOnly IntEvt←'change'  'close'  'create'  'destroy'  'focusIn'  'focusOut'  'open'
+
     :field public DateTime←''
     :field public Format←'dd-MMM-yyyy hh:mm:ss'
 

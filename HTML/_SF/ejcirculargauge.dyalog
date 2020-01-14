@@ -13,8 +13,8 @@
 
     :field public shared readonly DocBase←'https://help.syncfusion.com/js/circulargauge/overview'
     :field public shared readonly ApiLevel←3
-    :field public shared readonly DocDyalog←'/Documentation/DyalogAPIs/Syncfusion/ejCircularGauge.html'
     :field public shared readonly IntEvt←'drawCustomLabel' 'drawIndicators' 'drawLabels' 'drawPointerCap' 'drawPointers' 'drawRange' 'drawTicks' 'load' 'mouseClick' 'mouseClickMove' 'mouseClickUp' 'renderComplete'
+
     :field public Data←⍬
 
     ∇ make

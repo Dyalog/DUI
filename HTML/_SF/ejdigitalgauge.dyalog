@@ -27,8 +27,9 @@
 
     :field public shared readonly DocBase←'https://help.syncfusion.com/js/digitalgauge/overview'
     :field public shared readonly ApiLevel←3
-    :field public shared readonly DocDyalog←'/Documentation/DyalogAPIs/Syncfusion/ejDigitalGauge.html'
+    :field public shared readonly DocDyalog←'/Documentation/DyalgAPIs/Syncfusion/ejDigitalGauge.html'
     :field public shared readonly IntEvt←'init' 'itemRendering' 'load' 'renderComplete'
+
     :field public Text←''
     :field public Typeface←'16'
     :field public Spacing←4

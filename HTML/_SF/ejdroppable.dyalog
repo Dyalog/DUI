@@ -8,7 +8,6 @@
 
     :field public shared readonly DocBase←'https://help.syncfusion.com/js/droppable/overview'
     :field public shared readonly ApiLevel←1
-    :field public shared readonly DocDyalog←'/Documentation/DyalogAPIs/Syncfusion/ejDroppable.html' 
     :field public shared readonly IntEvt←'drop' 'out' 'over'
 
     ∇ make

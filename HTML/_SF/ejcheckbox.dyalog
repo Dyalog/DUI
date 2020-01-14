@@ -21,8 +21,8 @@
 
     :field public shared readonly DocBase←'https://help.syncfusion.com/js/checkbox/overview'
     :field public shared readonly ApiLevel←2
-    :field public shared readonly DocDyalog←'/Documentation/DyalogAPIs/Syncfusion/ejCheckBox.html'
     :field public shared readonly IntEvt←'beforeChange' 'change' 'create' 'destroy'
+
     :field public Label←''
     :field public LabelPos←'left'  ⍝ valid are 'left' 'right'
     :field public Checked←0        ⍝ 1=yes, 0=no, ¯1=indeterminate

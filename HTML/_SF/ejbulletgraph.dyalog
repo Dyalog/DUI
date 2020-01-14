@@ -17,8 +17,8 @@
 
     :field public shared readonly DocBase←'https://help.syncfusion.com/js/bulletgraph/overview'
     :field public shared readonly ApiLevel←3
-    :field public shared readonly DocDyalog←'/Documentation/DyalogAPIs/Syncfusion/ejBulletGraph.html'
     :field IntEvt←'drawCaption' 'drawCategory' 'drawComparativeMeasureSymbol' 'drawFeatureMeasureBar' 'drawIndicator' 'drawLabels' 'drawQualitativeRanges' 'load'
+
     :field public Data←⍬
 
     ∇ make

@@ -20,7 +20,6 @@
 
     :field public shared readonly DocBase←'http://api.jqueryui.com/button/'
     :field public shared readonly ApiLevel←3
-    :field public shared readonly DocDyalog←'/Documentation/DyalogAPIs/jQuery/jqSelectmenu.html'
 
     :field public Items←0 2⍴⊂''     ⍝ vector or matrix [;1] display, [;2] value
     :field public Selected←⍬          ⍝ either Boolean integer vector indicating

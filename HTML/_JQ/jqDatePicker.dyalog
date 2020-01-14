@@ -1,7 +1,6 @@
 ﻿:Class jqDatePicker : #._JQ._jqUIWidget
     :field public shared readonly DocBase←'http://api.jqueryui.com/datepicker/'
     :field public shared readonly ApiLevel←3
-    :field public shared readonly DocDyalog←'/Documentation/DyalogAPIs/jQuery/jqDatePicker.html'
 
     :field public Text←''  ⍝ text on the button
 

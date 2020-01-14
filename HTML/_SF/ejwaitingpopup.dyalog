@@ -9,7 +9,7 @@
 
     :field public shared readonly DocBase←'https://help.syncfusion.com/js/waitingpopup/overview'
     :field public shared readonly ApiLevel←3
-    :field public shared readonly DocDyalog←'/Documentation/DyalogAPIs/Syncfusion/ejWaitingPopup.html'
+
     :field public Text←''
     :field public Style←''
 

@@ -9,8 +9,8 @@
 
     :field public shared readonly DocBase←'https://help.syncfusion.com/js/button/overview'
     :field public shared readonly ApiLevel←3
-    :field public shared readonly DocDyalog←'/Documentation/DyalogAPIs/Syncfusion/ejButtonHelp.html'
     :field public shared readonly IntEvt←'click' 'create' 'destroy'
+
     :field public Text←''  ⍝ text on the button
 
     ∇ make

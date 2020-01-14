@@ -15,9 +15,9 @@
 ⍝ ejAccordion 2 2⍴'Title1' 'Section1' 'Title2' 'Section2'
 
     :field public shared readonly DocBase←'hthttps://help.syncfusion.com/js/ejAccordion/overview'
-    :field public shared readonly DocDyalog←'/Documentation/DyalogAPIs/Syncfusion/ejAccordion.html'
     :field public shared readonly IntEvt←'activate'  'ajaxBeforeLoad'  'ajaxError'  'ajaxLoad'  'ajaxSuccess'  'beforeActivate'  'beforeInactivate'  'create'  'destroy'  'inActivate'
     :field public shared readonly ApiLevel←3
+    
     :Field public Titles←0⍴⊂''
     :Field public Sections←0⍴⊂''
     :Field public IsURL←⍬

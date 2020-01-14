@@ -15,8 +15,8 @@
 
     :field public shared readonly DocBase←'https://help.syncfusion.com/js/rating/overview'
     :field public shared readonly ApiLevel←3
-    :field public shared readonly DocDyalog←'/Documentation/DyalogAPIs/Syncfusion/ejRating.html'
     :field public shared readonly IntEvt←'change' 'click' 'create' 'destroy' 'mouseout' 'mouseover'
+    
     :field public Max←5
     :field public Min←0
     :field public Value←1

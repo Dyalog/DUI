@@ -144,7 +144,7 @@
           :Else
               script,←⊂':field public shared readonly DocBase←''http://www.w3schools.com/tags/tag_',e,'.asp'''
           :EndSelect
-          script,←':field public shared readonly DocDyalog←''/Documentation/DyalogAPIs/html5.html''' ':field public shared readonly APILevel←2'
+          script,←⊂':field public shared readonly APILevel←2'
           script,←'∇make' ':Access Public'NoEndTag_X(':Implements Constructor :Base (,''',e,''')')(,'∇')
           script,←'∇make1 arg' ':Access Public'NoEndTag_X(':Implements Constructor :Base (,''',e,''') ',(''''' '/⍨~endtag),'arg')(,'∇')
           script,←'∇make2 (content attr);a' ':Access Public'NoEndTag_X('a←(⊂,''',e,'''),⊂⍣(isString a)⊢a←content attr')':Implements Constructor :Base a'(,'∇')

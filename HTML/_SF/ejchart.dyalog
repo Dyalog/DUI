@@ -11,7 +11,6 @@
 
     :field public shared readonly DocBase←'https://docs.syncfusion.com/js/chart/overview'
     :field public shared readonly ApiLevel←3
-    :field public shared readonly DocDyalog←'/Documentation/DyalogAPIs/Syncfusion/ejChart.html'
     :field public shared readonly IntEvt← 'animationComplete' 'axesLabelRendering' 'axesLabelsInitialize' 'axesRangeCalculate' 'axesTitleRendering' 'chartAreaBoundsCalculate' 'create' 'destroy' 'displayTextRendering' 'legendBoundsCalculate' 'legendItemClick' 'legendItemMouseMove' 'legendItemRendering' 'load' 'pointRegionClick' 'pointRegionMouseMove' 'preRender' 'seriesRendering' 'symbolRendering' 'titleRendering' 'toolTipInitialize' 'trackAxisToolTip' 'trackToolTip'
 
     ∇ make

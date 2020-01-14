@@ -17,7 +17,6 @@
 
     :field public shared readonly DocBase←'https://help.syncfusion.com/js/tab/overview'
     :field public shared readonly ApiLevel←3
-    :field public shared readonly DocDyalog←'/Documentation/DyalogAPIs/Syncfusion/ejTab.html'
     :field public shared readonly IntEvt←'active' 'ajaxBeforeLoad' 'ajaxError' 'ajaxLoad' 'ajaxSuccess' 'beforeActive' 'beforeItemRemove' 'create' 'destroy' 'itemAdd' 'itemRemove'
 
     :field public Titles←0⍴⊂''
