@@ -1,6 +1,6 @@
 ﻿:Class jqDialogSimple : MiPageSample
 ⍝ Control:: _JQ.jqDialog
-⍝ Description:: simple example of a dialog displaying a message 
+⍝ Description:: simple dialog displaying a message and responding to close-events.
 
     ∇ Compose;dp
       :Access public
@@ -10,10 +10,10 @@
       '#output'Add _.p
     ∇
 
-∇ R←OnClose 
-:access public
-R←'#output'Replace'You closed the dialog!'
-∇
+    ∇ R←OnClose
+      :Access public
+      R←'#output'Replace'You closed the dialog!'
+    ∇
 
 
 :EndClass

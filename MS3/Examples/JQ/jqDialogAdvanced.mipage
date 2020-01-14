@@ -22,7 +22,6 @@
       tab.HeaderRows←1
      
      
-      Use'jqDialog'
       'onclick=$("#dialog-form").dialog("open");'Add _.Button'Click to add person'
       d←'#dialog-form style=display:none; title="Create new user"'Add _.div
       f←(fm←'addUserForm'd.Add _.form).Add _.fieldset
@@ -35,7 +34,7 @@
       'email .text .ui-widget-content. ui-corner-all value="Jane@doe.com" required data-rule-email=true data-rule-minlength=6  data-rule-maxlength=80'd.Add _.Input'type=email'
       d←'.dialog-div'f.Add _.div
       'for=pswd'd.Add _.label'Password'
-      'pswd .text .ui-widget-content .ui-corner-all value="xxxxxx" required data-rule-minlength=8  data-rule-maxlength=16'd.Add _.Input'type=password'
+      'pswd .text .ui-widget-content .ui-corner-all value="xxxxxxxx" required data-rule-minlength=8  data-rule-maxlength=16'd.Add _.Input'type=password'
      
       'tabindex=-1 style=position:absolute;top:-1000px'f.Add _.InputSubmit ⍝ this adds invisible button (to allow submit using <Enter>)
      
@@ -48,7 +47,7 @@
     ⍝   }
      
      
-      d←Add _.jqDialog('#dialog-form'('autoOpen'_false'height' 450 'width' 450 'modal'_true'create'(⊂'function(){validator = $( "#addUserForm" ).validate({errorClass:"ui-state-error"});}')'buttons'(⊂'{"Create an account": addUser, Cancel: function() {dialog.dialog( "close" );}}')'close'(⊂'function() {form[ 0 ].reset();$("#addUserForm input").removeClass( "ui-state-error" );}')))
+      d←Add _.jqDialog('#dialog-form'('autoOpen'_false'height' 460 'width' 450 'modal'_true'create'(⊂'function(){validator = $( "#addUserForm" ).validate({errorClass:"ui-state-error"});}')'buttons'(⊂'{"Create an account": addUser, Cancel: function() {dialog.dialog( "close" );}}')'close'(⊂'function() {form[ 0 ].reset();$("#addUserForm input").removeClass( "ui-state-error" );}')))
       d.Var←'dialog'
       d.JavaScript←';form = dialog.find( "form" ).on( "submit", function( event ) {  event.preventDefault();  addUser();  });'
       Use'JQueryUI'
@@ -62,10 +61,11 @@
       :Access public
       (name email pswd)←Get¨'name' 'email' 'pswd'
 ⍝ Any serious processing should now validate the data as 1st step. Never rely on what's sent from the client, even if you validated there!
-⍝ add data to database, do heave processing etc.
-⍝...
+⍝ Then add data to database, do heavy processing etc.
+⍝ <inject code here> (left as an excercise to the reader)
 ⍝ and ultimately add a row to the table that shows the new record
-      R←'$("#users tbody").append("<tr><td>',name,'</td><td>',email,'</td><td>',pswd,'</td>");'
+      R←'$("#users tbody").append("<tr><td>',name,'</td><td>',email,'</td><td>',pswd,'</td>");'   
+      R,←'$("#addUserForm")[0].reset();'  ⍝ reset form
       R←Execute R
     ∇
 

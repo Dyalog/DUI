@@ -6,7 +6,7 @@
 ⍝
 
     :field public shared readonly DocBase←'http://api.jqueryui.com/dialog/'
-    :field public shared readonly ApiLevel←3
+    :field public shared readonly ApiLevel←2
 
 
     ∇ Make0
@@ -17,7 +17,7 @@
 
     ∇ Make1 sel;options
       :Access public
-      :Implements constructor :base 
+      :Implements constructor 
       JQueryFn←'dialog'
       :If 0<≢sel
           sel←⊆sel
