@@ -1,6 +1,6 @@
 ﻿ Stop
  :If 9=#.⎕NC'DUI'
-     Boot.Stop
+     DUI.End
      ⎕←'DUI stopped.'
  :Else
      ⎕←'DUI not running.'
