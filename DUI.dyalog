@@ -92,7 +92,7 @@
          ⍝ Validate path to WC2 framework
      
           :If 0∊⍴WC2Root
-          :AndIf ~0∊⍴t←SourceFile ⍬
+          :AndIf ~0∊⍴t←SourceFile
               WC2Root←⊃1 ⎕NPARTS⊃1 ⎕NPARTS t
           :EndIf
      
@@ -133,7 +133,7 @@
               miserv←1
               Framework←'MiServer'
               Server←⎕NEW #.MiServer config
-              Server._Renderer←⎕NS '' ⍝ for compatibility
+              Server._Renderer←⎕NS'' ⍝ for compatibility
           :EndIf
      
           #.HttpRequest.Server←Server
@@ -187,7 +187,6 @@
      
      EXIT:
     ∇
-
 
     ∇ Load nolink;filterOut;files;HTML;f;failed;dir;name;file;folder;callingEnv
       ⍝ Load required objects for MiServer
@@ -290,7 +289,21 @@
       :EndFor
     ∇
 
-    :section Configuration
+    ∇ r←{stopOnError}Test site;file
+      :Access public shared
+      :If 0=⎕NC'stopOnError' ⋄ stopOnError←0 ⋄ :EndIf
+      :If 0=⎕NC'#.SeleniumTests'
+          :Trap 22 ⍝ file not found
+              file←(⊃⎕NPARTS SourceFile),'QA/SeleniumTests'
+              ⎕SE.SALT.Load file
+          :Else
+              →0⊣r←⎕DMX.EM     
+          :EndTrap
+      :EndIf
+      r←stopOnError #.SeleniumTests.Test site
+    ∇
+
+    :Section Configuration
 
     ∇ Configure ms
       ConfigureDatasources ms
@@ -737,11 +750,14 @@
 ⍝--- Utilities ---
     APLVersion←{⊃(//)⎕VFI ⍵/⍨2>+\'.'=⍵}2⊃#.⎕WG 'APLVersion'
 
-      SourceFile←{
+    ∇ r←SourceFile
+      :Access public shared
+      r←{
           0::''
           6::∊1 ⎕NPARTS 4⊃5179⌶me
           ∊1 ⎕NPARTS #⍎(me←⍕⎕THIS),'.SALT_Data.SourceFile'
-      }
+      }⍬
+    ∇
 
     defaults←{(,⊆⍺){⍺,(≢⍺)↓⍵}⍵}
 
