@@ -295,7 +295,7 @@
       :If 0=⎕NC'#.SeleniumTests'
           :Trap 22 ⍝ file not found
               file←(⊃⎕NPARTS SourceFile),'QA/SeleniumTests'
-              ⎕SE.SALT.Load file
+              ⎕SE.SALT.Load file,' -target=#'
           :Else
               →0⊣r←⎕DMX.EM     
           :EndTrap

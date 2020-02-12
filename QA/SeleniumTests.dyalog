@@ -14,7 +14,7 @@
      ⍝ eg MS3Test '/QA/DC/InputGridSimple'
      
       Selenium.GoTo SITE,lopFirst page ⍝ Drop the "QA"
-      :If 'Test'≡name←⎕SE.SALT.Load AppRoot,page
+      :If 'Test'≡name←⎕SE.SALT.Load #.DUI.AppRoot,page
           :Trap stop×9999
               'Test'⎕STOP⍨1/⍨2=stop ⍝ stop on line 1 if stop=2
               :If stop⌊0≠⍴r←Test ⍬
@@ -28,14 +28,12 @@
       :EndIf
     ∇
 
-    ∇ r←FindAllFiles root;folders;ext
-      :If 0=⎕NC'Config.DefaultExtension' ⋄ ext←'.dyalog'
-      :Else ⋄ ext←Config.DefaultExtension
-      :EndIf
+    ∇ r←{ext}FindAllFiles root;folders;ext
+      :If 0=⎕NC'ext' ⋄ ext←Config.DefaultExtension ⋄ :EndIf
       root,←'/'/⍨~'/\'∊⍨¯1↑root ⍝ append trailing / if missing
       r←root∘,¨(('*',ext)#.Files.List root)[;1]
       :If 0≠⍴folders←{(('.'≠⊃¨⍵[;1])∧⍵[;4])/⍵[;1]}#.Files.List root
-          r←r,⊃,/FindAllFiles¨root∘,¨folders
+          r←r,⊃,/ext FindAllFiles¨root∘,¨folders
       :EndIf
     ∇
 
@@ -46,9 +44,12 @@
       stop←⊃stop_port
       r←''
       (site filter config)←3↑(eis site),'' '' ''
-      :If 0=⍴AppRoot←#.Load site
-          ⎕←'Test abandoned' ⋄ →0
-      :EndIf
+      #.DUI.WC2Root←1⊃⎕NPARTS ¯1↓1⊃⎕NPARTS SALT_Data.SourceFile
+      #.DUI.AppRoot←site
+   ⍝   :If 0=⍴AppRoot←#.DUI.Load ' -nolink'
+   ⍝       ⎕←'Test abandoned' ⋄ →0
+   ⍝   :EndIf
+   ⍝
      
      ⍝ selpath←({∊'/',⍨¨¯1↓'/\'#.Utils.penclose ⍵}#.Boot.MSRoot),'Selenium/'
       selpath←(1⊃⎕NPARTS ¯1↓1⊃⎕NPARTS ¯1↓1⊃⎕NPARTS SALT_Data.SourceFile),'Selenium/'
@@ -66,23 +67,36 @@
       Selenium.DLLPATH←selpath
       :If config≢''
           settings←⎕JSON 1⊃⎕NGET selpath,'settings.json'
-          Selenium.DLLPATH←(settings⍎config).DLLPATH
-          Selenium.DEFAULTBROWSER←(settings⍎config).BROWSER  ⍝** test it w Firefox!
+          config←settings⍎config
+          Selenium.DLLPATH←selpath Normalize config.DLLPATH
+          :If config.BROWSER≡''
+              Selenium.DEFAULTBROWSER←'Chrome'
+              #.DUI.Port←''
+          :Else
+              Selenium.DEFAULTBROWSER←config.BROWSER
+              #.DUI.Port←config.DUIPort
+          :EndIf
+      :Else
+          ∘∘∘ ⍝ Can't run w/o config!
       :EndIf
      
-      Config←#.Boot.ConfigureServer AppRoot
-      ext←Config.DefaultExtension
-      Config.DefaultExtension←'.dyalog' ⍝ We are searching for code
-      n←⍴files←(⍴AppRoot)↓¨¯7↓¨FindAllFiles AppRoot,'QA'
+     
+      :If 0≠⊃#.DUI.Initialize
+          ⎕←'Error initializing!'
+          ∘∘∘
+      :EndIf
+     
+     
+      n←⍴files←(⍴#.DUI.AppRoot)↓¨¯7↓¨'.dyalog'FindAllFiles #.DUI.AppRoot,'QA'
       ⍝ // Add code to compare this to the mipages found in the whole app
-      :If 0≠⍴filter
+      :If 0≠≢filter
           files←(filter ⎕S'%')files
           ⎕←'Selected: ',(⍕⍴files),' of ',(⍕n),' tests.'
       :EndIf
       n←⍴files
       ⍝SITE←'http://127.0.0.1:',⍕⊃1↓stop_port,Config.Port
       ⍝SITE←'http://',(2 ⎕NQ'.' 'TCPGetHostID'),':',(⍕{6::⍵.MSPort ⋄ ⍵.Port}#.Boot.ms.Config)
-      ⎕←'Site=',SITE←'http://',(2 ⎕NQ'.' 'TCPGetHostID'),':',⍕⊃1↓stop_port,Config.Port
+      ⎕←'Site=',SITE←'http://',(2 ⎕NQ'.' 'TCPGetHostID'),':',⍕⊃1↓stop_port,#.DUI.Port
      
 ⍝⍝ Un-comment to play music while testing:
 ⍝      :If site filter≡'MS3' ''
@@ -114,5 +128,12 @@
      
       Selenium.BROWSER.Quit
     ∇
+
+    ∇ path←home Normalize path;z
+      z←(⊂2↑path)∊'./' '.\'
+      path←(z/home),(z×2)↓path
+      path←∊1 ⎕NPARTS path
+    ∇
+
 
 :EndNamespace
