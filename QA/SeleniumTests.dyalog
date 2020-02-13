@@ -81,8 +81,8 @@
       :EndIf
      
      
-      :If 0≠⊃#.DUI.Initialize
-          ⎕←'Error initializing!'
+      :If 0≠⊃z←#.DUI.Initialize
+          ⎕←'Error initializing!'⋄⎕←z
           ∘∘∘
       :EndIf
      
