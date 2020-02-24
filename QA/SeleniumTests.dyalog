@@ -24,7 +24,7 @@
           :Else
               r←'Trapped error: ',,⍕⎕DMX.EN
           :EndTrap
-      :Else ⋄ r←AppRoot,page,' does not define a function called Test'
+      :Else ⋄ r←#.DUI.AppRoot,page,' does not define a function called Test'
       :EndIf
     ∇
 
@@ -66,16 +66,7 @@
       ⎕PATH,←' Selenium'
       Selenium.DLLPATH←selpath
       :If config≢''
-          settings←⎕JSON 1⊃⎕NGET selpath,'settings.json'
-          config←settings⍎config
-          Selenium.DLLPATH←selpath Normalize config.DLLPATH
-          :If config.BROWSER≡''
-              Selenium.DEFAULTBROWSER←'Chrome'
-              #.DUI.Port←''
-          :Else
-              Selenium.DEFAULTBROWSER←config.BROWSER
-              #.DUI.Port←config.DUIPort
-          :EndIf
+        Selenium.ApplySettings config
       :Else
           ∘∘∘ ⍝ Can't run w/o config!
       :EndIf
@@ -96,15 +87,14 @@
       n←⍴files
       ⍝SITE←'http://127.0.0.1:',⍕⊃1↓stop_port,Config.Port
       ⍝SITE←'http://',(2 ⎕NQ'.' 'TCPGetHostID'),':',(⍕{6::⍵.MSPort ⋄ ⍵.Port}#.Boot.ms.Config)
-      ⎕←'Site=',SITE←'http://',(2 ⎕NQ'.' 'TCPGetHostID'),':',⍕⊃1↓stop_port,#.DUI.Port
-     
+      ⎕←'Site=',SITE←'http://',(2 ⎕NQ'.' 'TCPGetHostID'),':',⍕⊃1↓stop_port,⍎⍕{6::⍵.MSPort ⋄ ⍵.Port}#.Boot.ms.Config
+
 ⍝⍝ Un-comment to play music while testing:
 ⍝      :If site filter≡'MS3' ''
 ⍝          ⎕CMD('"\Program Files (x86)\Windows Media Player\wmplayer.exe" "',AppRoot,'\Examples\Data\tellintro.mp3"')''
 ⍝      :EndIf
      
       Selenium.InitBrowser''
-      Selenium.BROWSER.Manage.Window.Maximize
      
      ⍝ Localize non-alphanumeric key names for easy access
       keynames←⍕#.SeleniumTests.Selenium.Keys.⎕NL ¯2
