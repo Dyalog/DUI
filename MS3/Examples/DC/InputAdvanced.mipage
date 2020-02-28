@@ -16,19 +16,21 @@
       ⍝
       ⍝ The third and fourth arguments specify the label and label position for the input field.
      
+     ShowForm←_Request.isGet∨0=≢_Request.Data ⍝ this can only happen if wewre showing data and user clicked "Show empty form"
+
       labels←'Date & time (interactive picker)' 'E-mail (has validation)' 'URL (has validation)' 'File (dialogue pop-up)'
      
       frm←Add _.Form
+      'lblYourInput'frm.Add _.h2'Here''s your input!'
       tab←frm.Add _.Table(5 2⍴⊂'')(5 2⍴⊂'')1
       tab.Data[1;]←'Description' 'Input'
       (1↓tab.Data[;1])←':',¨⍨(¯2+labels⍳¨'(')↑¨⍣_Request.isPost⊢labels
-      :If _Request.isGet
-      :OrIf 0=≢_Request.Data ⍝ this can only happen if wewre showing data and user clicked "Show empty form"
+      :If ShowForm
           tab.Data[2;2]←'inp1'New _.Input'datetime-local' '' 'Date of birth: '
           tab.Data[3;2]←'inp2'New _.Input'email' '' 'E-mail address:'
           tab.Data[4;2]←'inp3'New _.Input'url' '' 'Homepage: '
           tab.Data[5;2]←'inp4'New _.Input'file' '' 'Photo: '
-          frm.Add _.InputSubmit'Done'
+          'btnSub'frm.Add _.InputSubmit'Done'
       :Else
           tab.Data[1↓⍳5;2]←({⍵ New _.em,Get ⍵}¨'inp'∘,¨'1234')
           (frm.Add _.p)'output'New _.strong'Input accepted'
