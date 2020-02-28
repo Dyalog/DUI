@@ -429,7 +429,7 @@
 
     ∇ ConfigureDatasources ms;file;ds;name;tmp;orig;dyalog
       ⍝ load any datasource definitions
-      :If ~0∊⍴ms.Config.Datasources←'Name'ReadConfiguration'Datasources'
+      :If ~0∊⍴ms.Datasources←'Name'ReadConfiguration'Datasources'
           :For ds :In ms.Datasources
               :For name :In ds.⎕NL ¯2
                   orig←tmp←ds.⍎name
