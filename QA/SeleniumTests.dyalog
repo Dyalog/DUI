@@ -1,4 +1,5 @@
 ﻿:Namespace SeleniumTests
+⍝ needs Selenium/ in a folder that is on the same level as the DUI-Folder (ie /Git/DUI & /Git/Selenium)
 
     ∇ x←eis x
 ⍝ Enclose if simple
@@ -11,9 +12,14 @@
     ∇
 
     ∇ r←stop Run1Test page;name;ref;Test
-     ⍝ eg MS3Test '/QA/DC/InputGridSimple'
-     
-      Selenium.GoTo SITE,lopFirst page ⍝ Drop the "QA"
+     ⍝ eg MS3Test '/QA/DC/InputGridSimple'   
+      :Trap 11
+          Selenium.GoTo SITE,lopFirst page ⍝ Drop the "QA"
+      :Else
+          r←'Error while opening "',(lopFirst page),'": ',⎕DM
+          →(stop=0)/0
+          ∘∘∘
+      :EndTrap
       :If 'Test'≡name←⎕SE.SALT.Load #.DUI.AppRoot,page
           :Trap stop×9999
               'Test'⎕STOP⍨1/⍨2=stop ⍝ stop on line 1 if stop=2
@@ -66,19 +72,19 @@
       ⎕PATH,←' Selenium'
       Selenium.DLLPATH←selpath
       :If config≢''
-        Selenium.ApplySettings config
+          Selenium.ApplySettings config
       :Else
           ∘∘∘ ⍝ Can't run w/o config!
       :EndIf
      
      
       :If 0≠⊃z←#.DUI.Initialize
-          ⎕←'Error initializing!'⋄⎕←z
+          ⎕←'Error initializing!' ⋄ ⎕←z
           ∘∘∘
       :EndIf
      
      
-      n←⍴files←(⍴#.DUI.AppRoot)↓¨¯7↓¨'.dyalog'FindAllFiles #.DUI.AppRoot,'QA'
+      n←⍴files←(⍴#.DUI.AppRoot)↓¨¯7↓¨'.dyalog'FindAllFiles #.DUI.AppRoot,'QA'    
       ⍝ // Add code to compare this to the mipages found in the whole app
       :If 0≠≢filter
           files←(filter ⎕S'%')files
@@ -88,7 +94,7 @@
       ⍝SITE←'http://127.0.0.1:',⍕⊃1↓stop_port,Config.Port
       ⍝SITE←'http://',(2 ⎕NQ'.' 'TCPGetHostID'),':',(⍕{6::⍵.MSPort ⋄ ⍵.Port}#.Boot.ms.Config)
       ⎕←'Site=',SITE←'http://',(2 ⎕NQ'.' 'TCPGetHostID'),':',⍕⊃1↓stop_port,⍎⍕{6::⍵.MSPort ⋄ ⍵.Port}#.Boot.ms.Config
-
+     
 ⍝⍝ Un-comment to play music while testing:
 ⍝      :If site filter≡'MS3' ''
 ⍝          ⎕CMD('"\Program Files (x86)\Windows Media Player\wmplayer.exe" "',AppRoot,'\Examples\Data\tellintro.mp3"')''
@@ -118,12 +124,5 @@
      
       Selenium.BROWSER.Quit
     ∇
-
-    ∇ path←home Normalize path;z
-      z←(⊂2↑path)∊'./' '.\'
-      path←(z/home),(z×2)↓path
-      path←∊1 ⎕NPARTS path
-    ∇
-
 
 :EndNamespace
