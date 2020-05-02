@@ -87,7 +87,7 @@
       :Else
           ∘∘∘ ⍝ Can't run w/o config!
       :EndIf
-      Selenium.QUIETMODE←{0::0 ⋄ 1=2⊃⎕VFI ⍵}2 ⎕NQ'.' 'GetEnvironment' 'QUIETMODE'  ⍝ for automated tests! ;)
+      Selenium.QUIETMODE←{0::0 ⋄ (,1)≡,2⊃⎕VFI ⍵}2 ⎕NQ'.' 'GetEnvironment' 'QUIETMODE'  ⍝ for automated tests! ;)
      
       :If dui
           :If 0≠⊃z←#.DUI.Initialize

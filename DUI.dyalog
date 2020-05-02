@@ -90,7 +90,6 @@
           →EXIT⍴⍨1=⊃r←(16>APLVersion)/1 'Dyalog v16.0 or later is required to use DUI'
      
          ⍝ Validate path to WC2 framework
-     
           :If 0∊⍴WC2Root
           :AndIf ~0∊⍴t←SourceFile
               WC2Root←⊃1 ⎕NPARTS⊃1 ⎕NPARTS t
@@ -108,6 +107,7 @@
      
           :If ~0∊⍴AppRoot
               :If ⎕NEXISTS appRoot←∊1 ⎕NPARTS AppRoot
+              :elseif ⎕nexists appRoot←∊1⎕nparts       WC2Root,AppRoot{⍺,(⍵≠¯1↑⍺)⍴⍵}'/'
                   (appRoot type)←0 1 ⎕NINFO appRoot
                   :If type=1
                       AppRoot←appRoot,('/'=⊢/AppRoot)↓'/'
@@ -297,7 +297,7 @@
               file←(⊃⎕NPARTS SourceFile),'QA/SeleniumTests'
               ⎕SE.SALT.Load file,' -target=#'
           :Else
-              →0⊣r←⎕DMX.EM     
+              →0⊣r←⎕DMX.EM
           :EndTrap
       :EndIf
       r←stopOnError #.SeleniumTests.Test site
