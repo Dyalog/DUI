@@ -113,8 +113,9 @@
       n←⍴files
       ⍝SITE←'http://127.0.0.1:',⍕⊃1↓stop_port,Config.Port
       ⍝SITE←'http://',(2 ⎕NQ'.' 'TCPGetHostID'),':',(⍕{6::⍵.MSPort ⋄ ⍵.Port}#.Boot.ms.Config)
+      SITE←'http://',(2 ⎕NQ'.' 'TCPGetHostID'),':',⍕⊃1↓stop_port,⍎⍕{6::⍵.MSPort ⋄ ⍵.Port}cfg
       :if ~Selenium.QUIETMODE
-      ⎕←'Site=',SITE←'http://',(2 ⎕NQ'.' 'TCPGetHostID'),':',⍕⊃1↓stop_port,⍎⍕{6::⍵.MSPort ⋄ ⍵.Port}cfg
+      ⎕←'Site=',SITE
       :endif
      
 ⍝⍝ Un-comment to play music while testing:
@@ -133,7 +134,7 @@
      
       :For i :In ⍳n
           COUNT+←1
-          :If 0=⍴t←stop Run1Test{⍵⊣⍞←(⎕UCS 13),maxlen↑lopFirst ⍵}z←i⊃files
+          :If 0=⍴t←stop Run1Test{⍵⊣⍞←(⎕UCS 13),maxlen↑lopFirst ⍵}z←i⊃files⋄ :endif
           :If 0=⍴t←stop Run1Test z←i⊃files
               :If ~Selenium.QUIETMODE ⋄ ⎕←z,' *** PASSED ***' ⋄ :EndIf
           :Else
