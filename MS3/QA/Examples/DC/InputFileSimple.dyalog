@@ -1,11 +1,12 @@
-﻿ msg←Test dummy;CR;files;f;result;file;path;stats;s;c
+ msg←Test dummy;CR;files;f;result;file;path;stats;s;c
 ⍝ try to upload a sampling of files in the Data-directory
 
  msg←''
  CR←⎕UCS 13
 
  ⍝↓↓↓ remove directories, select one of each file type based on extension
- files←{⍵[(3⌊⍴⍵)?⍴⍵]}∊¨↓{⍵⌷[1]⍨⊂⍵[;3]⍳∪⍵[;3]}↑#.Files.SplitFilename¨{⍵[;1]/⍨~⍵[;4]}#.Files.List path←AppRoot,'examples\data\'
+ ⍝⍸≠ could replace {⍵⍳∪⍵} - but we need to be backwards-compatible....
+ files←{⍵[{⍵⍳∪⍵}3⊃¨⎕NPARTS¨⍵]}{⍵[;1]/⍨~⍵[;4]}#.Files.List path←#.Boot.AppRoot,'examples\data\'
  ⍝⍞←' testing ',(⍕⍴files),' files '
  c←0
  :For f :In files  ⍝ all files, no directories
@@ -24,6 +25,7 @@
      :Else
          s←{t←⍵ ⎕NTIE 0 ⋄ (⎕NUNTIE t)⊢{(⍴⍵),255|+/⍵}⎕NREAD t,83,2↑⎕NSIZE t}file
          :If stats≢s
+         ∘∘∘
              msg,←CR,'File ',file,' uploaded but statistics are different - uploaded = ',(⍕stats),', original = ',⍕s
          :EndIf
      :EndIf
