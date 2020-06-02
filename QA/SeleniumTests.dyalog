@@ -1,6 +1,7 @@
 ﻿:Namespace SeleniumTests
 ⍝ needs Selenium/ in a folder that is on the same level as the DUI- or MiServer-Folder (ie /Git/MiServer & /Git/Selenium)
 
+
     ∇ x←eis x
 ⍝ Enclose if simple
       :If (≡x)∊0 1 ⋄ x←,⊂,x ⋄ :EndIf
@@ -47,7 +48,7 @@
           r←r,⊃,/ext FindAllFiles¨root∘,¨folders
       :EndIf
     ∇
-
+ 
     ∇ r←stop_port Test site;count;ctl;examples;f;fail;nodot;start;t;time;z;i;START;COUNT;FAIL;Config;selpath;files;n;ext;filter;⎕PATH;keynames;maxlen;⎕USING;stopOnError;stop;dui;appr;cfg
       ⍝ stop: 0 (default) ignore but report errors; 1 stop on error; 2 stop before every test
       ⍝⍵: site filter config
@@ -81,12 +82,8 @@
           :EndTrap
       :EndIf
       ⎕PATH,←' Selenium'
-      Selenium.DLLPATH←selpath
-      :If config≢''
-          Selenium.ApplySettings config
-      :Else
-          ∘∘∘ ⍝ Can't run w/o config!
-      :EndIf
+      Selenium.DLLPATH←selpath  ⍝ backward compatibility
+      Selenium.ApplySettings config
       Selenium.QUIETMODE←{0::0 ⋄ (,1)≡,2⊃⎕VFI ⍵}2 ⎕NQ'.' 'GetEnvironment' 'QUIETMODE'  ⍝ for automated tests! ;)
      
       :If dui
@@ -113,7 +110,12 @@
       n←⍴files
       ⍝SITE←'http://127.0.0.1:',⍕⊃1↓stop_port,Config.Port
       ⍝SITE←'http://',(2 ⎕NQ'.' 'TCPGetHostID'),':',(⍕{6::⍵.MSPort ⋄ ⍵.Port}#.Boot.ms.Config)
+      :if 2=Selenium.SETTINGS.⎕nc'SITEROOT'
+      SITE←Selenium.SETTINGS.SITEROOT
+      :else
       SITE←'http://',(2 ⎕NQ'.' 'TCPGetHostID'),':',⍕⊃1↓stop_port,⍎⍕{6::⍵.MSPort ⋄ ⍵.Port}cfg
+      ∘∘∘
+      :endif
       :if ~Selenium.QUIETMODE
       ⎕←'Site=',SITE
       :endif
