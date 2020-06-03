@@ -114,7 +114,6 @@
       SITE←Selenium.SETTINGS.SITEROOT
       :else
       SITE←'http://',(2 ⎕NQ'.' 'TCPGetHostID'),':',⍕⊃1↓stop_port,⍎⍕{6::⍵.MSPort ⋄ ⍵.Port}cfg
-      ∘∘∘
       :endif
       :if ~Selenium.QUIETMODE
       ⎕←'Site=',SITE
