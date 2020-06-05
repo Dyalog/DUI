@@ -23,7 +23,7 @@
      :ElseIf 2≠⍴stats←⊃(//)⎕VFI result.Text
          msg,←CR,'File ',file,' uploaded but statistics are not found - ',result.Text
      :Else
-         s←{t←⍵ ⎕NTIE 0 ⋄ (⎕NUNTIE t)⊢{(⍴⍵),255|+/⍵}⎕NREAD t,83,2↑⎕NSIZE t}file
+         s←{t←⍵ ⎕NTIE 0 ⋄ (⎕NUNTIE t)⊢{(⍴⍵),(255|+)/⍵}⎕NREAD t,83,2↑⎕NSIZE t}file
          :If stats≢s
          ∘∘∘
              msg,←CR,'File ',file,' uploaded but statistics are different - uploaded = ',(⍕stats),', original = ',⍕s
