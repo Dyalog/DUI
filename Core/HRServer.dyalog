@@ -20,6 +20,8 @@
     ⎕TRAP←0/⎕TRAP ⋄ (⎕ML ⎕IO)←1 1
 
     unicode←80=⎕DR 'A'
+    APLVersion←{⊃(//)⎕VFI ⍵/⍨2>+\'.'=⍵}2⊃#.⎕WG 'APLVersion'
+    xlate←(1+18≤APLVersion)⊃⎕DR¨' ' 3 ⍝ file translation
     NL←(CR LF)←⎕UCS 13 10
     FindFirst←{(⍺⍷⍵)⍳1}
     setting←{0=⎕NC ⍵:⍺ ⋄ ⍎⍵}
@@ -141,8 +143,8 @@
       :If ~0∊⍴TID∩⎕TNUMS
           →EXIT⊣(r msg)←1('Server is already running on thread',⍕TID)
       :EndIf
-      →EXIT⍴⍨1=r←0<≢msg←(17.1>⎕←APLVersion)/1 'Dyalog v17.1 or later is required to use HRServer' 
-   
+      →EXIT⍴⍨1=r←0<≢msg←(17.1>APLVersion)/1 'Dyalog v17.1 or later is required to use HRServer'
+     
       onServerLoad
      
       TID←RunServer&⍬
@@ -305,7 +307,7 @@
       :If res.(File Status)∧.=1 200
           :Trap 22
               tn←res.HTML ⎕NTIE 0
-              res.HTML←⎕NREAD tn,(⎕DR' '),¯1 0
+              res.HTML←⎕NREAD tn,xlate,¯1 0
               ⎕NUNTIE tn
           :Else
               REQ.Fail 404
@@ -330,9 +332,8 @@
     ∇ r←UnicodeToHtml txt;u;ucs
       :Access public shared
     ⍝ converts chars ⎕UCS >255 to HTML safe format
-      :If ~2|⎕DR txt
-          r←,⍕txt
-      :EndIf
+      →0⍴⍨83=⎕DR r←txt ⍝ if single-byte integer, don't convert 
+      r←,⍕r
       :If 0<+/u←255<ucs←⎕UCS r
           (u/r)←(~∘' ')¨↓'G<&#ZZZ9;>'⎕FMT u/ucs
           r←∊r
@@ -595,7 +596,6 @@
     :endsection
 
     :section Misc
-    APLVersion←{⊃(//)⎕VFI ⍵/⍨2>+\'.'=⍵}2⊃#.⎕WG 'APLVersion'
     GetFromTableDefault←{⍺←'' ⋄ ⍺{0∊⍴⍵:⍺ ⋄ ⍵}⍵ {((819⌶⍵[;1])⍳⊆819⌶⍺)⊃⍵[;2],⊂''} ⍺⍺} ⍝ default_value (table ∇) value
 
     ∇ r←flag Debugger w

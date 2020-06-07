@@ -112,7 +112,8 @@
 
     ∇ {r}←Wrap
       :Access public
-      r←Render
+      r←Render                         
+      (Head Body).Content←'' ''
       :If Cacheable ⋄ _cache←r ⋄ :EndIf
     ∇
 
