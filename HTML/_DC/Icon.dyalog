@@ -12,6 +12,9 @@
 ⍝         when two strings are used, it represents a "stacked" icon, with second icon overlayed on the first
 ⍝         "stacked" icons are a feature of FontAwesome icons - using other icons may or may not have the desired visual effect
 ⍝
+⍝ KitURL - reduce download-size with FontAwesomeKits. This field, if used, should be assigned before using any Icons. It
+⍝           contains the full path to your FA-Kit /as given by the FA-Pro "Kit-Builder")
+⍝
 ⍝ Usage Notes::
 ⍝ Icon currently supports 3 different libraries of icons:
 ⍝   Library                  Prefix
@@ -37,7 +40,7 @@
     :field public shared readonly ApiLevel←3
     :Field public Spec←⍬
     :field public shared readonly DocBase←'http://fontawesome.io/examples/'
-:field public Dummy
+    :field public shared KitURL←''
 
     ∇ Make
       :Access public
@@ -47,7 +50,7 @@
     ∇ Make1 args;last
       :Access public
       :Implements constructor
-			Spec←args
+      Spec←args
     ∇
 
     ∇ r←Render;prefix;spec;icon;classes;n;origContent;origSpec;origClass
@@ -65,13 +68,13 @@
           :Select ¯1↓prefix
           :Case 'fa' ⍝ try to support old-style FA4-Codes by replacing with fas
                      ⍝ and spit out some warning into the session!
-              Use'faIcons5svg'
+              UseFA
               AddClass'fas ',Spec
               ⍝ :if Debugging ^ DevelopmentSys
               ⍝    echo warning about use of fa-
               ⍝ :endif
           :CaseList 'far' 'fas' 'fal' 'fab' 'fad'
-              Use'faIcons5svg'
+              UseFA
               Tag←'i'
               AddClass(¯1↓prefix),' fa-',spec  ⍝ change fab-name into "fab fa-name"
           :Case 'md' ⍝ Google
@@ -87,7 +90,7 @@
      
           :Else
               :If (⊂3↑prefix)∊'far' 'fas' 'fal' 'fab'  ⍝ 'fas fa-{name}' is direct use of FA5-Tags
-                  Use'faIcons5svg'
+                  UseFA
                   AddClass prefix,spec
               :Else
                   Content←Spec
@@ -109,6 +112,17 @@
       SetUse
       r←⎕BASE.Render
       (Spec Content class)←origSpec origContent((1+origClass≡UNDEF)⊃origClass'') ⍝ cannot just "unset" class
+    ∇
+
+
+    ∇ UseFA
+      :Access public shared
+      :If 0=≢KitURL
+          Use'faIcons5svg'
+      :Else
+          Use'⍎',KitURL
+      :EndIf
+     
     ∇
 
     SplitOn1st←{(l↑⍺)((l←⍺⍳⍵)↓⍺)}
