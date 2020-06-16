@@ -1,6 +1,8 @@
 ﻿ msg←Test dummy;link;output
-⍝ :If 0∊⍴msg←'list not found'/⍨0≡link←('CssSelectors'Find'#links li')[1]
- :If 0∊⍴msg←'list not found'/⍨0≡link←Find'links_1'
+ :If 0∊⍴msg←'list or first list-item not found'/⍨0≡link←1⌷'CssSelectors'Find'ol#links > li > a'
      output←Find'output'
-     msg←'Mouseover test failed'/⍨~{∨/'(opens in this tab)'⍷output.Text⊣⎕DL 0.1⊣MoveToElement link 10 10}Retry ⍬
+     msg←'Mouseover test failed'/⍨~{
+         sink←MoveToElement link 10 10 
+         ∨/'this'⍷output.Text
+         }Retry ⍬
  :EndIf

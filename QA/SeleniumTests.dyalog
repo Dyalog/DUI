@@ -135,7 +135,6 @@
      
       :For i :In ⍳n
           COUNT+←1
-          :If 0=⍴t←stop Run1Test{⍵⊣⍞←(⎕UCS 13),maxlen↑lopFirst ⍵}z←i⊃files⋄ :endif
           :If 0=⍴t←stop Run1Test z←i⊃files
               :If ~Selenium.QUIETMODE ⋄ ⎕←z,' *** PASSED ***' ⋄ :EndIf
           :Else
