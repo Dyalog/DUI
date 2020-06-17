@@ -1,4 +1,4 @@
- msg←Test dummy;CR;files;f;result;file;path;stats;s;c
+﻿ msg←Test dummy;CR;files;f;result;file;path;stats;s;c
 ⍝ try to upload a sampling of files in the Data-directory
 
  msg←''
@@ -23,10 +23,9 @@
      :ElseIf 2≠⍴stats←⊃(//)⎕VFI result.Text
          msg,←CR,'File ',file,' uploaded but statistics are not found - ',result.Text
      :Else
-         s←{t←⍵ ⎕NTIE 0 ⋄ (⎕NUNTIE t)⊢{(⍴⍵),(255|+)/⍵}⎕NREAD t,83,2↑⎕NSIZE t}file
+         s←{t←⍵ ⎕NTIE 0 ⋄ (⎕NUNTIE t)⊢{(⍴⍵),(255|+)/⎕UCS ⍵}⎕NREAD t,80,2↑⎕NSIZE t}file
          :If stats≢s
-         ∘∘∘
-             msg,←CR,'File ',file,' uploaded but statistics are different - uploaded = ',(⍕stats),', original = ',⍕s
+             msg,←⎕←CR,'File ',file,' uploaded but statistics are different - uploaded = ',(⍕stats),', original = ',⍕s
          :EndIf
      :EndIf
      c+←1

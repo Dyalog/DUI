@@ -1,13 +1,13 @@
 ﻿:Class jqButtonsetSimple : MiPageSample
 ⍝ Control:: _JQ.jqButtonset _.Handler
 ⍝ Description:: Grouped sets of buttons
-    :field private TEXTS
+    :field public TEXTS←'Shoes' 'Boots' 'Sandals' 'Flip-Flops'
 
     ∇ Compose;output;fw;menu;form
       :Access Public
       form←Add _.Form
      
-      TEXTS←'Shoes' 'Boots' 'Sandals' 'Flip-Flops'
+      ⍝ TEXTS←'Shoes' 'Boots' 'Sandals' 'Flip-Flops'
       fw←'footwear'form.Add _.jqButtonset(TEXTS'radio')
       fw.Legend←'Footwear'
      
