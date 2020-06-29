@@ -1,6 +1,15 @@
 :Class ejTreeViewAdvanced : MiPageSample
 ⍝ Control:: _SF.ejTreeView
 ⍝ Description:: TreeView with checkable nodes and ability to add and delete nodes
+ :field public _Sessioned←1
+ :field public current
+ :field public index
+ :field public items
+ :field public allids
+ :field public checked
+ :field public added
+ :field public levels
+ :field public tv
 
     ∇ Compose;add;chk;del;exp;mod
       :Access Public
@@ -37,7 +46,7 @@
     ∇ r←onNode;index;item;on
       ⍝ Handle node select or check/uncheck
       :Access Public
-     
+     ∘∘∘
       current←Get'node'
       index←allids⍳⊂current
       :If index>⍴items
@@ -80,6 +89,7 @@
           (insert⊃allids)←id
      
       :Case 'Del'
+      ∘∘∘
           :If index≠0
               r←tv.removeNode current
               m←index≠⍳1↑⍴items
