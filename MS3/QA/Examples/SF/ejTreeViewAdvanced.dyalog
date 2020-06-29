@@ -13,7 +13,8 @@
      Click'Del' ⍝ delete the node server side
      'tv'SendKeys Delete ⍝ make the client model match
      Click'Mod' ⍝ ... and display the model
- :AndIf 0=⍴msg←'Display Model button did not work, or models do not agree.'/⍨~{33=('CssSelectors'Find'#tvModel td').Count}Retry ⍬
+ :AndIf 0=⍴msg←'Display Model button did not work, or models do not agree.'/⍨~{72=('CssSelectors'Find'#tvModel td').Count}Retry ⍬
+ ⍝ ↑↑dunno why this checked for 33?  (8 rows + header x 8 cols + 2header-cells = 72+2=74)  MB,Jun24th, 2020
      msg←'tvModel'WaitFor'Server≡Browser' 'Server/Browser model mismatch.'
 
  :EndIf

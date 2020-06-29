@@ -1,7 +1,8 @@
 ﻿:Class jqSortableAdvanced : MiPageSample
 ⍝ Control:: _JQ.jqSortable
 ⍝ Description:: Grid of reorderable boxes
-
+ :field public _Sessioned←1
+ 
     ∇ Compose;output;image
       :Access Public
      
