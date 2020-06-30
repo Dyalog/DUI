@@ -107,7 +107,6 @@
      
           :If ~0∊⍴AppRoot
               :If ⎕NEXISTS appRoot←∊1 ⎕NPARTS AppRoot
-              :elseif ⎕nexists appRoot←∊1⎕nparts       WC2Root,AppRoot{⍺,(⍵≠¯1↑⍺)⍴⍵}'/'
                   (appRoot type)←0 1 ⎕NINFO appRoot
                   :If type=1
                       AppRoot←appRoot,('/'=⊢/AppRoot)↓'/'
