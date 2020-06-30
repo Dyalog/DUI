@@ -1,6 +1,6 @@
-﻿:Class d3Advanced : MiPageSample
+﻿:Class d3Simple : MiPageSample
 ⍝ Control:: _JS.d3
-⍝ Description:: "responsive" chart (click on bar to see "responmse")
+⍝ Description:: "responsive" chart (click on bar to see "response")
 
     ∇ Compose
       :Access Public

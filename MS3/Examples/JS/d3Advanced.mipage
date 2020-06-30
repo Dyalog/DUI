@@ -1,4 +1,4 @@
-﻿:Class d3Simple : MiPageSample
+﻿:Class d3Advanced : MiPageSample
 ⍝ Control:: _JS.d3
 ⍝ Description:: d3 pseudo-responsive data chart
 
