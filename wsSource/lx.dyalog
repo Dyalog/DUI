@@ -1,6 +1,6 @@
-﻿ lx;App;Port;NoLink
+﻿ lx;App;Port;NoLink;path
  :If 0∊⍴2 ⎕NQ'.' 'GetEnvironment' 'AttachDebugger'
-     WC2Root←(1⊃⎕NPARTS ⎕WSID)      ⍝ WCRoot ist the directory containing the workspace.
+     WC2Root←(1⊃1 ⎕NPARTS ⎕WSID)      ⍝ WCRoot ist the directory containing the workspace.
      ⎕SE.SALT.Load WC2Root,'DUI.dyalog'
 ⍝ looks for envVars AppRoot, MSPort and NoLink.
      :If 0<≢App←2 ⎕NQ'.' 'GetEnvironment' 'AppRoot'
@@ -11,8 +11,9 @@
              DUI.Run App''WC2Root NoLink
          :EndIf
      :Else
-         ⎕←'      DUI.Run''./MS3''        ⍝ run the sample app with HRServer (using HTMLRenderer)'
-         ⎕←'      DUI.Run''./MS3'' 8080   ⍝ run the sample app with MiServer (using your browser)'
+         path←(1+(#.Strings.lc WC2Root)≢#.Strings.lc 1⊃1 ⎕NPARTS'')⊃'./'WC2Root
+         ⎕←'      DUI.Run''',path,'MS3''        ⍝ run the sample app with HRServer (using HTMLRenderer)'
+         ⎕←'      DUI.Run''',path,'MS3'' 8080   ⍝ run the sample app with MiServer (using your browser)'
      :EndIf
  :Else
      ⎕←'      Start not run because AttachDebugger was set'Start''
