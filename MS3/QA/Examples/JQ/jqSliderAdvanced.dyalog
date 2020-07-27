@@ -1,7 +1,7 @@
 ﻿ msg←Test dummy;Msg;slave;min;max;LeftUntil;RightUntil
 
- LeftUntil←{∨/(Find ⍺).Text≡⍕⍵⊣(⍎⍺)DragAndDropToOffset ¯5 0}
- RightUntil←{∨/(Find ⍺).Text≡⍕⍵⊣(⍎⍺)DragAndDropToOffset 5 0}
+ LeftUntil←{∨/(Find ⍺).Text≡⍕⍵⊣(⍎⍺)DragAndDropToOffset ¯25 0}
+ RightUntil←{∨/(Find ⍺).Text≡⍕⍵⊣(⍎⍺)DragAndDropToOffset 25 0}
 
  Msg←/∘'Wrong limit'~
  (slave min max)←⌷'CssSelectors'Find'.ui-slider-handle'
