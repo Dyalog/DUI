@@ -5,4 +5,6 @@ Defaults   : ⎕IO←⎕ML←1
 TARGET     : ../DUI.dws,save=1,off=1
 
 APL   : *.dyalog, Target=#
+APL   : ../Utils/Strings.dyalog, Target=#      
+⍝ lx needs Strings.lc!
 LX    : lx
