@@ -1,7 +1,12 @@
-﻿ msg←Test dummy;Msg;slave;min;max;LeftUntil;RightUntil
+﻿ msg←Test dummy;Msg;slave;min;max;LeftUntil;RightUntil;RL
+ RL←Selenium.RETRYLIMIT
+ Selenium.RETRYLIMIT←50   ⍝ temporarily increase it (as we may need many D&D-Ops)
+⍝  LeftUntil←{∨/(Find ⍺).Text≡⍕⍵⊣(⍎⍺)DragAndDropToOffset ¯25 0}
+⍝  RightUntil←{∨/(Find ⍺).Text≡⍕⍵⊣(⍎⍺)DragAndDropToOffset 25 0}
+ ⍝ "tolerant sliding" - since this involves screensizes etc., we just make sure that we're "getting close"
 
- LeftUntil←{∨/(Find ⍺).Text≡⍕⍵⊣(⍎⍺)DragAndDropToOffset ¯25 0}
- RightUntil←{∨/(Find ⍺).Text≡⍕⍵⊣(⍎⍺)DragAndDropToOffset 25 0}
+ LeftUntil←{(1∊⍵∊(¯5+⍳10)+⌈/2⊃⎕VFI(Find ⍺).Text)⊣(⍎⍺)DragAndDropToOffset ¯25 0}
+ RightUntil←{(1∊⍵∊(¯5+⍳10)+⌈/2⊃⎕VFI(Find ⍺).Text)⊣(⍎⍺)DragAndDropToOffset 25 0}
 
  Msg←/∘'Wrong limit'~
  (slave min max)←⌷'CssSelectors'Find'.ui-slider-handle'
@@ -21,3 +26,5 @@
  :AndIf 0=⍴msg←Msg{'slave'RightUntil 100}Retry ⍬
 
  :EndIf
+
+ Selenium.RETRYLIMIT←RL
