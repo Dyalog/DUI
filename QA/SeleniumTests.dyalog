@@ -84,7 +84,7 @@
       ⎕PATH,←' Selenium'
       Selenium.DLLPATH←selpath  ⍝ backward compatibility
       Selenium.ApplySettings config
-      Selenium.QUIETMODE←{0::0 ⋄ (,1)≡,2⊃⎕VFI ⍵}2 ⎕NQ'.' 'GetEnvironment' 'QUIETMODE'  ⍝ for automated tests! ;)
+      Selenium.QUIETMODE←{6::(,1)≡,2⊃⎕VFI ⍵ ⋄ Selenium.QUIETMODE ⋄ }2 ⎕NQ'.' 'GetEnvironment' 'QUIETMODE'  ⍝ for automated tests! ;)
      
       :If dui
           :If 0≠⊃z←#.DUI.Initialize
@@ -105,7 +105,7 @@
       ⍝ // Add code to compare this to the mipages found in the whole app
       :If 0≠≢filter
           files←(filter ⎕S'%')files
-          ⎕←'Selected: ',(⍕⍴files),' of ',(⍕n),' tests.'
+          :If ~Selenium.QUIETMODE ⋄ ⎕←'Selected: ',(⍕≢files),' of ',(⍕n),' tests.'⋄:endif
       :EndIf
       n←⍴files
       ⍝SITE←'http://127.0.0.1:',⍕⊃1↓stop_port,Config.Port
@@ -139,14 +139,15 @@
               :If ~Selenium.QUIETMODE ⋄ ⎕←z,' *** PASSED ***' ⋄ :EndIf
           :Else
               FAIL+←1
-              r,←⊂z
+              r,←⊂z,': ',t
+              :If ~Selenium.QUIETMODE  ⍝ only show msg if not running with quietmode
               ⎕←z,' *** FAILED *** #',(⍕i),' of ',(⍕n),': ',z,': ',t
+              :endif
           :EndIf
       :EndFor
       :If ~Selenium.QUIETMODE ⋄ :OrIf 0<FAIL
           ⎕←'Total of ',(⍕COUNT),' samples tested in ',(∊(⍕¨24 60⊤⌊0.5+(⎕AI[3]-START)÷1000),¨'ms'),': ',(⍕FAIL),' failed.'
       :EndIf
-     
       Selenium.BROWSER.Quit
     ∇
 
