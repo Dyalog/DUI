@@ -15,7 +15,7 @@
  :If 1<≢##.args.Arguments ⋄ TestCase←2⊃##.args.Arguments ⋄ :else ⋄ TestCase←'' ⋄ :EndIf
 ⍝ Start a separate APLProcess that serves the pages
  :If grdui=1
-     GR←⎕NEW #.GhostRider('AppRoot=',DUIdir,'MS3/ ',params)
+     GR←⎕NEW #.GhostRider('RIDE_SPAWNED=0 AppRoot=',DUIdir,'MS3/ ',params)  ⍝ RIDE_SPAWNED=0 should make the session visible - that has no effect on MB's machine.
      GR.APL'⎕load''',DUIdir,'DUI',''''
  :ElseIf grdui=0
      myapl←⎕NEW APLProcess((DUIdir,'DUI')('AppRoot=',DUIdir,'MS3/ ',params)0 'serve:*:4052')
