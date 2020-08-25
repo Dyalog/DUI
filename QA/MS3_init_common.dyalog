@@ -17,6 +17,8 @@
  :If grdui=1
      GR←⎕NEW #.GhostRider('RIDE_SPAWNED=0 AppRoot=',DUIdir,'MS3/ ',params)  ⍝ RIDE_SPAWNED=0 should make the session visible - that has no effect on MB's machine.
      GR.APL'⎕load''',DUIdir,'DUI',''''
+     GR.(INFO TRACE)←##.verbose×~##.quiet
+     GR.DEBUG←##.halt
  :ElseIf grdui=0
      myapl←⎕NEW APLProcess((DUIdir,'DUI')('AppRoot=',DUIdir,'MS3/ ',params)0 'serve:*:4052')
  :Else
