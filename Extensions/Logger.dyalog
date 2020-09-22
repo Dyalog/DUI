@@ -11,12 +11,12 @@
 ⍝  <prefix></prefix>                       <!-- character vector log file prefix -->
 
     :field public instance Active←0
+    :field public instance Server
     :field private instance anonymousIps←1
     :field private instance directory←''
     :field private instance interval←10
     :field private instance prefix←''
     :field private instance badFolder←0
-    :field server
 
     :field private instance TieNo←⍬
     :field private instance Cache←''
@@ -25,7 +25,7 @@
     missing←{0∊⍴⍵:'-' ⋄ ⍵}
     Char←⎕DR ' '
 
-    serverLog←{⍺←1 ⋄ ⍺ server.Log 'Logger: ',⍵}
+    serverLog←{⍺←1 ⋄ ⍺ Server.Log 'Logger: ',⍵}
 
     ∇ Make ms;config;msg
       :Access public
@@ -33,7 +33,7 @@
      
       EOL←⎕UCS 13 10↓⍨~#.DUI.isWin
      
-      server←ms
+      Server←ms
       :If 0≢config←ConfigureLogger ms
           Active←config.active
           Anonymize←{3='.'+.=⍵:((-(⌽⍵)⍳'.')↓⍵),'.0' ⋄ ⍵}⍣config.anonymousIps
@@ -122,7 +122,7 @@
               TieNo←{0 ⎕NTIE⍨⍵⊣⎕NUNTIE ⍵ ⎕NCREATE 0}fn
               4 serverLog'log file "',fn,'" created'
           :Else
-              server.Log'Unable to open log file "',fn,'"'
+              Server.Log'Unable to open log file "',fn,'"'
               :Return
           :EndTrap
       :EndTrap

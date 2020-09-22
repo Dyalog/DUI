@@ -36,21 +36,20 @@
 
     ∇ End;classes;z;m
       ⍝ Clean up the workspace
-     
       :If 9=⎕NC'Server'
           :If 'HRServer'≡Framework
-              Server.Close
-          :Else
-              :Trap 0
-                  Server.End
-              :EndTrap
-              {}try'⎕EX⍕⊃⊃⎕CLASS Server.SessionHandler'
-              {}try'⎕EX⍕⊃⊃⎕CLASS Server.Authentication'
-              {}try'⎕EX⍕⊃⊃⎕CLASS Server.Logger'
-              {}try'⎕EX⍕¨∪∊ ⎕CLASS¨Server.Encoders'
-              ⎕EX⍕⊃⊃⎕CLASS Server
-              ⎕EX'Server'
+              {}try'Server._Renderer.Close'
           :EndIf
+          :Trap 0
+              Server.End
+          :EndTrap     
+          {}try'⎕EX''#.Pages'''
+          {}try'⎕EX⍕⊃⊃⎕CLASS Server.SessionHandler'
+          {}try'⎕EX⍕⊃⊃⎕CLASS Server.Authentication'
+          {}try'⎕EX⍕⊃⊃⎕CLASS Server.Logger'
+          {}try'⎕EX⍕¨∪∊ ⎕CLASS¨Server.Encoders'
+          {}try'⎕EX⍕⊃⊃⎕CLASS Server'
+          ⎕EX'Server'
       :EndIf
      
       :If 9=#.⎕NC'SQA'
@@ -71,6 +70,7 @@
           #.Conga.UnloadSharedLib
       :EndIf
       Server←⍬
+      ms←⍬
       MSPort←⍬
       AppRoot←''
       WC2Root←''

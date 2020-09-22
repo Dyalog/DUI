@@ -154,11 +154,14 @@
     ∇
 
     ∇ End
-    ⍝ Called by destructor
       :Access Public
       {0:: ⋄ Logger.Stop ⍬}⍬
+      {0:: ⋄ Logger.Server←⍬}⍬
+      {0:: ⋄ SessionHandler.Server←⍬}⍬
       {0:: ⋄ #.HttpRequest.Server←⍬}⍬
+      {0:: ⋄ #.HTTPRequest.Server←⍬}⍬
       {0:: ⋄ #.DUI.Server←⍬}⍬
+      {0:: ⋄ #.DUI.ms←⍬}⍬
       Cleanup ⍝ overridable
       TID←¯1
       ⎕DL 3 ⍝ pause for cleanup
@@ -170,7 +173,6 @@
      
       Stop←0
       StartTime←⎕TS
-     
       :If Config.TrapErrors>0
           ⎕TRAP←#.DrA.TrapServer
           #.DrA.NoUser←1+#.DrA.MailRecipient∨.≠' '
@@ -221,10 +223,10 @@
       :If 2=#.⎕NC'DEBUG' ⋄ DEBUG←#.DEBUG ⋄ :EndIf
     ∇
 
-    ∇ UnMake
-      :Implements Destructor
-      End
-    ∇
+⍝    ∇ UnMake
+⍝      :Implements Destructor
+⍝      End
+⍝    ∇
 
     :endsection
 
@@ -273,7 +275,6 @@
     ∇ r←HandleRequest arg;tn;res;REQ;ext;filename
     ⍝ arg - HTMLRenderer callback data
       r←arg
-      :If DEBUG≠0 ⋄ ⎕←∊' ',¨arg[11 8] ⋄ :EndIf
       REQ←⎕NEW #.HttpRequest arg
       res←REQ.Response
       REQ.Host←'dyalog_root'
@@ -332,7 +333,7 @@
     ∇ r←UnicodeToHtml txt;u;ucs
       :Access public shared
     ⍝ converts chars ⎕UCS >255 to HTML safe format
-      →0⍴⍨83=⎕DR r←txt ⍝ if single-byte integer, don't convert 
+      →0⍴⍨83=⎕DR r←txt ⍝ if single-byte integer, don't convert
       r←,⍕r
       :If 0<+/u←255<ucs←⎕UCS r
           (u/r)←(~∘' ')¨↓'G<&#ZZZ9;>'⎕FMT u/ucs
