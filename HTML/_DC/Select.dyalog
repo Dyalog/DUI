@@ -11,7 +11,7 @@
 ⍝ Selected  - Boolean or integer array indicating pre-selected options(s)
 ⍝ Disabled  - Boolean or integer array indicating disabled options(s)
 ⍝ Prompt      - first item to display (has no value) (default '[Select]')
-⍝ 
+⍝
 ⍝ Public Methods::
 ⍝ ReplaceOptions options [[selected] [disabled]]
 ⍝ Arguments as discussed above
@@ -47,15 +47,14 @@
 
     ∇ r←Render;opts;sel
       :Access public
-     
       Content←opts←''
       SetInputName
       Add BuildOptions(Options Selected Disabled)
-     
       r←⎕BASE.Render
     ∇
 
     ∇ r←BuildOptions(opts sel dis);v
+      :Access public shared
       r←''
       :If ~0∊⍴opts
           opts←eis opts
@@ -63,17 +62,19 @@
               opts←opts,⍪opts
           :EndIf
       :EndIf
-          
+     
       v←⍳⍬⍴⍴opts
       (sel dis)←v∘∊∘{∧/⍵∊0 1:⍵/⍳⍴⍵ ⋄ ⍵}∘,¨sel dis
-      :If 1<+/sel                         ⍝ if we have multiple items selected
-      :AndIf 0∊⍴⊃Attrs[⊂'multiple']       ⍝ and the multiple attribute is not set
-          Attrs[⊂'multiple']←⊂'multiple'  ⍝ then set it
-      :EndIf
+      :If {6::0 ⋄ 1⊣Attrs[]}⍬               ⍝ if calling Public Shared version, Attrs doesn't exist
+          :If 1<+/sel                         ⍝ if we have multiple items selected
+          :AndIf 0∊⍴⊃Attrs[⊂'multiple']       ⍝ and the multiple attribute is not set
+              Attrs[⊂'multiple']←⊂'multiple'  ⍝ then set it
+          :EndIf
      
-      :If ~0∊⍴Prompt
-      :AndIf 0∊⍴⊃Attrs[⊂'multiple']  ⍝ prompt makes no sense if multiple selections are allowed
-          r,←(('disabled="disabled" ',(~∨/sel)/'selected="selected"')New #._html.option Prompt).Render
+          :If ~0∊⍴Prompt
+          :AndIf 0∊⍴⊃Attrs[⊂'multiple']  ⍝ prompt makes no sense if multiple selections are allowed
+              r,←(('disabled="disabled" ',(~∨/sel)/'selected="selected"')New #._html.option Prompt).Render
+          :EndIf
       :EndIf
      
       r,←FormatOptions(opts sel dis)

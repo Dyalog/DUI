@@ -1,0 +1,38 @@
+﻿:Class ChosenAdvancedGroups : MiPageSample
+⍝ Control::     _JS.Chosen
+⍝ Description:: Chosen widget sample using grouping and other options
+
+    ⍝↓↓↓ items with leading '*' indicate grouping headings
+    ⍝    the characted used to indicate grouping is determined by the GroupMarker setting below
+    choices←'*Fruits' 'Apples' 'Bananas' 'Grapes' '*Vegetables' 'Carrots' 'Eggplant' 'Peppers' 'Spinach'
+
+    ∇ Compose;form;chosen
+      :Access public
+      Add _.h2'This page demonstrates using _.Chosen with several options'
+      form←Add _.Form                                  ⍝ add a form to the page
+      chosen←'#mySelection'form.Add _.Chosen choices   ⍝ add the Chosen widget (and its choices)
+      chosen.Style'width:200px'                        ⍝ make it a bit wider
+      chosen.Multiple←1                                ⍝ allow multiple selections
+      chosen.GroupMarker←'*'                           ⍝ indicate the group marker character
+      chosen.Prompt←'Select up to 3 produce items'     ⍝ add the placeholder (prompt) text
+      'max_selected_options'chosen.Set 3               ⍝ set a Chosen sttribute (see Chosen documentation)
+      chosen.On'chosen:maxselected' 'myCallback'
+      form.Add _.br
+      (form.Add _.Button'Done').On'click' 'myCallback'
+      Add _.br
+      'output'Add _.div
+    ∇
+
+    ∇ r←myCallback;msg
+     ⍝ Called when user either selected more than 3 items, or clicked the Done button
+      :Access Public
+      :Select _event
+      :Case 'click'
+          msg←'You selected',∊' ',¨⊆{0∊⍴⍵:'nothing?' ⋄ ⍵}Get'mySelection'
+      :Case 'chosen:maxselected'
+          msg←'Hey, don''t be greedy!'
+      :EndSelect
+      r←'#output'Replace _.p msg
+    ∇
+
+:EndClass

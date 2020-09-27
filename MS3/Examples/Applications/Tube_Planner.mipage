@@ -2,6 +2,9 @@
 ⍝ Control:: _JS.Chosen
 ⍝ Description:: Tube/Metro/Subway planner for multiple cities
 
+    
+    :Field public _Sessioned←1
+
     ∇ Compose;ipcity;go;route;inputs
       :Access public
       :If 0=⎕NC'TUBE.cities'
@@ -44,7 +47,7 @@
       CITYDATA←TUBE⍎#.Strings.lc Get'city'
       TUBE.compile CITYDATA
       STOPS←{(1=≡¨⍵)/⍵}CITYDATA.labels
-      r←IPFR.ReplaceOptions STOPS
-      r,←IPTO.ReplaceOptions STOPS
+      r←IPFR.ReplaceChoices STOPS
+      r,←IPTO.ReplaceChoices STOPS
     ∇
 :endclass
