@@ -95,7 +95,7 @@
       :If 1=⍴⍴opts ⋄ opts←opts,⍪opts ⋄ :EndIf
       :If 1=≢opts ⋄ opts←(⊂'')⍪opts ⋄ (sel dis)←0,¨sel dis ⋄ :EndIf ⍝ if single option, need to insert blank per Chosen documentation
       :For o s d :InEach (↓opts)sel dis
-          :If GroupMarker≡1 1⊃o
+          :If GroupMarker≡1↑1⊃o
               r,←'<optgroup label="',(1↓1⊃o),'"',(d/' disabled="disabled"'),'/>'
           :Else
               r,←'<option',({⍵ ine' value="',(HtmlSafeText ⍵),'"'}2⊃o),(s/' selected="selected"'),(d/' disabled="disabled"'),'>',(1⊃o),'</option>'
