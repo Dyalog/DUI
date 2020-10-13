@@ -14,7 +14,7 @@
     :Field Public Overrides
     :Field ServerName
     :Field Public ReadOnly Framework←'HRServer'
-    :Field Public _Renderer←''
+    :Field Public _Renderers←⍬
     :Field Public Shared DEBUG←0
 
     ⎕TRAP←0/⎕TRAP ⋄ (⎕ML ⎕IO)←1 1
@@ -181,17 +181,43 @@
       onServerStart ⍝ meant to be overridden
      
       idletime←#.Dates.DateToIDN ⎕TS
+      StartNewRenderer''
+    ∇
+
+    ∇ {renderer}←StartNewRenderer url;props
       props←{
           0∊⍴n←(⍵.⎕NL ¯2)~⊂'Debug':''
           ⍵{⍵({∧/⊃(m n)←⎕VFI⍕⍵:n ⋄ ⍵}⍺⍎⍵)}¨n
       }Config.HRServer
-      props,←⊂'Event'('onHTTPRequest' 'HandleRequest')
-      _Renderer←⎕NEW'HTMLRenderer'props
-      :If {0::0 ⋄ 1=⊃2⊃⎕VFI⍕Config.HRServer.Debug}⍬
-          _Renderer.ShowDevTools 1
+      props,←⊂'Event'('onAll' 'RendererRequest')
+      :If ~0∊⍴url
+          props,←⊂'URL'url
       :EndIf
-      _Renderer.Wait
-     RESUME: ⍝ Error Trapped and logged
+      _Renderers,←renderer←⎕NEW'HTMLRenderer'props
+      :If {0::0 ⋄ 1=⊃2⊃⎕VFI⍕Config.HRServer.Debug}⍬
+          renderer.ShowDevTools 1
+      :EndIf
+    ∇
+
+    ∇ r←RendererRequest evt
+      :Access public
+      :Select 2⊃evt ⍝ Event
+      :Case 'Create'
+      :Case 'Close'
+          _Renderers~←1⊃evt
+          :If 0∊⍴_Renderers
+              Done
+          :EndIf
+      :Case 'HTTPRequest'
+          r←HandleRequest evt
+      :Case 'DoPopup'
+          StartNewRenderer 3⊃evt
+      :Else
+          1 Log'Unhandled HTMLRenderer event: ',⍕2⊃evt
+      :EndSelect
+    ∇
+
+    ∇ Done
       1 Log'HRServer stopped'
       :If Config.CloseOnCrash
           ⎕OFF
@@ -199,8 +225,7 @@
       End
     ∇
 
-
-    :section Constructor/Destructor
+    :Section Constructor/Destructor
 
     ∇ Make config;rc
       :Access Public

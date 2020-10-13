@@ -13,8 +13,8 @@
 ⍝ Shared Fields
 
     :Field Public Shared DecodeBuffers←1     ⍝ have Conga decode HTTP message buffers by default (MiServer also sets this on initialization) set to 0 for debugging purposes
-    :Field Public Shared Server              ⍝ reference back to the server
- 
+    :Field Public Shared Server←''           ⍝ reference back to the server
+
  ⍝ Fields related to the Request
 
     :Field Public Instance Complete←0        ⍝ do we have a complete request?

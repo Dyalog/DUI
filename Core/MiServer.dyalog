@@ -491,6 +491,7 @@
       :Select evt
       :Case 'HTTPHeader'
           conns.Req←⎕NEW #.HttpRequest data
+          conns.Req.Server←⎕THIS
       :Case 'HTTPBody'
           conns.Req.ProcessBody data
       :Case 'HTTPChunk'
