@@ -34,6 +34,7 @@
     :Field Public Instance Cookies←0 2⍴⊂''
     :Field Public Instance Session←''
     :Field Public Instance CloseConnection←0
+    :Field Public Instance Renderer←''       ⍝ reference to the HTMLRenderer that received the request (HTMLRenderer mode only) 
 
 ⍝ Fields related to the Response
 
@@ -77,6 +78,7 @@
           (Method URI HTTPVersion Headers)←args
       :Else ⍝ HTMLRenderer
           HTMLRenderer←1
+          Renderer←1⊃args
           Method←11⊃args
           URI←{⌽⍵/⍨~∨\'toor_golayd'⍷⍵}⌽8⊃args
           HTTPVersion←'1.1'

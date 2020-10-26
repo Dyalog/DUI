@@ -1,5 +1,11 @@
 <HRServer>
+
+<!-- HTMLRenderer properties -->
   <Size>90 90</Size>
   <Coord>Prop</Coord>
+
+<!-- Other properties -->
   <Debug>0</Debug>
+  <NewWindowOffset>5 5</NewWindowOffset>
+
 </HRServer>

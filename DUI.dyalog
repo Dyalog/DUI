@@ -42,7 +42,7 @@
           :EndIf
           :Trap 0
               Server.End
-          :EndTrap     
+          :EndTrap
           {}try'⎕EX''#.Pages'''
           {}try'⎕EX⍕⊃⊃⎕CLASS Server.SessionHandler'
           {}try'⎕EX⍕⊃⊃⎕CLASS Server.Authentication'
@@ -117,6 +117,13 @@
                   →EXIT⊣r←4('Application path not found: "',AppRoot,'"')
               :EndIf
           :EndIf
+     
+          :Trap 11
+              JSONin←⎕JSON⍠'Dialect' 'JSON5' ⋄ {}JSONin 1
+              JSONout←⎕JSON⍠'HighRank' 'Split' ⋄ {}JSONout 1
+          :Else
+              JSONout←JSONin←⎕JSON
+          :EndTrap  
      
           nolink←NoLink/' -nolink'
      
@@ -342,12 +349,22 @@
     ⍝ 1) from server root WC2Root
     ⍝ 2) from site root AppRoot
     ⍝ merging the two if they both exist - site settings overrule server settings
+     
       config←''
       :If #.Files.Exists file←WC2Root,'Config/',type,'.xml'
           config←serverconfig←(#.XML.ToNS #.Files.ReadText file)⍎type
+      :ElseIf #.Files.Exists file←WC2Root,'Config/',type,'.json'
+          config←serverconfig←JSONin #.Files.ReadText file
       :EndIf
+     
+      siteconfig←''
       :If #.Files.Exists file←AppRoot,'Config/',type,'.xml'
           siteconfig←(#.XML.ToNS #.Files.ReadText file)⍎type
+      :ElseIf #.Files.Exists file←AppRoot,'Config/',type,'.json'
+          siteconfig←JSONin #.Files.ReadText file
+      :EndIf
+     
+      :If ~0∊⍴siteconfig
           :If 0∊⍴config
               config←siteconfig
           :ElseIf 0=⎕NC'element'
@@ -380,7 +397,6 @@
       Config.AppRoot←AppRoot
       Config.Authentication←Config Setting'Authentication' 0 'SimpleAuth'
       Config.CertFile←Config Setting'CertFile' 0 ''
-    ⍝ Config.ClassName←Config Setting'ClassName' 0 'MiServer'
       Config.CloseOnCrash←Config Setting'CloseOnCrash' 1 0
       Config.Debug←Config Setting'Debug' 1 0
       Config.DecodeBuffers←Config Setting'DecodeBuffers' 1 1 ⍝ allow Conga to decode HTTP messages (1)
@@ -559,6 +575,12 @@
       :Else
           1 ms.Log'No content types defined?'
       :EndIf
+    ∇
+
+    ∇ ns←ParseConfigNumerics ns
+    ⍝ convert numerics from XML configuration file
+      ∘∘∘
+      {}ns{⍵(⍺{⍺⍺⍎⍺,'←⍵'}){∧/⊃(m n)←⎕VFI⍕⍵:n ⋄ ⍵}⍺⍎⍵}¨ns.⎕NL ¯2
     ∇
 
     :Class ConfigSpace

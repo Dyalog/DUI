@@ -15,7 +15,10 @@
     :Field ServerName
     :Field Public ReadOnly Framework←'HRServer'
     :Field Public _Renderers←⍬
-    :Field Public Shared DEBUG←0
+    :Field Public DEBUG←0
+    :Field Public ScreenSize←⍬
+    :Field HTMLRendererProperties
+
 
     ⎕TRAP←0/⎕TRAP ⋄ (⎕ML ⎕IO)←1 1
 
@@ -27,11 +30,9 @@
     setting←{0=⎕NC ⍵:⍺ ⋄ ⍎⍵}
     endswith←{(,⍺){⍵≡⍺↑⍨-⍴⍵},⍵}
 
-      bit←{⎕IO←0  ⍝ used by Log
-          0=⍺:0 ⍝ all bits turned off
-          ¯1=⍺:1 ⍝ all bits turned on
-          (⌈2⍟⍵)⊃⌽((1+⍵)⍴2)⊤⍺}
-
+      bit←{ ⍝ used by Log
+          {⍵[;1]∧.≥1↓[2]⍵}2⊥⍣¯1⊢⍺,⍵
+      }
     :section Override
 ⍝ ↓↓↓--- Methods which are usually overridden ---
 
@@ -184,14 +185,25 @@
       StartNewRenderer''
     ∇
 
-    ∇ {renderer}←StartNewRenderer url;props
+    ∇ StartNewRenderer evt;props;renderer;posn;size
       props←{
-          0∊⍴n←(⍵.⎕NL ¯2)~⊂'Debug':''
+          0∊⍴n←HTMLRendererProperties∩⍵.⎕NL ¯2:''
           ⍵{⍵({∧/⊃(m n)←⎕VFI⍕⍵:n ⋄ ⍵}⍺⍎⍵)}¨n
       }Config.HRServer
       props,←⊂'Event'('onAll' 'RendererRequest')
-      :If ~0∊⍴url
-          props,←⊂'URL'url
+      :If ~0∊⍴evt ⍝ if called in response to a DoPopup event...
+          props,←⊂'URL'(3⊃evt)
+          (posn size)←2↑4⊃evt
+          :If ⍬≡∊posn,size ⍝ if nothing specified, use NewWindowOffset
+              :If 2=Config.HRServer.⎕NC'NewWindowOffset'
+                  props,←⊂'Posn'((2↑Config.HRServer.NewWindowOffset)+(1⊃evt).Posn)
+              :EndIf
+          :Else ⍝ parameters from window.open() are in pixels, if we're using coord=prop, we need to adjust
+              :If 'Prop'≡(1⊃evt).Coord
+                  (posn size)←(posn size)÷¨⊂ScreenSize
+              :EndIf
+              props,←('Posn'posn)('Size'size)
+          :EndIf
       :EndIf
       _Renderers,←renderer←⎕NEW'HTMLRenderer'props
       :If {0::0 ⋄ 1=⊃2⊃⎕VFI⍕Config.HRServer.Debug}⍬
@@ -211,7 +223,7 @@
       :Case 'HTTPRequest'
           r←HandleRequest evt
       :Case 'DoPopup'
-          StartNewRenderer 3⊃evt
+          StartNewRenderer evt
       :Else
           1 Log'Unhandled HTMLRenderer event: ',⍕2⊃evt
       :EndSelect
@@ -243,15 +255,10 @@
       Logger.Stop←{}
       Logger.Start←{}
       Config←config
-     
+      (ScreenSize HTMLRendererProperties)←{(h←⎕NEW'HTMLRenderer'(('Visible' 0)('Coord' 'Prop')('Size'(100 100)))).Coord←'Pixel' ⋄ h.(Size PropList)}⍬
       PageTemplates←#.Pages.⎕NL ¯9.4
       :If 2=#.⎕NC'DEBUG' ⋄ DEBUG←#.DEBUG ⋄ :EndIf
     ∇
-
-⍝    ∇ UnMake
-⍝      :Implements Destructor
-⍝      End
-⍝    ∇
 
     :endsection
 
@@ -687,7 +694,7 @@
     ⍝ checks if the requested URI is a browsable directory
       folder←page←{⍵,'/'/⍨~'/\'∊⍨¯1↑⍵}REQ.OrigPage
       r←up←0
-      :Trap 0/0 ⍝!!! remove 0/ after testing
+      :Trap 0
           :While r⍱0∊⍴folder
               :If #.Files.Exists file←Config.AppRoot,folder,'Folder.xml'
                   F←⎕NEW #.DUI.ConfigSpace file

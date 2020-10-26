@@ -954,7 +954,7 @@
     ⍝ checks if the requested URI is a browsable directory
       folder←page←{⍵,'/'/⍨~'/\'∊⍨¯1↑⍵}REQ.OrigPage
       r←up←0
-      :Trap 0/0 ⍝!!! remove 0/ after testing
+      :Trap 0
           :While r⍱0∊⍴folder
               :If #.Files.Exists file←Config.AppRoot,folder,'Folder.xml'
                   F←⎕NEW #.DUI.ConfigSpace file

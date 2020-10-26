@@ -2,13 +2,12 @@
 
 	<div id="banner-logo">
 		<a href="/">
-			<img alt="MS3" src="/Styles/Images/D-MS3.png" />
+			<img alt="MS3" src="/Styles/Images/D-DUI.png" />
 		</a>
 	</div>
 
 	<div id="banner-heading">
-		<h1>Dyalog MiServer 3 Sample Site</h1>
-		<p>Anyone who can write an APL function should be able to host it on the web.™</p>
+		<h1>DUI Reference</h1>
 	</div>
 
 
@@ -25,22 +24,23 @@
 	</label>
 	<div id="banner-resources">
 		<ul>
-			<li>MiServer
+			<li>DUI
 				<ul>
 					<li>
-						<a target="_blank" href="https://github.com/Dyalog/MiServer/archive/miserver.dyalog.com.zip">Download</a>
+						<a target="_blank" href="https://github.com/Dyalog/DUI">GitHub</a>
+					</li>
+				</ul>
+			</li>
+			<li>Dyalog
+				<ul>
+					<li>
+						<a target="_blank" href="http://www.dyalog.com/forum">Forums</a>
 					</li>
 					<li>
-						<a target="_blank" href="https://github.com/Dyalog/MiServer/tree/miserver.dyalog.com">GitHub</a>
+						<a target="_blank" href="http://www.dyalog.com/blog">Blog</a>
 					</li>
 					<li>
-						<a target="_blank" href="http://www.dyalog.com/forum/viewforum.php?f=34">Forum</a>
-					</li>
-					<li>
-						<a target="_blank" href="http://www.dyalog.com/blog/category/miserver/">Blog</a>
-					</li>
-					<li>
-						<a target="_blank" href="http://www.dyalog.com/">Dyalog's website</a>
+						<a target="_blank" href="http://www.dyalog.com/">Website</a>
 					</li>
 					<li>
 						<a target="_blank" href="/Licenses">3rd-party licenses</a>

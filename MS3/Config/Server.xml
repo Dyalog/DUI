@@ -1,5 +1,5 @@
 <Server>
-    <Name>MS3 Sample Site</Name>
+    <Name>DUI Reference</Name>
     <ClassName>MS3Server</ClassName>
     <RESTful>1</RESTful>
     <AllowedHTTPCommands>get,put,delete,post</AllowedHTTPCommands>
