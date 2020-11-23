@@ -8,7 +8,6 @@
 
     ∇ Compose
       :Access public 
-      COUNTER←0
       Add _.h4'Timer Sample - will append timestamp every half-second (10 times)'
       ti←Add _.Timer 500
       'output'Add _.div
