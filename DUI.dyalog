@@ -774,9 +774,10 @@
     ∇ r←SourceFile
       :Access public shared
       r←{
-          0::''
+          0::''  
+          me←⍕⎕THIS
           6::∊1 ⎕NPARTS 4⊃5179⌶me
-          ∊1 ⎕NPARTS #⍎(me←⍕⎕THIS),'.SALT_Data.SourceFile'
+          ∊1 ⎕NPARTS #⍎me,'.SALT_Data.SourceFile'
       }⍬
     ∇
 
