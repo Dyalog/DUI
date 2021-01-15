@@ -1,8 +1,9 @@
- lx;App;Port;NoLink;path
+﻿ lx;App;Port;NoLink;path
  WC2Root←1⊃1 ⎕NPARTS ⎕WSID      ⍝ WCRoot is the directory containing the workspace
  ⎕SE.SALT.Load WC2Root,'DUI.dyalog'
 ⍝ looks for envVars AppRoot, MSPort and NoLink.
- :If 0<≢App←2 ⎕NQ'.' 'GetEnvironment' 'AppRoot'
+ :If 0<≢App←(2 ⎕NQ'.' 'GetEnvironment' 'AppRoot')~'"'
+     App←('""'≡App[1,≢App]){(-⍺)↓⍺↓⍵}App
      NoLink←1{0=≢⍵:⍺ ⋄ (,'1')≡,⍵}⍕+2 ⎕NQ'.' 'GetEnvironment' 'NoLink'
      :If 0<Port←⍬⍴2⊃⎕VFI 2 ⎕NQ'.' 'GetEnvironment' 'MSPort'
          DUI.Run App Port WC2Root NoLink
