@@ -27,7 +27,7 @@
      
       frm←Add _.Form  ⍝ dialog is always shown so that we can upload again after having sent a file!
      
-      'ipfl'frm.Add _.InputFile 'Select a file to upload: '
+      'ipfl'frm.Add _.Input'file' 'Select a file to upload: '
      
       frm.Add _.br
       'submit'frm.Add _.Input'submit' 'Submit'
