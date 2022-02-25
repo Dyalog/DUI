@@ -46,7 +46,7 @@
     ∇ r←onNode;index;item;on
       ⍝ Handle node select or check/uncheck
       :Access Public
-     ∘∘∘
+     
       current←Get'node'
       index←allids⍳⊂current
       :If index>⍴items
@@ -89,7 +89,6 @@
           (insert⊃allids)←id
      
       :Case 'Del'
-      ∘∘∘
           :If index≠0
               r←tv.removeNode current
               m←index≠⍳1↑⍴items

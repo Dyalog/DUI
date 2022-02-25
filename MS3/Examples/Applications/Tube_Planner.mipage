@@ -4,10 +4,12 @@
 
     
     :Field public _Sessioned←1
+    :field public cities
+    :field public TUBE        
 
     ∇ Compose;ipcity;go;route;inputs
       :Access public
-      :If 0=⎕NC'TUBE.cities'
+      :If {6::1 ⋄ (⍎⍵).notes}'TUBE'
           (TUBE←⎕NS ⍬).⎕CY'tube'
           cities←'^.' '_(.)'⎕R'\u&' ' \u1'⊢(TUBE.⎕NL ¯9)~⊂'notes'
       :EndIf
@@ -47,7 +49,7 @@
       CITYDATA←TUBE⍎#.Strings.lc Get'city'
       TUBE.compile CITYDATA
       STOPS←{(1=≡¨⍵)/⍵}CITYDATA.labels
-      r←IPFR.ReplaceChoices STOPS
-      r,←IPTO.ReplaceChoices STOPS
+      r←IPFR.ReplaceOptions STOPS
+      r,←IPTO.ReplaceOptions STOPS
     ∇
 :endclass
