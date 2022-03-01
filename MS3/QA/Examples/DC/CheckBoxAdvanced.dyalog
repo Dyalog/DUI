@@ -3,7 +3,7 @@
 
  ClickDoesNotMake←{
      msg⊢←' wrong state',⍨id←cb.GetAttribute⊂'id'
-     ⍵≢Value cb⊣Click id
+     ⍵≢Value cb⊣(⎕dl 2)⊣Click id
  }
 
  msg←''
@@ -23,8 +23,8 @@
      msg←'cb2 wrong state'
  :ElseIf ClickDoesNotMake'checked'
 
- :ElseIf 'checked'≢Value cb←Find'cb1'⊣⎕DL 0.2
-     msg←'cb1 unexpected change'
+ :ElseIf 'checked'≢Value cb←Find'cb1'⊣⎕DL 0.5
+     msg←1 unexpected change'
  :ElseIf ClickDoesNotMake'indeterminate'
  :ElseIf ClickDoesNotMake'unchecked'
  :ElseIf ClickDoesNotMake'checked'

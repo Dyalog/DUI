@@ -4,7 +4,7 @@
  Then←{
      ~0∊⍴msg←'Wrong initial class'/⍨~Is ⍺:msg
      ~0∊⍴msg←'Missing transistion'/⍨(⍺≢⍵)∧Is ⍵⊣⎕DL 0.1⊣Click button:msg
-     ~0∊⍴msg←'Wrong final class'/⍨~Is ⍵⊣⎕DL 1:msg
+     ~0∊⍴msg←'Wrong final class'/⍨~Is ⍵⊣⎕DL 2:msg
      ''
  }
 

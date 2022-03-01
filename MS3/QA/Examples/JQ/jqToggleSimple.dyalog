@@ -3,7 +3,7 @@
  Has←{∧/∨/¨(⊂⍣(1=≡⍵)⊢⍵)⍷¨⊂output.GetAttribute⊂'style'}
  Transitions←{
      ~0=⍴msg←'Wrong initial style'/⍨Has ⍵:msg
-     ~0=⍴msg←'Missing transistion'/⍨~Has ⍵⊣⎕DL 0.1⊣Click ⍺:msg
+     ~0=⍴msg←'Missing transistion'/⍨~Has ⍵⊣⎕DL 1⊣Click ⍺:msg
      ~0=⍴msg←'Wrong final style'/⍨Has ⍵⊣⎕DL 1:msg
      ''
  }
