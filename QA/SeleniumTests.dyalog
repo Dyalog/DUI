@@ -1,7 +1,6 @@
 ﻿:Namespace SeleniumTests
 ⍝ needs Selenium/ in a folder that is on the same level as the DUI- or MiServer-Folder (ie /Git/MiServer & /Git/Selenium)
 
-
     ∇ x←eis x
 ⍝ Enclose if simple
       :If (≡x)∊0 1 ⋄ x←,⊂,x ⋄ :EndIf
@@ -49,7 +48,7 @@
       :EndIf
     ∇
  
-    ∇ r←stop_port Test site;count;ctl;examples;f;fail;nodot;start;t;time;z;i;START;COUNT;FAIL;Config;selpath;files;n;ext;filter;⎕PATH;keynames;maxlen;⎕USING;stopOnError;stop;dui;appr;cfg
+    ∇ r←stop_port Test site;count;ctl;examples;f;fail;nodot;start;t;time;z;i;START;COUNT;FAIL;Config;selpath;files;n;ext;filter;⎕PATH;keynames;maxlen;⎕USING;stopOnError;stop;dui;appr;cfg;config
       ⍝ stop: 0 (default) ignore but report errors; 1 stop on error; 2 stop before every test
       ⍝⍵: site filter config
       ⍝                config refers to a named entry in Selenium/settings.json
@@ -82,8 +81,6 @@
           :EndTrap
       :EndIf
       ⎕PATH,←' Selenium'
-      Selenium.DLLPATH←selpath  ⍝ backward compatibility
-      Selenium.ApplySettings config
       Selenium.QUIETMODE←{6::(,1)≡,2⊃⎕VFI ⍵ ⋄ Selenium.QUIETMODE ⋄ }2 ⎕NQ'.' 'GetEnvironment' 'QUIETMODE'  ⍝ for automated tests! ;)
      
       :If dui
@@ -110,6 +107,7 @@
       n←⍴files
       ⍝SITE←'http://127.0.0.1:',⍕⊃1↓stop_port,Config.Port
       ⍝SITE←'http://',(2 ⎕NQ'.' 'TCPGetHostID'),':',(⍕{6::⍵.MSPort ⋄ ⍵.Port}#.Boot.ms.Config)
+      Selenium.InitBrowser config
       :if 2=Selenium.SETTINGS.⎕nc'SITEROOT'
       SITE←Selenium.SETTINGS.SITEROOT
       :else
@@ -124,7 +122,6 @@
 ⍝          ⎕CMD('"\Program Files (x86)\Windows Media Player\wmplayer.exe" "',AppRoot,'\Examples\Data\tellintro.mp3"')''
 ⍝      :EndIf
      
-      Selenium.InitBrowser''
      
      ⍝ Localize non-alphanumeric key names for easy access
       keynames←⍕#.SeleniumTests.Selenium.Keys.⎕NL ¯2

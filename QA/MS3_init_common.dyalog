@@ -1,22 +1,25 @@
-﻿ r←MS3_init_common params;cmd
-⍝ vars are global by design here ;)
+﻿ r←MS3_init_common params;cmd;myapl
+⍝ DO NOT LOCALIZE GR, grdui or DUIdur , they are needed later...
 ⍝ needs the following repos as siblings of the paren't parent (ie /Git/DUI, /Git/GhostRider) : GhostRider
  r←''
- grdui←1  ⍝ during development: run DUI through GhostRider (the goal, but currentty not working), 
+ grdui←1  ⍝ during development: run DUI through GhostRider (the goal, but currentty not working),
           ⍝  1=GhostRider
-          ⍝  0=use APLProcess to run DUI and connect to it with GhostRider to adjust Config-Settings, 
+          ⍝  0=use APLProcess to run DUI and connect to it with GhostRider to adjust Config-Settings,
           ⍝ ¯1=don't use GhostRider (don't fiddle with Config)
           ⍝ we need GhostRider for some fine-tuning of the config of the DUI-Server - but it's not too critical if we can't do that,...⌈
  DUIdir←1⊃⎕NPARTS ¯1↓1⊃1 ⎕NPARTS ##.TESTSOURCE
- ⎕SE.SALT.Load'APLProcess'
+ ⎕SE.SALT.Load'APLProcess -target=#'
  ⎕SE.SALT.Load DUIdir,'QA/SeleniumTests.dyalog -target=#'
  ⎕SE.SALT.Load DUIdir,'../Selenium/Selenium.dyalog -target=#.SeleniumTests'
- :If grdui≥0 ⋄ ⎕SE.SALT.Load(1⊃⎕NPARTS ¯1↓DUIdir),'/GhostRider/GhostRider.dyalog -target=#' ⋄ :EndIf
- :If 1<≢##.args.Arguments ⋄ TestCase←2⊃##.args.Arguments ⋄ :else ⋄ TestCase←'' ⋄ :EndIf
+ :If grdui≥0
+    {} (⎕JSON'{"overwrite":1}')⎕SE.Link.Import #(DUIdir,'/QA/GhostRider.dyalog')
+    
+ :EndIf
+ :If 1<≢##.args.Arguments ⋄ TestCase←2⊃##.args.Arguments ⋄ :Else ⋄ TestCase←'' ⋄ :EndIf
 ⍝ Start a separate APLProcess that serves the pages
  :If grdui=1
      GR←⎕NEW #.GhostRider('RIDE_SPAWNED=0 AppRoot=',DUIdir,'MS3/ ',params)  ⍝ RIDE_SPAWNED=0 should make the session visible - that has no effect on MB's machine.
-     GR.APL'⎕load''',DUIdir,'DUI',''''
+     {}GR.APL'⎕load''',DUIdir,'DUI',''''
      GR.(INFO TRACE)←##.verbose×~##.quiet
      GR.DEBUG←##.halt
  :ElseIf grdui=0
