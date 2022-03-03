@@ -2,14 +2,14 @@
 ⍝ Control:: _JS.Chosen
 ⍝ Description:: Tube/Metro/Subway planner for multiple cities
 
-    
+
     :Field public _Sessioned←1
     :field public cities
-    :field public TUBE        
+    :field public TUBE
 
     ∇ Compose;ipcity;go;route;inputs
       :Access public
-      :If {6::1 ⋄ (⍎⍵).notes}'TUBE'
+      :If {6::1 ⋄ 0×≢(⍎⍵).notes}'TUBE'
           (TUBE←⎕NS ⍬).⎕CY'tube'
           cities←'^.' '_(.)'⎕R'\u&' ' \u1'⊢(TUBE.⎕NL ¯9)~⊂'notes'
       :EndIf

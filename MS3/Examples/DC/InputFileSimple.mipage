@@ -6,7 +6,7 @@
       :Access Public
      
       Add MarkdownFollows
-      ⍝ The Dyalog `InputFile` control is deprecated. Use `Input'file'` instread, like in this example. 
+      ⍝ The Dyalog `InputFile` control is deprecated. Use `Input'file'` instread, like in this example.
       ⍝ If a file is uploaded, the data linked to the name of the input control is a 2 element vector of vectors.
       ⍝ The first vector is the file name, the second vector is an integer vector (datatype 83) of the uploaded file's data
      
@@ -21,7 +21,11 @@
       ⍝ we'll just calculate a simple checksum and display that.
      
           (fname fdata)←Get'ipfl'
-          out.Add _.strong fname,' received with ',(⍕⍴fdata),' bytes and a checksum of ',⍕(255|+)/⎕ucs fdata
+          :If 0=≢fdata
+              out.Add _.strong('Received NO data for file "',fname,'"')
+          :Else
+              out.Add _.strong(fname,' received with ',(⍕⍴fdata),' bytes and a checksum of ',⍕(255|+)/⎕UCS fdata)
+          :EndIf
           out.Add¨2⍴_.br
       :EndIf
      

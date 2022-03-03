@@ -13,6 +13,11 @@
 
     ∇ r←stop Run1Test page;name;ref;Test;pg
      ⍝ eg MS3Test '/QA/DC/InputGridSimple'
+     ⍝ stop=1 Halt on Error | 2=Trace
+      :If stop=2
+          (⎕LC[1]+1)⎕STOP 1⊃⎕SI
+      :EndIf
+reRun:
       :Trap 11
           Selenium.GoTo SITE,lopFirst page ⍝ Drop the "QA"
       :Else
@@ -25,7 +30,7 @@
           :Trap stop×9999
               'Test'⎕STOP⍨1/⍨2=stop ⍝ stop on line 1 if stop=2
               :If stop⌊0≠⍴r←Test ⍬
-                  ⎕←'test for ',page,' failed:' ⋄ ⎕←r ⋄ ⎕←'Rerun:' ⋄ '      Test ⍬'
+                  ⎕←'test for ',page,' failed:' ⋄ ⎕←r ⋄ ⎕←'Rerun:' ⋄ '      Test ⍬    ⍝ to execute test again' '      →reRun   ⍝ to reload page and test and run again'
                   ∘∘∘
               :EndIf
           :Else
@@ -47,7 +52,7 @@
           r←r,⊃,/ext FindAllFiles¨root∘,¨folders
       :EndIf
     ∇
- 
+
     ∇ r←stop_port Test site;count;ctl;examples;f;fail;nodot;start;t;time;z;i;START;COUNT;FAIL;Config;selpath;files;n;ext;filter;⎕PATH;keynames;maxlen;⎕USING;stopOnError;stop;dui;appr;cfg;config
       ⍝ stop: 0 (default) ignore but report errors; 1 stop on error; 2 stop before every test
       ⍝⍵: site filter config
@@ -102,20 +107,20 @@
       ⍝ // Add code to compare this to the mipages found in the whole app
       :If 0≠≢filter
           files←(filter ⎕S'%')files
-          :If ~Selenium.QUIETMODE ⋄ ⎕←'Selected: ',(⍕≢files),' of ',(⍕n),' tests.'⋄:endif
+          :If ~Selenium.QUIETMODE ⋄ ⎕←'Selected: ',(⍕≢files),' of ',(⍕n),' tests.' ⋄ :EndIf
       :EndIf
       n←⍴files
       ⍝SITE←'http://127.0.0.1:',⍕⊃1↓stop_port,Config.Port
       ⍝SITE←'http://',(2 ⎕NQ'.' 'TCPGetHostID'),':',(⍕{6::⍵.MSPort ⋄ ⍵.Port}#.Boot.ms.Config)
       Selenium.InitBrowser config
-      :if 2=Selenium.SETTINGS.⎕nc'SITEROOT'
-      SITE←Selenium.SETTINGS.SITEROOT
-      :else
-      SITE←'http://',(2 ⎕NQ'.' 'TCPGetHostID'),':',⍕⊃1↓stop_port,⍎⍕{6::⍵.MSPort ⋄ ⍵.Port}cfg
-      :endif
-      :if ~Selenium.QUIETMODE
-      ⎕←'Site=',SITE
-      :endif
+      :If 2=Selenium.SETTINGS.Browser.⎕NC'SITEROOT'
+          SITE←Selenium.SETTINGS.Browser.SITEROOT
+      :Else
+          SITE←'http://',(2 ⎕NQ'.' 'TCPGetHostID'),':',⍕⊃1↓stop_port,⍎⍕{6::⍵.MSPort ⋄ ⍵.Port}cfg
+      :EndIf
+      :If ~Selenium.QUIETMODE
+          ⎕←'Site=',SITE
+      :EndIf
      
 ⍝⍝ Un-comment to play music while testing:
 ⍝      :If site filter≡'MS3' ''
@@ -138,12 +143,12 @@
               FAIL+←1
               r,←⊂z,': ',t
               :If ~Selenium.QUIETMODE  ⍝ only show msg if not running with quietmode
-              ⎕←z,' *** FAILED *** #',(⍕i),' of ',(⍕n),': ',z,': ',t
-              :endif
+                  ⎕←z,' *** FAILED *** #',(⍕i),' of ',(⍕n),': ',z,': ',t
+              :EndIf
           :EndIf
       :EndFor
       :If ~Selenium.QUIETMODE ⋄ :OrIf 0<FAIL
-          ⎕←'Total of ',(⍕COUNT),' samples tested in ',(∊(⍕¨24 60⊤⌊0.5+(⎕AI[3]-START)÷1000),¨'ms'),': ',(⍕FAIL),' failed.'
+          r,←⊂⎕←'Total of ',(⍕COUNT),' samples tested in ',(∊(⍕¨24 60⊤⌊0.5+(⎕AI[3]-START)÷1000),¨'ms'),': ',(⍕FAIL),' failed.'
       :EndIf
       Selenium.BROWSER.Quit
     ∇
