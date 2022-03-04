@@ -1,4 +1,4 @@
-﻿ r←MS3_init_common params;cmd;myapl
+ r←MS3_init_common params;cmd;myapl;logfile
 ⍝ DO NOT LOCALIZE GR, grdui or DUIdur , they are needed later...
 ⍝ needs the following repos as siblings of the paren't parent (ie /Git/DUI, /Git/GhostRider) : GhostRider
  r←''
@@ -10,7 +10,8 @@
  DUIdir←1⊃⎕NPARTS ¯1↓1⊃1 ⎕NPARTS ##.TESTSOURCE
  ⎕SE.SALT.Load'APLProcess -target=#'
  ⎕SE.SALT.Load DUIdir,'QA/SeleniumTests.dyalog -target=#'
- ⎕SE.SALT.Load DUIdir,'../Selenium/Selenium.dyalog -target=#.SeleniumTests'
+ ⎕SE.SALT.Load DUIdir,'QA/Selenium.dyalog -target=#.SeleniumTests'
+logfile←##.TESTSOURCE,'duiprocesslog.txt'
  :If grdui≥0
     {} (⎕JSON'{"overwrite":1}')⎕SE.Link.Import #(DUIdir,'/QA/GhostRider.dyalog')
     
@@ -23,9 +24,9 @@
      GR.(INFO TRACE)←##.verbose×~##.quiet
      GR.DEBUG←##.halt
  :ElseIf grdui=0
-     myapl←⎕NEW APLProcess((DUIdir,'DUI')('AppRoot=',DUIdir,'MS3/ ',params)0 'serve:*:4052')
+     myapl←⎕NEW APLProcess((DUIdir,'DUI')('AppRoot=',DUIdir,'MS3/ ',params)0 'serve:*:4052' logfile)
  :Else
-     myapl←⎕NEW APLProcess((DUIdir,'DUI')('AppRoot=',DUIdir,'MS3/ ',params))
+     myapl←⎕NEW APLProcess((DUIdir,'DUI')('AppRoot=',DUIdir,'MS3/ ',params)0 '' logfile))
  :EndIf
 
  'DUI'#.⎕NS''

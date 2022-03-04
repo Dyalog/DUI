@@ -1,0 +1,16 @@
+{
+    "DyalogVersions": "18.2+",
+    "Bits": [32, 64],
+    "Platforms": ["mac", "win"],
+    "SecondsTimeout": 1800,
+    "tests": [{
+            "id": "Browser",
+            "test": "./QA/MS3_8080.dyalogtest",
+            disabled: true, // unsure what to do about browser in the test environment...
+        },
+        {
+            "id": "HtmlRenderer",
+            "test": "./QA/MS3_HR.dyalogtest"
+        }
+    ]
+}

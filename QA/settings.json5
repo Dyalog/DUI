@@ -1,0 +1,64 @@
+{
+    /***
+     This file contains settings for some browser-configs that were current at the time it was composed.
+     Simply refer to the name of a config in ⍺ of the Test-fn
+    i.e. Test'./MS3' '' 'Chrome80' - of course that is optional, the "default"-Config will used if you don't explicitely select a config
+    or use `Selenium.ApplySettings'Chrome80'` (or: Selenium.InitBrowser'HtmlRenderer') in your own test-function. 
+    NB: you may also pass an empty string as ⍵ to use the default. Or use the (not so appropriately names envvar SELENIUM_DRIVER to pass that name)
+    ***/
+
+    Browsers: {
+        Chromium: {
+            o: "ChromeDriver",   // name of object that will be instiated
+            n: "Selenium.WebDriver.ChromeDriver", // name of Nuget package
+            ns: "Chrome",        // name of WebDriver (namespaces in OpenQA.Selenium.) we will be ⎕USING
+            v: "98.0.4758.8000", // version. This will always point to the latest know version...
+            Flavours: {
+                "CEFinDyalog": {
+                    "SITEROOT": "http://dyalog_root",
+                    // NB:Namespaces are usually something to dig into - Options specifies a parameter within this config. To avoid further processing, is has the flag isDriverParam!
+                    "Options": {
+                        "DebuggerAddress": "127.0.0.1:8080",
+                        "isDriverParam": true
+                    },
+                    "AddArguments": ["no-sandbox"],
+                    "Flavours": {
+                        HtmlRenderer: {
+                            v: "90.0.4430.2400"
+                        },
+                        "HtmlRenderer182beta": {
+                            v: "89.0.4389.2300",
+                        }
+                    },
+                },
+                "Chrome98": { // we use ALL settings from the parent (because the currently apply...)
+                },
+                "LatestChrome": { // we use ALL settings from the parent
+                },
+            },
+        },
+    },
+
+    "Port": 8080,
+    "Browser": "HtmlRenderer182beta",         // fortunately WD89 will also work with Chromium90
+    "Components": {
+        "WebDriver": {
+            n: "Selenium.WebDriver",          // name of NuGet package
+            v: "4.1.0",                       // version
+            u: ["OpenQA", "OpenQA.Selenium"], // "things" we are using
+            f: "WebDriver.dll",               // reference to the file
+        },
+        "optional": {
+            "Support": {
+                "n": "Selenium.Support",
+                "v": "4.1.0",
+                "u": ["OpenQA.Selenium.Support", "OpenQA.Selenium.Support.UI"],
+                "f": "WebDriver.Support.dll"
+            },
+            "Newtonsoft": {
+                "n": "Newtonsoft.Json",
+                "v": "12.0.3",
+            }
+        }
+    }
+}

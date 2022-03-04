@@ -250,7 +250,7 @@
       Constructor ⍬
     ∇
 
-    ∇ Constructor args;RIDE_INIT;_;env;host;port;r;runtime;tm1;tm2
+    ∇ Constructor args;RIDE_INIT;_;env;host;port;r;runtime;tm1;tm2;logfile
       :Access Public
       :Implements Constructor
       ⎕RL←⍬ 1  ⍝ for ED and _RunQA
@@ -265,7 +265,9 @@
           ⍝:If 0∊⍴('\sSESSION_FILE='⎕S 0)env  ⍝ don't inherit some environment variables
           ⍝    env,←' SESSION_FILE='
           ⍝:EndIf
-          PROCESS←⎕NEW #.APLProcess(''env runtime RIDE_INIT)
+          logfile←(1⊃⎕nparts {0::(1⊃1⎕nparts''),⍵ ⋄ 0<≢⍵:⍵⋄SALT_Data.SourceFile}50⎕atx 1⊃⎕si),'ghostriderlog.txt'
+          ⍝ ⎕←'grlogfile=',logfile
+          PROCESS←⎕NEW #.APLProcess(''env runtime RIDE_INIT logfile)
           ⎕DL 0.3  ⍝ ensure process doesn't exit early
           :If PROCESS.HasExited
               'Constructor'Error'Failed to start APLProcess: RIDE_INIT=',RIDE_INIT,' env=',env
