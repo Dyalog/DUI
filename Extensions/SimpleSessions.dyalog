@@ -31,7 +31,8 @@
       :Implements Constructor
     ⍝ Initialize Session handler
       Server←server
-      Sessions←(Server.Framework≡'HRServer')⍴⎕NEW Session
+      Sessions←⍬
+    ⍝   Session←(Server.Framework≡'HRServer')⍴⎕NEW Session
       root←Server.Config.AppRoot
       Timeout←Server.Config.SessionTimeout
       timeout←Timeout÷24×60 ⍝ Convert minutes to fractions of a day
@@ -52,7 +53,13 @@
       :Access Public
     ⍝ Return session. Right argument is a HttpRequest.
       :If 'HRServer'≡Server.Framework
-          req.Session←⊃Sessions
+          :If 0=≢Sessions
+              Sessions←,⎕NEW Session
+              req.Session←⊃Sessions
+              #.Overrides.onSessionStart req
+              :else 
+              req.Session←⊃Sessions
+          :EndIf
       :Else
           :Hold 'Sessions'
               session←req.GetCookie'Session'
