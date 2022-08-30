@@ -31,7 +31,7 @@
       :Implements Constructor
     ⍝ Initialize Session handler
       Server←server
-      Sessions←⍬
+      Sessions←0⍴⎕NEW Session
     ⍝   Session←(Server.Framework≡'HRServer')⍴⎕NEW Session
       root←Server.Config.AppRoot
       Timeout←Server.Config.SessionTimeout
@@ -57,7 +57,7 @@
               Sessions←,⎕NEW Session
               req.Session←⊃Sessions
               Server.onSessionStart req
-          :Else 
+          :Else
               req.Session←⊃Sessions
           :EndIf
       :Else
@@ -135,18 +135,20 @@
     ⍝ Call any page application callbacks (_Close) if necessary
       :Access Public
       :If Server.Framework≡'MiServer'
-          now←#.Dates.DateToIDN ⎕TS
-          :If ∨/m←Sessions.LastActive<now-timeout
-              :Hold 'Sessions'
-                  :For i :In m/⍳⍴m
-                      Server.onSessionEnd i⊃Sessions
-                      :If 0≠⍴p←(i⊃Sessions).Pages
-                      :AndIf 0≠⊃p.⎕NC⊂'_Close'
-                          p._Close i⊃Sessions
-                      :EndIf
-                  :EndFor
-                  Sessions←(~m)/Sessions
-              :EndHold
+          :If ~0∊⍴Sessions
+              now←#.Dates.DateToIDN ⎕TS
+              :If ∨/m←Sessions.LastActive<now-timeout
+                  :Hold 'Sessions'
+                      :For i :In m/⍳⍴m
+                          Server.onSessionEnd i⊃Sessions
+                          :If 0≠⍴p←(i⊃Sessions).Pages
+                          :AndIf 0≠⊃p.⎕NC⊂'_Close'
+                              p._Close i⊃Sessions
+                          :EndIf
+                      :EndFor
+                      Sessions←(~m)/Sessions
+                  :EndHold
+              :EndIf
           :EndIf
       :EndIf
     ∇
