@@ -71,4 +71,8 @@
     <ext>woff</ext>
     <type>application/font-woff</type>
   </content>
+  <content>
+    <ext>ogv</ext>
+    <type>video/ogg</type>
+  </content>
 </ContentTypes>

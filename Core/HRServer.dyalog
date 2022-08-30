@@ -18,6 +18,7 @@
     :Field Public DEBUG←0
     :Field Public ScreenSize←⍬
     :Field HTMLRendererProperties
+    :Field Public Runtime←0
 
 
     ⎕TRAP←0/⎕TRAP ⋄ (⎕ML ⎕IO)←1 1
@@ -147,8 +148,12 @@
       →EXIT⍴⍨1=r←0<≢msg←(17.1>APLVersion)/1 'Dyalog v17.1 or later is required to use HRServer'
      
       onServerLoad
-     
-      TID←RunServer&⍬
+      :If Runtime
+          TID←0 ⋄ RunServer ⍬
+          ⎕DQ '.'
+      :Else
+          TID←RunServer&⍬
+      :EndIf
       msg←'HRServer started, serving ',Config.AppRoot
       r←0
      EXIT:

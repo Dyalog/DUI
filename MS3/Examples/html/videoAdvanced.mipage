@@ -8,9 +8,9 @@
       mysound←'autoplay=' 'loop=' 'controls='Add _.video'Your browser does not support the video tag.'
      
     ⍝ This is a list of alternative clips in preferred order
-      'src=../Data/unicorn.mp4'mysound.Add _.source
+    ⍝  'src=../Data/unicorn.mp4'mysound.Add _.source
       'src=../Data/lego.ogg'mysound.Add _.source
-      'src=../Data/bear.mp4'mysound.Add _.source
+    ⍝  'src=../Data/bear.mp4'mysound.Add _.source
      
       Add _.p'What do you see?'
       mylist←Add _.ul

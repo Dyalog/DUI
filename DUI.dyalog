@@ -25,7 +25,13 @@
     ∇ (r msg)←Start
       :Access public
       :If 0=⊃(r msg)←Initialize
+          Server.Runtime←('R'=1⍴4⊃'.'⎕WG'APLVersion')∨~0∊⍴2 ⎕NQ'.' 'GetEnvironment' 'runtime'
           (r msg)←Server.Run
+          :If Server.Runtime
+              :Repeat  ⍝ if runtime, do not return to immediate execution
+                  {}⎕DL 10
+              :Until ¯1=Server.TID
+          :EndIf     
       :EndIf
     ∇
 
@@ -123,7 +129,7 @@
               JSONout←⎕JSON⍠'HighRank' 'Split' ⋄ {}JSONout 1
           :Else
               JSONout←JSONin←⎕JSON
-          :EndTrap  
+          :EndTrap
      
           nolink←NoLink/' -nolink'
      
@@ -624,7 +630,7 @@
           r←{⍺←0
               1∊⍺:tonumvec ⍵
               w←⍵ ⋄ ((w='-')/w)←'¯'
-              ⊃⊃{~∧/⍺:⎕SIGNAL 11 ⋄ ⍵}/⎕VFI w}w
+              ⊃⊃{~∧/⍺:⎕SIGNAL 11 ⋄ ⍵}/⎕VFI w}⍕w
         ∇
 
         ∇ r←tonumvec v;to;minus;digits;c;mask
@@ -774,7 +780,7 @@
     ∇ r←SourceFile
       :Access public shared
       r←{
-          0::''  
+          0::''
           me←⍕⎕THIS
           6::∊1 ⎕NPARTS 4⊃5179⌶me
           ∊1 ⎕NPARTS #⍎me,'.SALT_Data.SourceFile'

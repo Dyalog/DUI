@@ -2,7 +2,7 @@
 
 ⍝∇:require =\JSON.dyalog
 
-    ⎕io←⎕ml←1
+    ⎕IO←⎕ML←1
 
     :field public shared _version←1
     :field public NL←⎕ucs 13 ⍝ 10

@@ -56,8 +56,8 @@
           :If 0=≢Sessions
               Sessions←,⎕NEW Session
               req.Session←⊃Sessions
-              #.Overrides.onSessionStart req
-              :else 
+              Server.onSessionStart req
+          :Else 
               req.Session←⊃Sessions
           :EndIf
       :Else
