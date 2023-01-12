@@ -111,8 +111,8 @@
       ⍝ Called when the Pick button is pressed
       :Access Public  
      ⍝ When selecting a single item the result will be a string
-      selected←⍕⊃Get'selT'
-      r←'#output'Replace _.p('You picked: ',selected,(0=⍴selected)/'nothing')
+      selected←⍕Get'selT'
+      r←'#output'Replace _.p('You picked: ',selected,(0=≢selected)/'nothing')
     ∇
 
 :EndClass
