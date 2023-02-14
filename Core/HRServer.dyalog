@@ -149,8 +149,7 @@
      
       onServerLoad
       :If Runtime
-          TID←0 ⋄ RunServer ⍬
-          ⎕DQ '.'
+          TID←0 ⋄ RunServer ⍬ ⍝ if Runtime, ⎕DQ is done in DUI.Start
       :Else
           TID←RunServer&⍬
       :EndIf

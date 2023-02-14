@@ -28,10 +28,14 @@
           Server.Runtime←('R'=1⍴4⊃'.'⎕WG'APLVersion')∨~0∊⍴2 ⎕NQ'.' 'GetEnvironment' 'runtime'
           (r msg)←Server.Run
           :If Server.Runtime
-              :Repeat  ⍝ if runtime, do not return to immediate execution
-                  {}⎕DL 10
-              :Until ¯1=Server.TID
-          :EndIf     
+              :If 'HRServer'≡Server.Framework
+                  ⎕DQ ⊃Server._Renderers
+              :Else
+                  :Repeat  ⍝ if runtime, do not return to immediate execution
+                      {}⎕DL 10
+                  :Until ¯1=Server.TID
+              :EndIf
+          :EndIf
       :EndIf
     ∇
 
