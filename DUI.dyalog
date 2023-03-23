@@ -726,7 +726,6 @@
     ∇
 
     ∇ SubstEnv config;getEnv;subst;n;v
-    :Access public shared
     ⍝ substitute environment variables for items with values im the form $envName$
     ⍝ config is a configuration result from ReadConfiguration
     ⍝   it should be either a namespace reference, or a vector of namespace references
