@@ -228,6 +228,7 @@
           r←HandleRequest evt
       :Case 'DoPopup'
           StartNewRenderer evt
+      :Case 'LoadEnd'
       :Else
           1 Log'Unhandled HTMLRenderer event: ',⍕2⊃evt
       :EndSelect
