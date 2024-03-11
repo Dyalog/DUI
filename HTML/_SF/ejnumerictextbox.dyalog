@@ -13,7 +13,7 @@
     :field public shared readonly DocBase←'https://help.syncfusion.com/js/textboxes/overview'
     :field public shared readonly ApiLevel←1
     :field public shared readonly DocDyalog←'/Documentation/DyalogAPIs/Syncfusion/ejNumericTextbox.html'
-    :field publuc DecimalPlaces←0
+    :field public DecimalPlaces←0
     :field public WatermarkText←''
     :field public ShowSpinButton←0
 
