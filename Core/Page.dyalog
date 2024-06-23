@@ -68,7 +68,7 @@
 
     ∇ run arg
       :Access public
-      _Renderer←⎕NEW'HTMLRenderer'(('Visible' 0)('Coord'Coord)('Size'Size)('Event'('onHTTPRequest' '__CallbackFn'))('Caption' _PageName))
+      _Renderer←⎕NEW'HTMLRenderer'(('Visible' 0)('Coord'Coord)('Size'Size)('Event'('onHTTPRequest' '__CallbackFn'))('Caption'_PageName))
       :If ~0∊⍴props←_Renderer.PropList∩Props.⎕NL ¯2
           {_Renderer⍎⍺,'←⍵'}/¨{⍵(Props⍎⍵)}¨props
       :EndIf
@@ -111,7 +111,7 @@
           r[4 5 6 7]←1 200 'OK' 'text/html'
           r[10]←⊂UnicodeToHtml Render
           r[9]←⊂NL,⍨∊NL,⍨¨('Content-Type: ',7⊃r)('Content-Length: ',⍕≢10⊃r)
-      :ElseIf ~0∊⍴ext←(819⌶)1↓⊃¯1↑1 ⎕NPARTS request.Page  ⍝ !!!need to handle case where another MiPage is requested
+      :ElseIf ~0∊⍴ext←lc 1↓⊃¯1↑1 ⎕NPARTS request.Page  ⍝ !!!need to handle case where another MiPage is requested
           :If #.Files.Exists filename←∊1 ⎕NPARTS _Config #.MiServer.Virtual request.Page
               :If ' '∨.≠handler←⊃_Config.MappingHandlers.handler/⍨<\_Config.MappingHandlers.ext≡¨⊂'.',ext
                   (mimeType content)←⍎'filename #.MappingHandlers.',handler,' request'
@@ -183,5 +183,6 @@
     ∇
 
     tableLookup←{(⍺[;2],⊂'')[⍺[;1]⍳⊆,⍵]}
+    lc←{2::0(819⌶)⍵ ⋄ ¯3 ⎕C ⍵}
 
 :EndClass

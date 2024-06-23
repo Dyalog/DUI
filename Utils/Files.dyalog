@@ -395,6 +395,8 @@
     :Section Documentation Utilities
     ⍝ these are generic utilities used for documentation
 
+    lc←{2::0(819⌶)⍵ ⋄ ¯3 ⎕C ⍵}
+
     ∇ docn←ExtractDocumentationSections what;⎕IO;box;CR;sections;eis;matches
     ⍝ internal utility function
       ⎕IO←1
@@ -406,7 +408,7 @@
       docn←docn/⍨'⍝'≠⊃¨docn     ⍝ remove any lines beginning with ⍝⍝
       sections←{∨/'::'⍷⍵}¨docn
       :If ~0∊⍴what
-          matches←∨⌿∨/¨(eis(819⌶what))∘.⍷(819⌶)sections/docn
+          matches←∨⌿∨/¨(eis(lc what))∘.⍷lc sections/docn
           (sections docn)←((+\sections)∊matches/⍳≢matches)∘/¨sections docn
       :EndIf
       (sections/docn)←box¨sections/docn

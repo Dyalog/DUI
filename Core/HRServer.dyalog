@@ -634,7 +634,8 @@
     :endsection
 
     :section Misc
-    GetFromTableDefault←{⍺←'' ⋄ ⍺{0∊⍴⍵:⍺ ⋄ ⍵}⍵ {((819⌶⍵[;1])⍳⊆819⌶⍺)⊃⍵[;2],⊂''} ⍺⍺} ⍝ default_value (table ∇) value
+    lc←{2::0(819⌶)⍵ ⋄ ¯3 ⎕C ⍵}
+    GetFromTableDefault←{⍺←'' ⋄ ⍺{0∊⍴⍵:⍺ ⋄ ⍵}⍵ {((lc ⍵[;1])⍳⊆lc ⍺)⊃⍵[;2],⊂''} ⍺⍺} ⍝ default_value (table ∇) value
 
     ∇ r←flag Debugger w
       :If flag

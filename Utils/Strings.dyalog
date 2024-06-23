@@ -1,9 +1,9 @@
 ﻿:Namespace Strings
 
     (⎕IO ⎕ML)←1
-
-    lc←(819⌶) ⍝ :Includable Lower-casification of simple array
-    uc←1∘(819⌶) ⍝ Ditto Upper-casification
+    
+    lc←{2::0(819⌶)⍵ ⋄ ¯3 ⎕C ⍵}
+    uc←{2::1(819⌶)⍵ ⋄ 1 ⎕C ⍵}
 
     cis←{~0∊⍴(⍺ ⎕S 0 ⎕OPT'IC' 1)⍵} ⍝ Case Insensitive Search
 
