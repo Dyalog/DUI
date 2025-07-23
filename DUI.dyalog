@@ -396,6 +396,7 @@
               config←serverconfig
           :EndIf
       :EndIf
+      SubstEnv config
     ∇
 
     ∇ Config←ConfigureServer(AppRoot MSPort WC2Root HomePage);file
@@ -723,6 +724,36 @@
       r←(#.Strings.subst∘('%ServerRoot%'(¯1↓WC2Root)))r
       r←(#.Strings.subst∘('%SiteRoot%'(¯1↓AppRoot)))r
     ∇
+
+    ∇ SubstEnv config;getEnv;subst;n;v
+    ⍝ substitute environment variables for items with values im the form $envName$
+    ⍝ config is a configuration result from ReadConfiguration
+    ⍝   it should be either a namespace reference, or a vector of namespace references
+      getEnv←{2 ⎕NQ'.' 'GetEnvironment'⍵}
+      subst←{
+          0∊⍴⍵:⍵ ⋄
+          '$'∧.=(⊣/,⊢/)(2⌈≢⍵)↑⍵:getEnv 1↓¯1↓⍵ ⋄
+          ⍵}
+      :Select ⊃⎕NC'config'
+      :Case 2
+          :If 9.1∧.={⎕NC⊂,'⍵'}¨config
+              SubstEnv¨config
+          :EndIf
+      :Case 9
+          :For n :In config.⎕NL ¯2
+              :Select ≡v←config⍎n
+              :Case 1
+                  v←subst v
+              :Case 2
+                  v←subst¨v
+              :Else
+                  ∘∘∘
+              :EndSelect
+              ⍎'config.',n,'←v'
+          :EndFor
+      :EndSelect
+    ∇
+
 
     ∇ r←isRunning
       :Trap r←0
